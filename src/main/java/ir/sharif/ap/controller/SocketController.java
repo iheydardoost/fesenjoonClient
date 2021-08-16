@@ -14,10 +14,10 @@ import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 
 public class SocketController implements Runnable{
-    private final Socket socket;
+    private Socket socket;
     private InputStream input;
     private OutputStream output;
-    private final LoopHandler loopHandler;
+    private LoopHandler loopHandler;
     private ClientSocketConfig clientSocketConfig;
     private final LinkedList<Packet> requests;
     private final LinkedList<Packet> responses;
@@ -31,7 +31,9 @@ public class SocketController implements Runnable{
         authToken = 0;
         authTokenAvailable = false;
         packetHandler = new PacketHandler();
+    }
 
+    public void initConnection(){
         clientSocketConfig = Main.getMainController().getConfigLoader().getClientSocketConfig();
         InetSocketAddress socketAddress =
                 new InetSocketAddress(clientSocketConfig.getIpAddress(),clientSocketConfig.getPort());

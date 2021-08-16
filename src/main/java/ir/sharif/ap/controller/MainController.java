@@ -1,8 +1,14 @@
 package ir.sharif.ap.controller;
 
+import com.gluonhq.charm.glisten.application.MobileApplication;
+import com.gluonhq.charm.glisten.control.AppBar;
+import ir.sharif.ap.Main;
 import ir.sharif.ap.Presenter.AuthFormEvent;
 import ir.sharif.ap.model.Packet;
 import ir.sharif.ap.model.PacketType;
+import javafx.application.Platform;
+
+import static com.gluonhq.charm.glisten.application.MobileApplication.HOME_VIEW;
 
 public class MainController implements Runnable{
     private LoopHandler loopHandler;
@@ -23,10 +29,10 @@ public class MainController implements Runnable{
 
         switch (response.getPacketType()){
             case LOG_IN_RES:
-                System.out.println("login response body: " + response.getBody());
+                Platform.runLater(() -> Main.getLoginPresenter().onAuthReceive(response.getBody()));
                 break;
             case SIGN_IP_RES:
-                System.out.println("signup response body: " + response.getBody());
+                Platform.runLater(() -> Main.getLoginPresenter().onSignupReceive(response.getBody()));
                 break;
             default:
                 break;
@@ -66,5 +72,9 @@ public class MainController implements Runnable{
 
     public ConfigLoader getConfigLoader() {
         return configLoader;
+    }
+
+    public SocketController getSocketController() {
+        return socketController;
     }
 }

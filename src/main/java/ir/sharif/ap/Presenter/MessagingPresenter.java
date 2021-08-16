@@ -11,30 +11,29 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 
-
 import java.net.URL;
 import java.util.ResourceBundle;
 
 import static ir.sharif.ap.Main.*;
 
-public class TimeLinePresenter implements Initializable {
+public class MessagingPresenter implements Initializable {
     @FXML
-    private View timelineTab;
+    private View messagingTab;
 
     @FXML
     private BottomNavigationButton navigationTimeline, navigationPrivate, navigationExplore, navigationMessaging, navigationSetting;
 
 
-    final static String tabName="TimeLine";
+    final static String tabName="Messaging";
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         Label b = new Label("Hello Dear this is "+tabName+" PAge");
 
-        timelineTab.setCenter(b);
-        timelineTab.showingProperty().addListener((obs, ov, nv) -> {
+        messagingTab.setCenter(b);
+        messagingTab.showingProperty().addListener((obs, ov, nv) -> {
             if (nv) {
-                navigationTimeline.setSelected(true);
+                navigationMessaging.setSelected(true);
 
                 final AppBar appBar = MobileApplication.getInstance().getAppBar();
                 appBar.setTitleText(tabName);

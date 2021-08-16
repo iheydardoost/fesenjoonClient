@@ -2,20 +2,28 @@ package ir.sharif.ap.Presenter;
 
 import com.gluonhq.charm.glisten.animation.FadeInLeftBigTransition;
 import com.gluonhq.charm.glisten.application.MobileApplication;
-import com.gluonhq.charm.glisten.control.AppBar;
+import com.gluonhq.charm.glisten.control.*;
+
+//import com.gluonhq.charm.glisten.control.DatePicker;
+import com.gluonhq.charm.glisten.control.Dialog;
+import com.gluonhq.charm.glisten.control.TextArea;
 import com.gluonhq.charm.glisten.control.TextField;
 import com.gluonhq.charm.glisten.layout.Layer;
 import com.gluonhq.charm.glisten.mvc.View;
 import com.gluonhq.charm.glisten.visual.MaterialDesignIcon;
 import com.gluonhq.charm.glisten.visual.Swatch;
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.control.DatePicker;
 
 import java.net.URL;
+import java.util.Date;
 import java.util.ResourceBundle;
 
+import static ir.sharif.ap.Main.SETTING_VIEW;
 import static ir.sharif.ap.Main.TIMELINE_VIEW;
 
 public class LoginPresenter implements Initializable {
@@ -36,11 +44,18 @@ public class LoginPresenter implements Initializable {
     @FXML
     private Button loginButton;
     @FXML
-    private Label loginErrorText;
+    private Label loginErrorText, signupErrorText;
     @FXML
-    private TextField loginUsernameText;
+    private TextField loginUsernameText, signupUsernameText, signupFirstNameTxt, signupLastNameTxt, signupPhoneTxt, signupEmailTxt;
     @FXML
-    private PasswordField loginPasswordText;
+    private PasswordField loginPasswordText, signupPasswordText;
+
+    @FXML
+    private DatePicker signupDateTxt;
+    @FXML
+    private TextArea signupBiographyTxt;
+
+    private Snackbar snackbar;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -52,6 +67,9 @@ public class LoginPresenter implements Initializable {
 
         home.setShowTransitionFactory(v -> new FadeInLeftBigTransition(v));
         showProperLoginView();
+
+        snackbar = new Snackbar("");
+
         home.showingProperty().addListener((obs, ov, nv) -> {
             if (nv) {
                 final AppBar appBar = MobileApplication.getInstance().getAppBar();
@@ -98,18 +116,24 @@ public class LoginPresenter implements Initializable {
         showProperLoginView();
     }
 
-    private void onAuthReceive(int result){
-        if(result == 0){
-            System.out.println("Authentication successful");
+    public void onAuthReceive(String responseBody){
+        String[] responseArray=responseBody.split(",");
+        snackbar.setMessage(responseArray[1]);
+        snackbar.show();
+        if(responseArray[0].equals("success")){
             MobileApplication.getInstance().switchView(TIMELINE_VIEW);
-        }else if(result == 1){
-            System.out.println("User does not exist");
-        }else if(result == 2){
-            System.out.println("Wrong password");
         }
     }
 
+    public void onSignupReceive(String responseBody){
+        String[] responseArray=responseBody.split(",");
+        snackbar.setMessage(responseArray[1]);
+        snackbar.show();
+    }
+
+
     public void onLoginClick(ActionEvent actionEvent) {
+
         loginErrorText.setText("");
         if(loginUsernameText.getText().isEmpty()){
             loginErrorText.setText("Please enter username");
@@ -120,6 +144,36 @@ public class LoginPresenter implements Initializable {
             authFormEvent.setLoginReq(true)
                     .setUserName(loginUsernameText.getText())
                     .setPassword(loginPasswordText.getText());
+            authFormListener.authFormEventOccurred(authFormEvent);
+        }
+    }
+
+    public void onSignupClick(ActionEvent actionEvent) {
+
+
+        signupErrorText.setText("");
+        if(signupFirstNameTxt.getText().isEmpty()){
+            signupErrorText.setText("Please enter first name");
+        }else if(signupLastNameTxt.getText().isEmpty()) {
+            signupErrorText.setText("Please enter last name");
+        }else if(signupUsernameText.getText().isEmpty()) {
+            signupErrorText.setText("Please enter user name");
+        }else if(signupPasswordText.getText().isEmpty()) {
+            signupErrorText.setText("Please enter password");
+        }else if(signupEmailTxt.getText().isEmpty()) {
+            signupErrorText.setText("Please enter email");
+        }else{
+
+            AuthFormEvent authFormEvent = new AuthFormEvent();
+            authFormEvent.setLoginReq(false)
+                    .setFirstName(signupFirstNameTxt.getText())
+                    .setLastName(signupLastNameTxt.getText())
+                    .setUserName(signupUsernameText.getText())
+                    .setPassword(signupPasswordText.getText())
+                    .setPhoneNumber(signupPhoneTxt.getText())
+                    .setEmail(signupEmailTxt.getText())
+                    .setDateOfBirth(signupDateTxt.getValue())
+                    .setBio(signupBiographyTxt.getText());
             authFormListener.authFormEventOccurred(authFormEvent);
         }
     }

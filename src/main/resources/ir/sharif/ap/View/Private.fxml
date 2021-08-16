@@ -6,9 +6,9 @@
 <?import com.gluonhq.charm.glisten.mvc.View?>
 <?import javafx.scene.layout.BorderPane?>
 
-<View fx:id="timelineTab" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
+<View fx:id="privateTab" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
       prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="ir.sharif.ap.Presenter.TimeLinePresenter">
+      fx:controller="ir.sharif.ap.Presenter.PrivatePresenter">
     <center>
 
     </center>
@@ -18,13 +18,13 @@
     <bottom>
         <BottomNavigation BorderPane.alignment="CENTER">
             <actionItems>
-                <BottomNavigationButton fx:id="navigationTimeline" onAction="#onNavigationBarChange" selected="true"
+                <BottomNavigationButton fx:id="navigationTimeline" onAction="#onNavigationBarChange"
                                         text="Timeline">
                     <graphic>
                         <Icon content="HOME"/>
                     </graphic>
                 </BottomNavigationButton>
-                <BottomNavigationButton fx:id="navigationPrivate" onAction="#onNavigationBarChange" text="Private">
+                <BottomNavigationButton fx:id="navigationPrivate" onAction="#onNavigationBarChange" text="Private" selected="true">
                     <graphic>
                         <Icon content="PERSON"/>
                     </graphic>

@@ -6,35 +6,68 @@ import com.gluonhq.charm.glisten.control.BottomNavigationButton;
 import com.gluonhq.charm.glisten.mvc.View;
 import com.gluonhq.charm.glisten.visual.MaterialDesignIcon;
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
+import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-
+import javafx.scene.control.PasswordField;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 import static ir.sharif.ap.Main.*;
 
-public class TimeLinePresenter implements Initializable {
+public class SettingPresenter implements Initializable {
     @FXML
-    private View timelineTab;
+    private View settingTab;
 
     @FXML
     private BottomNavigationButton navigationTimeline, navigationPrivate, navigationExplore, navigationMessaging, navigationSetting;
 
 
-    final static String tabName="TimeLine";
+    final static String tabName="Setting";
+
+    @FXML
+    private ComboBox privacyCombo;
+
+    @FXML
+    private ComboBox lastSeenCombo;
+
+    @FXML
+    private ComboBox activityCombo;
+
+    @FXML
+    private PasswordField passwordText;
+
+    @FXML
+    private Button deleteUserButton;
+
+    @FXML
+    private Button applyButton;
+
+    @FXML
+    private Button logOutButton;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        Label b = new Label("Hello Dear this is "+tabName+" PAge");
+        ObservableList<String> privacyList= FXCollections.observableArrayList("Private","Public");
+        ObservableList<String> lastSeenList= FXCollections.observableArrayList("Everyone","No one", "Followings");
+        ObservableList<String> activityList= FXCollections.observableArrayList("Active","Inactive");
+        privacyCombo.setItems(privacyList);
+        lastSeenCombo.setItems(lastSeenList);
+        activityCombo.setItems(activityList);
 
-        timelineTab.setCenter(b);
-        timelineTab.showingProperty().addListener((obs, ov, nv) -> {
+        settingTab.showingProperty().addListener((obs, ov, nv) -> {
             if (nv) {
-                navigationTimeline.setSelected(true);
+                privacyCombo.getSelectionModel().selectFirst();
+                lastSeenCombo.getSelectionModel().selectFirst();
+                activityCombo.getSelectionModel().selectFirst();
+
+                navigationSetting.setSelected(true);
 
                 final AppBar appBar = MobileApplication.getInstance().getAppBar();
                 appBar.setTitleText(tabName);
@@ -73,5 +106,20 @@ public class TimeLinePresenter implements Initializable {
         }
     }
 
+    @FXML
+    void onApplyClick(ActionEvent event) {
+        String s = privacyCombo.getSelectionModel().getSelectedItem().toString();
+        System.out.println("THIS IS "+ s );
+    }
+
+    @FXML
+    void onDeleteUserClick(ActionEvent event) {
+
+    }
+
+    @FXML
+    void onLogoutClick(ActionEvent event) {
+
+    }
 
 }
