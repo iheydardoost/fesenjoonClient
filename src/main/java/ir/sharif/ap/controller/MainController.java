@@ -4,6 +4,7 @@ import com.gluonhq.charm.glisten.application.MobileApplication;
 import com.gluonhq.charm.glisten.control.AppBar;
 import ir.sharif.ap.Main;
 import ir.sharif.ap.Presenter.AuthFormEvent;
+import ir.sharif.ap.Presenter.SettingChangeFormEvent;
 import ir.sharif.ap.model.Packet;
 import ir.sharif.ap.model.PacketType;
 import javafx.application.Platform;
@@ -34,6 +35,14 @@ public class MainController implements Runnable{
             case SIGN_IP_RES:
                 Platform.runLater(() -> Main.getLoginPresenter().onSignupReceive(response.getBody()));
                 break;
+            case CHANGE_SETTING_RES:
+                break;
+            case DELETE_USER_RES:
+                break;
+            case LOG_OUT_RES:
+                break;
+            case SETTING_INFO_RES:
+                break;
             default:
                 break;
         }
@@ -63,6 +72,60 @@ public class MainController implements Runnable{
                     false);
         }
         socketController.addRequest(request);
+    }
+
+    public void handleLogoutEvent(){
+        socketController.addRequest(
+                new Packet(
+                        PacketType.LOG_OUT_REQ,
+                        "",
+                        socketController.getAuthToken(),
+                        true));
+    }
+
+    public void handleUserDeleteEvent(){
+        socketController.addRequest(
+                new Packet(
+                        PacketType.DELETE_USER_REQ,
+                        "",
+                        socketController.getAuthToken(),
+                        true));
+    }
+
+    public void handleSettingInfoEvent(){
+        socketController.addRequest(
+                new Packet(
+                        PacketType.SETTING_INFO_REQ,
+                        "",
+                        socketController.getAuthToken(),
+                        true));
+    }
+
+    public void handleSettingChangeEvent(SettingChangeFormEvent e){
+        socketController.addRequest(
+                new Packet(
+                        PacketType.CHANGE_SETTING_REQ,
+                        "lastSeenStatus," + e.getLastSeenStatus(),
+                        socketController.getAuthToken(),
+                        true));
+        socketController.addRequest(
+                new Packet(
+                        PacketType.CHANGE_SETTING_REQ,
+                        "accountPrivate," + e.isAccountPrivate(),
+                        socketController.getAuthToken(),
+                        true));
+        socketController.addRequest(
+                new Packet(
+                        PacketType.CHANGE_SETTING_REQ,
+                        "accountActive," + e.isAccountActive(),
+                        socketController.getAuthToken(),
+                        true));
+        socketController.addRequest(
+                new Packet(
+                        PacketType.CHANGE_SETTING_REQ,
+                        "password," + e.getPassword(),
+                        socketController.getAuthToken(),
+                        true));
     }
 
     public void doClose(){
