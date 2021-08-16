@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.gluonhq.charm.glisten.control.BottomNavigation?>
+<?import com.gluonhq.charm.glisten.control.BottomNavigationButton?>
+<?import com.gluonhq.charm.glisten.control.Icon?>
+<?import com.gluonhq.charm.glisten.mvc.View?>
+<?import javafx.scene.layout.BorderPane?>
+
+<View fx:id="timeline" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ir.sharif.ap.Presenter.TimeLinePresenter">
+<center>
+
+</center>
+    <bottom>
+
+    </bottom>
+   <bottom>
+      <BottomNavigation BorderPane.alignment="CENTER">
+          <actionItems>
+              <BottomNavigationButton selected="true" text="Timeline">
+                  <graphic>
+                      <Icon content="HOME" />
+                  </graphic>
+              </BottomNavigationButton>
+              <BottomNavigationButton text="Private">
+                  <graphic>
+                      <Icon content="PERSON" />
+                  </graphic>
+              </BottomNavigationButton>
+              <BottomNavigationButton text="Explore">
+                  <graphic>
+                      <Icon content="EXPLORE" />
+                  </graphic>
+              </BottomNavigationButton>
+            <BottomNavigationButton text="Messaging">
+               <graphic>
+                  <Icon content="MESSAGE" />
+               </graphic>
+            </BottomNavigationButton>
+            <BottomNavigationButton text="Setting">
+               <graphic>
+                  <Icon content="SETTINGS" />
+               </graphic>
+            </BottomNavigationButton>
+          </actionItems>
+      </BottomNavigation>
+   </bottom>
+</View>

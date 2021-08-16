@@ -16,6 +16,8 @@ import javafx.scene.control.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import static ir.sharif.ap.Main.TIMELINE_VIEW;
+
 public class LoginPresenter implements Initializable {
     private AuthFormListener authFormListener;
 
@@ -47,8 +49,6 @@ public class LoginPresenter implements Initializable {
 //            System.out.println("FAB click");
 //        });
 //        fab.showOn(home);
-
-        RadioButton rd = new RadioButton();
 
         home.setShowTransitionFactory(v -> new FadeInLeftBigTransition(v));
         showProperLoginView();
@@ -101,7 +101,7 @@ public class LoginPresenter implements Initializable {
     private void onAuthReceive(int result){
         if(result == 0){
             System.out.println("Authentication successful");
-                    MobileApplication.getInstance().switchView("TimeLineView");
+            MobileApplication.getInstance().switchView(TIMELINE_VIEW);
         }else if(result == 1){
             System.out.println("User does not exist");
         }else if(result == 2){

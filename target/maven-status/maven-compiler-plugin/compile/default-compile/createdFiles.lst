@@ -1,4 +1,11 @@
+ir\sharif\ap\Presenter\TimeLinePresenter.class
+ir\sharif\ap\View\SettingView.class
+ir\sharif\ap\View\PrivateView.class
 ir\sharif\ap\MainController.class
-ir\sharif\ap\Main.class
+ir\sharif\ap\View\ExploreView.class
 ir\sharif\ap\View\LoginView.class
+ir\sharif\ap\View\TimeLineView.class
+ir\sharif\ap\Main.class
+ir\sharif\ap\View\MessagingView.class
+ir\sharif\ap\Presenter\SamplePresenter.class
 ir\sharif\ap\Presenter\LoginPresenter.class

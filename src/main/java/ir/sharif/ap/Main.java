@@ -7,12 +7,16 @@ import com.gluonhq.charm.glisten.mvc.View;
 import ir.sharif.ap.Presenter.LoginPresenter;
 import ir.sharif.ap.View.LoginView;
 import ir.sharif.ap.controller.MainController;
+
+import ir.sharif.ap.View.TimeLineView;
+
 import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
-import javafx.scene.control.Label;
 
 public class Main extends MobileApplication {
+
     private static MainController mainController;
+    public final static String TIMELINE_VIEW="TimeLineView";
 
     @Override
     public void init() {
@@ -25,7 +29,10 @@ public class Main extends MobileApplication {
             return (View) loginView.getView();
         });
 
-        addViewFactory("TimeLineView", () -> new View(new Label("Hello TimeLine!")));
+        addViewFactory(TIMELINE_VIEW, () -> {
+            final TimeLineView timeLineView = new TimeLineView();
+            return (View) timeLineView.getView();
+        });
 
 //        addViewFactory(HOME_VIEW, () -> {
 //            FloatingActionButton fab = new FloatingActionButton(MaterialDesignIcon.SEARCH.text,
@@ -64,7 +71,7 @@ public class Main extends MobileApplication {
                     .map(DisplayService::getScreenResolution)
                     .orElse(new Dimension2D(640, 480));
             scene.getWindow().setWidth(640);
-            scene.getWindow().setHeight(480);
+            scene.getWindow().setHeight(640);
 
 //            scene.getWindow().setWidth(dimension2D.getWidth());
 //            scene.getWindow().setHeight(dimension2D.getHeight());
