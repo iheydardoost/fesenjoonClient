@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: com.onexip:FlexBoxFX:0.1.5.3-SNAPSHOT">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/onexip/FlexBoxFX/0.1.5.3-SNAPSHOT/FlexBoxFX-0.1.5.3-20171011.122929-2.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/com/onexip/FlexBoxFX/0.1.5.3-SNAPSHOT/FlexBoxFX-0.1.5.3-20171011.122929-2-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/com/onexip/FlexBoxFX/0.1.5.3-SNAPSHOT/FlexBoxFX-0.1.5.3-20171011.122929-2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
