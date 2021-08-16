@@ -1,3 +1,3 @@
 {
-  "frameConfigPath" : "src/main/config_files/frame_config.json"
+  "clientSocketConfigPath" : "./src/main/config_files/client_socket_config.json"
 }

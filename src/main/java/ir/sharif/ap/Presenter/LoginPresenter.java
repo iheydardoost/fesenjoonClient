@@ -13,11 +13,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 
-
 import java.net.URL;
 import java.util.ResourceBundle;
 
 public class LoginPresenter implements Initializable {
+    private AuthFormListener authFormListener;
+
     @FXML
     private View home;
 
@@ -107,11 +108,6 @@ public class LoginPresenter implements Initializable {
             System.out.println("Wrong password");
         }
     }
-    private boolean authenticate(String username, String password){
-        System.out.println("authenticating username:(" + username + ") password:(" + password+")");
-        onAuthReceive(0);
-        return true;
-    }
 
     public void onLoginClick(ActionEvent actionEvent) {
         loginErrorText.setText("");
@@ -120,7 +116,15 @@ public class LoginPresenter implements Initializable {
         }else if(loginPasswordText.getText().isEmpty()){
             loginErrorText.setText("Please enter password");
         }else{
-            authenticate(loginUsernameText.getText().toString(), loginPasswordText.getText().toString());
+            AuthFormEvent authFormEvent = new AuthFormEvent();
+            authFormEvent.setLoginReq(true)
+                    .setUserName(loginUsernameText.getText())
+                    .setPassword(loginPasswordText.getText());
+            authFormListener.authFormEventOccurred(authFormEvent);
         }
+    }
+
+    public void addAuthFormListener(AuthFormListener loginFormListener) {
+        this.authFormListener = loginFormListener;
     }
 }

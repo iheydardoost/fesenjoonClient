@@ -3,26 +3,25 @@ package ir.sharif.ap;
 import com.gluonhq.attach.display.DisplayService;
 import com.gluonhq.attach.util.Platform;
 import com.gluonhq.charm.glisten.application.MobileApplication;
-import com.gluonhq.charm.glisten.control.AppBar;
-import com.gluonhq.charm.glisten.control.FloatingActionButton;
 import com.gluonhq.charm.glisten.mvc.View;
-import com.gluonhq.charm.glisten.visual.MaterialDesignIcon;
-import com.gluonhq.charm.glisten.visual.Swatch;
+import ir.sharif.ap.Presenter.LoginPresenter;
 import ir.sharif.ap.View.LoginView;
+import ir.sharif.ap.controller.MainController;
 import javafx.geometry.Dimension2D;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.VBox;
 
 public class Main extends MobileApplication {
+    private static MainController mainController;
 
     @Override
     public void init() {
         addViewFactory(HOME_VIEW, () -> {
             final LoginView loginView = new LoginView();
+            LoginPresenter loginPresenter = (LoginPresenter) loginView.getPresenter();
+            loginPresenter.addAuthFormListener(e -> {
+                mainController.handleAuthEvent(e);
+            });
             return (View) loginView.getView();
         });
 
@@ -73,6 +72,12 @@ public class Main extends MobileApplication {
     }
 
     public static void main(String[] args) {
+        mainController = new MainController();
+
         launch(args);
+    }
+
+    public static MainController getMainController() {
+        return mainController;
     }
 }
