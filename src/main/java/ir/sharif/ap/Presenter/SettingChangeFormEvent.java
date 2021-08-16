@@ -12,7 +12,7 @@ public class SettingChangeFormEvent {
         this.lastSeenStatus = LastSeenStatus.EVERYONE;
         this.accountPrivate = false;
         this.accountActive = true;
-        this.password = "";
+        this.password = null;
     }
 
     public LastSeenStatus getLastSeenStatus() {

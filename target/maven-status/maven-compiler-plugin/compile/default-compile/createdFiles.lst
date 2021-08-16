@@ -1,4 +1,4 @@
-ir\sharif\ap\Presenter\CommonController.class
+ir\sharif\ap\Presenter\SettingInfoListener.class
 ir\sharif\ap\controller\SocketController.class
 ir\sharif\ap\Presenter\TimeLinePresenter.class
 ir\sharif\ap\controller\LoopHandler.class
@@ -8,6 +8,7 @@ ir\sharif\ap\Presenter\ExplorePresenter.class
 ir\sharif\ap\View\LoginView.class
 ir\sharif\ap\controller\JsonHandler.class
 ir\sharif\ap\model\ActionType.class
+ir\sharif\ap\Presenter\SettingChangeFormListener.class
 ir\sharif\ap\Presenter\PrivatePresenter.class
 ir\sharif\ap\Main.class
 ir\sharif\ap\Presenter\MessagingPresenter.class
@@ -23,6 +24,7 @@ ir\sharif\ap\Presenter\LoginPresenter.class
 ir\sharif\ap\controller\ConsoleColors.class
 ir\sharif\ap\model\config\ClientSocketConfig.class
 ir\sharif\ap\model\Packet.class
+ir\sharif\ap\Presenter\LogoutListener.class
 ir\sharif\ap\model\User.class
 ir\sharif\ap\Presenter\SettingPresenter.class
 ir\sharif\ap\View\ExploreView.class
@@ -36,5 +38,7 @@ ir\sharif\ap\View\MessagingView.class
 ir\sharif\ap\controller\ConfigLoader.class
 ir\sharif\ap\model\ChatType.class
 ir\sharif\ap\model\NotificationType.class
+ir\sharif\ap\Presenter\SettingChangeFormEvent.class
 ir\sharif\ap\model\Notification$NOTIFICATION_CONTEX.class
+ir\sharif\ap\Presenter\UserDeleteListener.class
 ir\sharif\ap\model\LastSeenStatus.class

@@ -129,6 +129,9 @@ public class LoginPresenter implements Initializable {
         String[] responseArray=responseBody.split(",");
         snackbar.setMessage(responseArray[1]);
         snackbar.show();
+        if(responseArray[0].equals("success")){
+            MobileApplication.getInstance().switchView(TIMELINE_VIEW);
+        }
     }
 
 

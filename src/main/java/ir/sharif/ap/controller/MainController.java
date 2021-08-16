@@ -36,12 +36,16 @@ public class MainController implements Runnable{
                 Platform.runLater(() -> Main.getLoginPresenter().onSignupReceive(response.getBody()));
                 break;
             case CHANGE_SETTING_RES:
+                Platform.runLater(() -> Main.getSettingPresenter().onChangeResponse(response.getBody()));
                 break;
             case DELETE_USER_RES:
+                Platform.runLater(() -> Main.getSettingPresenter().onUserDeleteResponse(response.getBody()));
                 break;
             case LOG_OUT_RES:
+                Platform.runLater(() -> Main.getSettingPresenter().onLogoutResponse(response.getBody()));
                 break;
             case SETTING_INFO_RES:
+                Platform.runLater(() -> Main.getSettingPresenter().onSettingInfoReceive(response.getBody()));
                 break;
             default:
                 break;
@@ -99,6 +103,7 @@ public class MainController implements Runnable{
                         "",
                         socketController.getAuthToken(),
                         true));
+
     }
 
     public void handleSettingChangeEvent(SettingChangeFormEvent e){
@@ -120,12 +125,14 @@ public class MainController implements Runnable{
                         "accountActive," + e.isAccountActive(),
                         socketController.getAuthToken(),
                         true));
-        socketController.addRequest(
-                new Packet(
-                        PacketType.CHANGE_SETTING_REQ,
-                        "password," + e.getPassword(),
-                        socketController.getAuthToken(),
-                        true));
+        if(!e.getPassword().isEmpty()) {
+            socketController.addRequest(
+                    new Packet(
+                            PacketType.CHANGE_SETTING_REQ,
+                            "password," + e.getPassword(),
+                            socketController.getAuthToken(),
+                            true));
+        }
     }
 
     public void doClose(){

@@ -5,6 +5,7 @@ import com.gluonhq.attach.util.Platform;
 import com.gluonhq.charm.glisten.application.MobileApplication;
 import com.gluonhq.charm.glisten.mvc.View;
 import ir.sharif.ap.Presenter.LoginPresenter;
+import ir.sharif.ap.Presenter.SettingPresenter;
 import ir.sharif.ap.View.*;
 import ir.sharif.ap.controller.JsonHandler;
 import ir.sharif.ap.controller.LogHandler;
@@ -28,6 +29,7 @@ public class Main extends MobileApplication {
 
 
     private static LoginPresenter loginPresenter;
+    private static SettingPresenter settingPresenter;
     @Override
     public void stop(){
 
@@ -67,6 +69,11 @@ public class Main extends MobileApplication {
 
         addViewFactory(SETTING_VIEW, () -> {
             final SettingView settingView = new SettingView();
+            settingPresenter = (SettingPresenter) settingView.getPresenter();
+            settingPresenter.addSettingInfoListener(e->mainController.handleSettingInfoEvent());
+            settingPresenter.addUserDeleteListener(e->mainController.handleUserDeleteEvent());
+            settingPresenter.addLogoutListener(e->mainController.handleLogoutEvent());
+            settingPresenter.addSettingChangeFormListener(e->mainController.handleSettingChangeEvent(e));
             return (View) settingView.getView();
         });
 
@@ -131,5 +138,9 @@ public class Main extends MobileApplication {
 
     public static LoginPresenter getLoginPresenter() {
         return loginPresenter;
+    }
+
+    public static SettingPresenter getSettingPresenter() {
+        return settingPresenter;
     }
 }
