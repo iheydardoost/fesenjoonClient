@@ -4,47 +4,47 @@
 <?import com.gluonhq.charm.glisten.control.BottomNavigationButton?>
 <?import com.gluonhq.charm.glisten.control.Icon?>
 <?import com.gluonhq.charm.glisten.mvc.View?>
+<?import javafx.scene.control.ListView?>
 <?import javafx.scene.layout.BorderPane?>
 
-<View fx:id="timelineTab" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity"
-      prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1"
-      fx:controller="ir.sharif.ap.Presenter.TimeLinePresenter">
-    <center>
+<View fx:id="timelineTab" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="480.0" prefWidth="640.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ir.sharif.ap.Presenter.TimeLinePresenter">
 
-    </center>
+
     <bottom>
 
     </bottom>
     <bottom>
         <BottomNavigation BorderPane.alignment="CENTER">
             <actionItems>
-                <BottomNavigationButton fx:id="navigationTimeline" onAction="#onNavigationBarChange" selected="true"
-                                        text="Timeline">
+                <BottomNavigationButton fx:id="navigationTimeline" onAction="#onNavigationBarChange" selected="true" text="Timeline">
                     <graphic>
-                        <Icon content="HOME"/>
+                        <Icon content="HOME" />
                     </graphic>
                 </BottomNavigationButton>
                 <BottomNavigationButton fx:id="navigationPrivate" onAction="#onNavigationBarChange" text="Private">
                     <graphic>
-                        <Icon content="PERSON"/>
+                        <Icon content="PERSON" />
                     </graphic>
                 </BottomNavigationButton>
                 <BottomNavigationButton fx:id="navigationExplore" onAction="#onNavigationBarChange" text="Explore">
                     <graphic>
-                        <Icon content="EXPLORE"/>
+                        <Icon content="EXPLORE" />
                     </graphic>
                 </BottomNavigationButton>
                 <BottomNavigationButton fx:id="navigationMessaging" onAction="#onNavigationBarChange" text="Messaging">
                     <graphic>
-                        <Icon content="MESSAGE"/>
+                        <Icon content="MESSAGE" />
                     </graphic>
                 </BottomNavigationButton>
                 <BottomNavigationButton fx:id="navigationSetting" onAction="#onNavigationBarChange" text="Setting">
                     <graphic>
-                        <Icon content="SETTINGS"/>
+                        <Icon content="SETTINGS" />
                     </graphic>
                 </BottomNavigationButton>
             </actionItems>
         </BottomNavigation>
     </bottom>
+   <center>
+      <ListView fx:id="timelineListView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
+   </center>
 </View>

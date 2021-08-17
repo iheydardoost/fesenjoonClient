@@ -2,7 +2,7 @@ package ir.sharif.ap.model;
 
 import java.time.LocalDateTime;
 
-public class Tweet{
+public class Tweet {
     private long tweetID;
     private long parentTweetID;
     private String tweetText;
@@ -11,14 +11,12 @@ public class Tweet{
     private boolean retweeted;
     private int reportedNumber;
     private byte[] tweetImage;
+    private int likesNum;
 
-
-    public Tweet() {
-    }
 
     public Tweet(long tweetID, long parentTweetID, String tweetText,
                  LocalDateTime tweetDateTime, long userID,
-                 boolean retweeted, int reportedNumber, byte[] tweetImage) {
+                 boolean retweeted, int reportedNumber, byte[] tweetImage, int likesNum) {
         this.tweetID = tweetID;
         this.parentTweetID = parentTweetID;
         this.tweetText = tweetText;
@@ -27,6 +25,7 @@ public class Tweet{
         this.retweeted = retweeted;
         this.reportedNumber = reportedNumber;
         this.tweetImage = tweetImage;
+        this.likesNum = likesNum;
     }
 
     public long getTweetID() {
@@ -92,4 +91,8 @@ public class Tweet{
     public void setTweetImage(byte[] tweetImage) {
         this.tweetImage = tweetImage;
     }
+
+    public int getLikesNum() { return likesNum; }
+
+    public void setLikesNum(int likesNum) { this.likesNum = likesNum; }
 }

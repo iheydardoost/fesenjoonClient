@@ -13,9 +13,6 @@ import ir.sharif.ap.controller.MainController;
 
 import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
-import javafx.stage.Stage;
-
-import java.util.logging.Logger;
 
 public class Main extends MobileApplication {
 
@@ -26,6 +23,9 @@ public class Main extends MobileApplication {
     public final static String EXPLORE_VIEW="ExploreView";
     public final static String MESSAGING_VIEW="MessagingView";
     public final static String SETTING_VIEW="SettingView";
+    public final static String NEW_TWEET_VIEW="NewTweetView";
+
+    private static int lastViewIndex= 0;
 
 
     private static LoginPresenter loginPresenter;
@@ -47,6 +47,11 @@ public class Main extends MobileApplication {
                 mainController.handleAuthEvent(e);
             });
             return (View) loginView.getView();
+        });
+
+        addViewFactory(NEW_TWEET_VIEW, () -> {
+            final NewTweetView newTweetView = new NewTweetView();
+            return (View) newTweetView.getView();
         });
 
         addViewFactory(TIMELINE_VIEW, () -> {
@@ -142,5 +147,9 @@ public class Main extends MobileApplication {
 
     public static SettingPresenter getSettingPresenter() {
         return settingPresenter;
+    }
+    public static String getNextViewName(){
+        lastViewIndex++;
+        return "ViewNumber" + String.valueOf(lastViewIndex);
     }
 }
