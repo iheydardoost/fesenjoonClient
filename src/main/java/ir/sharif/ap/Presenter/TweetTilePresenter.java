@@ -83,10 +83,10 @@ public class TweetTilePresenter implements Initializable {
 
         });
 
-        retweetButton.setStyle(detailButtonStyle);
-        likeButton.setStyle(detailButtonStyle);
-        commentButton.setStyle(detailButtonStyle);
-        tweetDetailButton.setStyle(detailButtonStyle);
+        retweetButton.setStyle(defaultButtonStyle);
+        likeButton.setStyle(defaultButtonStyle);
+        commentButton.setStyle(defaultButtonStyle);
+        tweetDetailButton.setStyle(defaultButtonStyle);
 
         likesNum = new Label("0");
         commentsNum = new Label("0");
@@ -133,6 +133,13 @@ public class TweetTilePresenter implements Initializable {
             this.tweetPane.setStyle(lightBackgroundStyle);
         }
     }
+    public void setLikeIcon(boolean isLiked){
+        if(isLiked){
+            likeButton.setStyle(redButtonStyle);
+        }else {
+            likeButton.setStyle(defaultButtonStyle);
+        }
+    }
 
     public void setTweet(TweetTile tweet) {
         this.tweet = tweet;
@@ -169,5 +176,6 @@ public class TweetTilePresenter implements Initializable {
         setTweetAvatar(userImage);
         setTweetImage(tweetImage);
         setDarkBackgroundStyle(tweet.isMainTweet());
+        setLikeIcon(true);
     }
 }

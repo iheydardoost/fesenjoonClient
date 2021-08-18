@@ -23,7 +23,7 @@ import java.util.Random;
 import java.util.ResourceBundle;
 
 import static ir.sharif.ap.Main.*;
-import static ir.sharif.ap.Presenter.Styles.detailButtonStyle;
+import static ir.sharif.ap.Presenter.Styles.defaultButtonStyle;
 
 public class ExplorePresenter implements Initializable {
     @FXML
@@ -46,7 +46,7 @@ public class ExplorePresenter implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         searchButton = MaterialDesignIcon.SEARCH.button(e -> System.out.println("retweet"));
-        searchButton.setStyle(detailButtonStyle);
+        searchButton.setStyle(defaultButtonStyle);
         searchBar.getChildren().add(searchButton);
 
 
