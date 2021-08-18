@@ -6,6 +6,7 @@ ir\sharif\ap\controller\LoopHandler.class
 ir\sharif\ap\View\SettingView.class
 ir\sharif\ap\View\PrivateView.class
 ir\sharif\ap\Presenter\ExplorePresenter.class
+ir\sharif\ap\Presenter\Styles.class
 ir\sharif\ap\View\LoginView.class
 ir\sharif\ap\View\NewTweetView.class
 ir\sharif\ap\controller\JsonHandler.class

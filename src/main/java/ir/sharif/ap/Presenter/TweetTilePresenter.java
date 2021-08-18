@@ -27,6 +27,9 @@ import java.util.ResourceBundle;
 
 import static ir.sharif.ap.Main.NEW_TWEET_VIEW;
 import static ir.sharif.ap.Main.getNextViewName;
+import static ir.sharif.ap.Presenter.Styles.detailButtonStyle;
+import static ir.sharif.ap.Presenter.Styles.darkBackgroundStyle;
+import static ir.sharif.ap.Presenter.Styles.lightBackgroundStyle;
 
 
 public class TweetTilePresenter implements Initializable {
@@ -53,14 +56,10 @@ public class TweetTilePresenter implements Initializable {
     private Label likesNum, commentsNum;
     private TweetTile tweet;
 
-    final String detailButtonStyle="-fx-text-fill: -primary-swatch-900;";
-    final String darkBackgroundStyle="-fx-background-color: #b3aab5;";
-    final String lightBackgroundStyle="-fx-background-color: #ffffff;";
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-
 
         tweetImage.setManaged(false);
         tweetImage.setVisible(false);
@@ -132,11 +131,11 @@ public class TweetTilePresenter implements Initializable {
     public void setCommentsNum(String commentsNum) {
         this.commentsNum.setText(commentsNum);
     }
-    public void setDarkBackgroundStyle(boolean darkBackgroundStyle){
-        if(darkBackgroundStyle){
-            this.tweetPane.setStyle(this.darkBackgroundStyle);
+    public void setDarkBackgroundStyle(boolean setDarkBackgroundStyle){
+        if(setDarkBackgroundStyle){
+            this.tweetPane.setStyle(darkBackgroundStyle);
         }else {
-            this.tweetPane.setStyle(this.lightBackgroundStyle);
+            this.tweetPane.setStyle(lightBackgroundStyle);
         }
     }
 

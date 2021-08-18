@@ -115,27 +115,16 @@ public class TimeLinePresenter extends GluonPresenter<Main> implements Initializ
 
         if(e.getSource() == navigationTimeline){
             MobileApplication.getInstance().switchView(TIMELINE_VIEW);
-
-            System.out.println("This Action navigationTimeline");
         }else if(e.getSource() == navigationPrivate){
             MobileApplication.getInstance().switchView(PRIVATE_VIEW);
-
-            System.out.println("This Action navigationPrivate");
-
         }else if(e.getSource() == navigationExplore){
             MobileApplication.getInstance().switchView(EXPLORE_VIEW);
-
-            System.out.println("This Action navigationExplore");
-
         }else if(e.getSource() == navigationMessaging){
             MobileApplication.getInstance().switchView(MESSAGING_VIEW);
-
-            System.out.println("This Action navigationMessaging");
-
         }else if(e.getSource() == navigationSetting){
             MobileApplication.getInstance().switchView(SETTING_VIEW);
-            System.out.println("This Action NavigationSetting");
         }
+
     }
 
 
