@@ -10,7 +10,6 @@ import ir.sharif.ap.View.*;
 import ir.sharif.ap.controller.JsonHandler;
 import ir.sharif.ap.controller.LogHandler;
 import ir.sharif.ap.controller.MainController;
-
 import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
 

@@ -5,7 +5,6 @@ import com.gluonhq.charm.glisten.control.Avatar;
 import com.gluonhq.charm.glisten.mvc.View;
 import com.gluonhq.charm.glisten.visual.MaterialDesignIcon;
 import ir.sharif.ap.Main;
-import ir.sharif.ap.View.TimeLineView;
 import ir.sharif.ap.View.TweetDetailView;
 import ir.sharif.ap.model.TweetTile;
 import javafx.fxml.FXML;
@@ -16,7 +15,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
 
 import java.io.ByteArrayInputStream;
@@ -24,12 +22,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-
 import static ir.sharif.ap.Main.NEW_TWEET_VIEW;
 import static ir.sharif.ap.Main.getNextViewName;
-import static ir.sharif.ap.Presenter.Styles.detailButtonStyle;
-import static ir.sharif.ap.Presenter.Styles.darkBackgroundStyle;
-import static ir.sharif.ap.Presenter.Styles.lightBackgroundStyle;
+import static ir.sharif.ap.Presenter.Styles.*;
 
 
 public class TweetTilePresenter implements Initializable {

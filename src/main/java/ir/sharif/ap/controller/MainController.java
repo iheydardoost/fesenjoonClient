@@ -1,15 +1,11 @@
 package ir.sharif.ap.controller;
 
-import com.gluonhq.charm.glisten.application.MobileApplication;
-import com.gluonhq.charm.glisten.control.AppBar;
 import ir.sharif.ap.Main;
-import ir.sharif.ap.Presenter.AuthFormEvent;
-import ir.sharif.ap.Presenter.SettingChangeFormEvent;
-import ir.sharif.ap.model.Packet;
-import ir.sharif.ap.model.PacketType;
+import ir.sharif.ap.Presenter.*;
+import ir.sharif.ap.model.*;
 import javafx.application.Platform;
 
-import static com.gluonhq.charm.glisten.application.MobileApplication.HOME_VIEW;
+import java.util.Base64;
 
 public class MainController implements Runnable{
     private LoopHandler loopHandler;
@@ -46,6 +42,22 @@ public class MainController implements Runnable{
                 break;
             case SETTING_INFO_RES:
                 Platform.runLater(() -> Main.getSettingPresenter().onSettingInfoReceive(response.getBody()));
+                break;
+            case TIMELINE_TWEET_RES:
+                break;
+            case EXPLORER_TWEET_RES:
+                break;
+            case NEW_TWEET_RES:
+                break;
+            case REPORT_TWEET_RES:
+                break;
+            case LIKE_TWEET_RES:
+                break;
+            case REPORT_USER_RES:
+                break;
+            case MUTE_USER_RES:
+                break;
+            case BLOCK_USER_RES:
                 break;
             default:
                 break;
@@ -133,6 +145,86 @@ public class MainController implements Runnable{
                             socketController.getAuthToken(),
                             true));
         }
+    }
+
+    public void handleListTweetEvent(ListTweetEvent e){
+        if(e.isTimeline()) {
+            socketController.addRequest(
+                    new Packet(
+                            PacketType.TIMELINE_TWEET_REQ,
+                            e.getMaxNum() + "," + e.getLastTweetDateTime(),
+                            socketController.getAuthToken(),
+                            true));
+        }
+        else {
+            socketController.addRequest(
+                    new Packet(
+                            PacketType.EXPLORER_TWEET_REQ,
+                            e.getMaxNum() + "," + e.getLastTweetDateTime(),
+                            socketController.getAuthToken(),
+                            true));
+        }
+    }
+
+    public void handleActionTweetEvent(ActionTweetEvent e){
+        if(e.getActionType()== ActionType.LIKE) {
+            socketController.addRequest(
+                    new Packet(
+                            PacketType.LIKE_TWEET_REQ,
+                            Long.toString(e.getTweetID()),
+                            socketController.getAuthToken(),
+                            true));
+        }
+        else if(e.getActionType()== ActionType.SPAM) {
+            socketController.addRequest(
+                    new Packet(
+                            PacketType.REPORT_TWEET_REQ,
+                            Long.toString(e.getTweetID()),
+                            socketController.getAuthToken(),
+                            true));
+        }
+    }
+
+    public void handleRelationUserEvent(RelationUserEvent e){
+        if(e.getRelationType()== RelationType.REPORT) {
+            socketController.addRequest(
+                    new Packet(
+                            PacketType.REPORT_USER_REQ,
+                            Long.toString(e.getObjectID()),
+                            socketController.getAuthToken(),
+                            true));
+        }
+        else if(e.getRelationType()== RelationType.MUTE) {
+            socketController.addRequest(
+                    new Packet(
+                            PacketType.MUTE_USER_REQ,
+                            Long.toString(e.getObjectID()),
+                            socketController.getAuthToken(),
+                            true));
+        }
+        else if(e.getRelationType()== RelationType.BLOCK) {
+            socketController.addRequest(
+                    new Packet(
+                            PacketType.BLOCK_USER_REQ,
+                            Long.toString(e.getObjectID()),
+                            socketController.getAuthToken(),
+                            true));
+        }
+    }
+
+    public void handleNewTweetEvent(NewTweetEvent e){
+        String body = e.getTweetText() + ","
+                + e.getTweetDateTime() + ","
+                + e.getUserID() + ","
+                + e.getParentTweetID() + ","
+                + e.isRetweeted() + ","
+                + Base64.getEncoder().encodeToString(e.getTweetImage());
+        socketController.addRequest(
+                new Packet(
+                        PacketType.NEW_TWEET_REQ,
+                        body,
+                        socketController.getAuthToken(),
+                        true));
     }
 
     public void doClose(){

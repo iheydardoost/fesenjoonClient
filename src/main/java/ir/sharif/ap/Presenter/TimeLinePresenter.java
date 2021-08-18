@@ -7,7 +7,6 @@ import com.gluonhq.charm.glisten.control.BottomNavigationButton;
 import com.gluonhq.charm.glisten.mvc.View;
 import com.gluonhq.charm.glisten.visual.MaterialDesignIcon;
 import ir.sharif.ap.Main;
-import ir.sharif.ap.model.Tweet;
 import ir.sharif.ap.model.TweetTile;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -16,13 +15,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
-import javafx.scene.image.Image;
-import javafx.scene.input.ScrollEvent;
-
 
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDateTime;
 import java.util.Random;
 import java.util.ResourceBundle;
 

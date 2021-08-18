@@ -2,28 +2,22 @@ package ir.sharif.ap.Presenter;
 
 import com.gluonhq.charm.glisten.animation.FadeInLeftBigTransition;
 import com.gluonhq.charm.glisten.application.MobileApplication;
-import com.gluonhq.charm.glisten.control.*;
-
-//import com.gluonhq.charm.glisten.control.DatePicker;
-import com.gluonhq.charm.glisten.control.Dialog;
+import com.gluonhq.charm.glisten.control.AppBar;
+import com.gluonhq.charm.glisten.control.Snackbar;
 import com.gluonhq.charm.glisten.control.TextArea;
 import com.gluonhq.charm.glisten.control.TextField;
 import com.gluonhq.charm.glisten.layout.Layer;
 import com.gluonhq.charm.glisten.mvc.View;
 import com.gluonhq.charm.glisten.visual.MaterialDesignIcon;
 import com.gluonhq.charm.glisten.visual.Swatch;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.control.DatePicker;
 
 import java.net.URL;
-import java.util.Date;
 import java.util.ResourceBundle;
 
-import static ir.sharif.ap.Main.SETTING_VIEW;
 import static ir.sharif.ap.Main.TIMELINE_VIEW;
 
 public class LoginPresenter implements Initializable {
