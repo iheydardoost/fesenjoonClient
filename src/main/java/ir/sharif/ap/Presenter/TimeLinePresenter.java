@@ -7,6 +7,8 @@ import com.gluonhq.charm.glisten.control.BottomNavigationButton;
 import com.gluonhq.charm.glisten.mvc.View;
 import com.gluonhq.charm.glisten.visual.MaterialDesignIcon;
 import ir.sharif.ap.Main;
+import ir.sharif.ap.controller.MainController;
+import ir.sharif.ap.model.TweetListType;
 import ir.sharif.ap.model.TweetTile;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -18,6 +20,8 @@ import javafx.scene.control.ListView;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDateTime;
+import java.util.Base64;
 import java.util.Random;
 import java.util.ResourceBundle;
 
@@ -33,93 +37,82 @@ public class TimeLinePresenter extends GluonPresenter<Main> implements Initializ
     @FXML
     private ListView<TweetTile> timelineListView;
 
-    final static String tabName="TimeLine";
-    static EventTarget lastScrollEvent;
+    private ListTweetEventListener listTweetEventListener;
+    private final String TAB_NAME ="Timeline";
+
+
+    public void addListTweetEventListener(ListTweetEventListener listTweetEventListener) {
+        this.listTweetEventListener = listTweetEventListener;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        Label b = new Label("Hello Dear this is "+tabName+" PAge");
+        timelineListView.setCellFactory(p -> {
+            TweetListCell tweetListCell = new TweetListCell();
+            tweetListCell.addActionTweetEventListener(e -> Main.getMainController().handleActionTweetEvent(e));
+            tweetListCell.addNewTweetListener(e -> Main.getMainController().handleNewTweetEvent(e));
 
-//        timelineTab.setCenter(b);
+            return tweetListCell;
+        });
 
-        timelineListView.setCellFactory(p -> new TweetListCell());
         timelineListView.setPlaceholder(new Label("There are no Tweets"));
         timelineListView.setOnScroll(e -> {
-            int rnd = new Random().nextInt();
-            if(e.getDeltaY()<0)
-                System.out.println("You Reached THE End Baby"+ rnd );
+            if(e.getDeltaY()<0) {
+                LocalDateTime lastTweetTime = null;
+                if(timelineListView.getItems().size()>1){
+                    lastTweetTime = timelineListView.getItems().get(timelineListView.getItems().size()-1).getTweetDateTime();
+                }
+                ListTweetEvent event = new ListTweetEvent(
+                        MainController.MAX_TWEET_LIST_REQUEST_NUMBER,
+                        lastTweetTime,
+                        TweetListType.TIMELINE,
+                        0);
+                listTweetEventListener.listTweetEventOccurred(event);
+            }
         });
 
 
-        TweetTile testTweet = null, testTweet2= null, testTweet3= null, testTweet4= null, testTweet5= null;
-        try {
-            testTweet = new TweetTile("String 1", "Tweet1 Text", "2334",
-                    "12313", null,
-                    Main.class.getResourceAsStream("/ir/sharif/ap/images/Apple.jpg").readAllBytes(),
-                    Main.class.getResourceAsStream("/ir/sharif/ap/images/avatar.png").readAllBytes());
-            testTweet2 = new TweetTile("String 2", "Tweet2 Text", "2334",
-                    "12313", null,
-                    null,
-                    Main.class.getResourceAsStream("/ir/sharif/ap/images/avatar.png").readAllBytes());
-            testTweet3 = new TweetTile("String 3", "Tweet 3 Text", "2334",
-                    "12313", null,
-                    Main.class.getResourceAsStream("/ir/sharif/ap/images/Apple.jpg").readAllBytes(),
-                    Main.class.getResourceAsStream("/ir/sharif/ap/images/avatar.png").readAllBytes());
-            testTweet4 = new TweetTile("String 4", "Tweet 4 Text", "2334",
-                    "12313", null,
-                    null,
-                    Main.class.getResourceAsStream("/ir/sharif/ap/images/avatar.png").readAllBytes());
-            testTweet5 = new TweetTile("String tweetText", "Tweet 5 Text", "2334",
-                    "12313", null,
-                    Main.class.getResourceAsStream("/ir/sharif/ap/images/Apple.jpg").readAllBytes(),
-                    Main.class.getResourceAsStream("/ir/sharif/ap/images/avatar.png").readAllBytes());
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        timelineListView.getItems().clear();
-        for (int i = 0; i < 2; i++) {
-            timelineListView.getItems().add(testTweet);
-            timelineListView.getItems().add(testTweet2);
-            timelineListView.getItems().add(testTweet3);
-            timelineListView.getItems().add(testTweet4);
-            timelineListView.getItems().add(testTweet5);
-
-            timelineListView.getItems().add(testTweet);
-            timelineListView.getItems().add(testTweet2);
-            timelineListView.getItems().add(testTweet3);
-            timelineListView.getItems().add(testTweet4);
-            timelineListView.getItems().add(testTweet5);
-        }
-
         timelineTab.showingProperty().addListener((obs, ov, nv) -> {
             if (nv) {
+                if(Main.refreshTimeline()){
+                    Main.setRefreshTimeline(false);
+                    timelineListView.getItems().clear();
+                    ListTweetEvent event = new ListTweetEvent(
+                            MainController.MAX_TWEET_LIST_REQUEST_NUMBER,
+                            null,
+                            TweetListType.TIMELINE,
+                            0);
+                    listTweetEventListener.listTweetEventOccurred(event);
+                }
+
                 navigationTimeline.setSelected(true);
 
                 final AppBar appBar = MobileApplication.getInstance().getAppBar();
-                appBar.setTitleText(tabName);
-                appBar.getActionItems().addAll(
-                        MaterialDesignIcon.ARROW_BACK.button(e->MobileApplication.getInstance().switchToPreviousView()),
-                        MaterialDesignIcon.POWER_SETTINGS_NEW.button(e-> Platform.exit()));
-
+                appBar.setTitleText(TAB_NAME);
+                appBar.getActionItems().addAll(mainAppBar.getActionItems());
             }
         });
     }
 
-    public void onNavigationBarChange(ActionEvent e){
+    public void onTweetReceive(String response){
+        TweetTile tweet = Utility.createTweetFromResponse(response);
+        timelineListView.getItems().add(tweet);
+    }
 
+    public void onNavigationBarChange(ActionEvent e){
         if(e.getSource() == navigationTimeline){
+            Main.setRefreshTimeline(true);
             MobileApplication.getInstance().switchView(TIMELINE_VIEW);
         }else if(e.getSource() == navigationPrivate){
             MobileApplication.getInstance().switchView(PRIVATE_VIEW);
         }else if(e.getSource() == navigationExplore){
+            Main.setRefreshExplore(true);
             MobileApplication.getInstance().switchView(EXPLORE_VIEW);
         }else if(e.getSource() == navigationMessaging){
             MobileApplication.getInstance().switchView(MESSAGING_VIEW);
         }else if(e.getSource() == navigationSetting){
             MobileApplication.getInstance().switchView(SETTING_VIEW);
         }
-
     }
 
 

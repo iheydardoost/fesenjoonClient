@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!--<?import com.gluonhq.charm.glisten.control.DatePicker?>-->
+<?import javafx.scene.control.DatePicker?>
 
 <?import com.gluonhq.charm.glisten.control.*?>
 <?import com.gluonhq.charm.glisten.layout.Layer?>

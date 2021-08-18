@@ -3,19 +3,16 @@ package ir.sharif.ap.Presenter;
 import com.gluonhq.charm.glisten.application.MobileApplication;
 import com.gluonhq.charm.glisten.control.AppBar;
 import com.gluonhq.charm.glisten.mvc.View;
-import ir.sharif.ap.model.RelationTile;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
-import javafx.scene.control.ListView;
 
 import java.net.URL;
 import java.util.ResourceBundle;
 
 import static ir.sharif.ap.Main.mainAppBar;
 
-public class SamplePresenter implements Initializable {
-
+public class NotificationsPresenter implements Initializable {
+    
     @FXML
     private View tab;
 

@@ -2,15 +2,12 @@ package ir.sharif.ap.Presenter;
 
 import com.gluonhq.charm.glisten.application.MobileApplication;
 import com.gluonhq.charm.glisten.control.AppBar;
-import com.gluonhq.charm.glisten.control.Snackbar;
 import com.gluonhq.charm.glisten.mvc.View;
-import com.gluonhq.charm.glisten.visual.MaterialDesignIcon;
-import ir.sharif.ap.Main;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
+import javafx.scene.control.DatePicker;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
@@ -20,58 +17,47 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.ResourceBundle;
 
 import static ir.sharif.ap.Main.mainAppBar;
 
-public class NewTweetPresenter implements Initializable {
+public class EditUserInfoPresenter implements Initializable {
+    
     @FXML
-    private View newTweetTab;
+    private View editUserInfoTab;
 
     @FXML
-    private TextArea tweetTxt;
-
-    @FXML
-    private TextField tweetImagePath;
+    private TextField userImagePath;
 
     @FXML
     private Button addImageButton;
 
     @FXML
-    private Button cancelButton;
+    private TextArea bioText;
 
     @FXML
-    private Button tweetButton;
+    private DatePicker dateOfBirthText;
 
-    private long parentTweetID;
+    @FXML
+    private TextField firstnameText;
 
-    private byte[] tweetImage;
+    @FXML
+    private TextField lastnameText;
 
-    private NewTweetListener newTweetListener;
-    private Snackbar snackbar;
+    @FXML
+    private TextField phoneNumberText;
 
-    public void addNewTweetListener(NewTweetListener newTweetListener) {
-        this.newTweetListener = newTweetListener;
-    }
+    @FXML
+    private Button applyButton;
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        snackbar = new Snackbar("");
-        parentTweetID = -1;
-        newTweetTab.showingProperty().addListener((obs, ov, nv) -> {
-            if (nv) {
-                final AppBar appBar = MobileApplication.getInstance().getAppBar();
-                appBar.setTitleText("New Tweet");
-                appBar.getActionItems().addAll(mainAppBar.getActionItems());
-            }
-        });
-    }
-
-    public void setParentTweetID(long parentTweetID) {
-        this.parentTweetID = parentTweetID;
-    }
+    @FXML
+    private Button cancelButton;
+    private byte[] userImage, lastUserImage;
+    private String lastFirstnameStr, lastLastnameStr, lastPhoneNumberStr, lastBioStr;
+    LocalDate lastDateOfBirth;
 
     @FXML
     void onAddImageClick(ActionEvent event) {
@@ -81,14 +67,14 @@ public class NewTweetPresenter implements Initializable {
         if(file == null){
             return;
         }
-        tweetImagePath.setText(file.toPath().toString());
+        userImagePath.setText(file.toPath().toString());
 
         FileInputStream fin = null;
         try {
             fin = new FileInputStream(file);
             byte fileContent[] = new byte[(int)file.length()];
             fin.read(fileContent);
-            tweetImage = Arrays.copyOf(fileContent,fileContent.length);
+            userImage = Arrays.copyOf(fileContent,fileContent.length);
 
             //fileContent has data inside
         }
@@ -124,30 +110,59 @@ public class NewTweetPresenter implements Initializable {
     }
 
     @FXML
+    void onApplyButtonClick(ActionEvent event) {
+        if (!phoneNumberText.getText().equals(lastPhoneNumberStr)) {
+
+        }
+        if (!bioText.getText().equals(lastBioStr)) {
+
+        }
+        if (lastDateOfBirth.compareTo(dateOfBirthText.getValue()) != 0) {
+
+        }
+        if (!firstnameText.getText().equals(lastFirstnameStr)) {
+
+        }
+        if (!lastnameText.getText().equals(lastLastnameStr)) {
+
+        }
+        if (!Arrays.equals(lastUserImage, userImage)) {
+
+        }
+    }
+
+    @FXML
     void onCancelButtonClick(ActionEvent event) {
         MobileApplication.getInstance().switchToPreviousView();
     }
 
-    @FXML
-    void onTweetButtonClick(ActionEvent event) {
-        NewTweetEvent e =
-                new NewTweetEvent(
-                        tweetTxt.getText(),
-                        LocalDateTime.now(),
-                        Main.getUserID(),
-                        parentTweetID,
-                        false,
-                        tweetImage
-                );
-        newTweetListener.newTweetEventOccurred(e);
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        editUserInfoTab.showingProperty().addListener((obs, ov, nv) -> {
+            if (nv) {
+                final AppBar appBar = MobileApplication.getInstance().getAppBar();
+                appBar.setTitleText("Edit User Info");
+                appBar.getActionItems().addAll(mainAppBar.getActionItems());
+            }
+        });
     }
 
-    public void onNewTweetResultRecive(String result){
-        String args[] = result.split(",", -1);
-        snackbar.setMessage(args[0]);
-        snackbar.show();
-        if(args[0].equals("success")){
-            MobileApplication.getInstance().switchToPreviousView();
-        }
+    public void onUserInfoReceive() {
+        lastBioStr = "";
+        lastDateOfBirth = LocalDate.parse("");
+        lastFirstnameStr = "";
+        lastLastnameStr = "";
+        lastUserImage = null;
+        lastPhoneNumberStr = "";
+
+        phoneNumberText.setText(lastPhoneNumberStr);
+        bioText.setText(lastBioStr);
+        dateOfBirthText.setValue(lastDateOfBirth);
+        firstnameText.setText(lastFirstnameStr);
+        lastnameText.setText(lastLastnameStr);
+        Arrays.equals(lastUserImage, userImage);
+
+
     }
+
 }

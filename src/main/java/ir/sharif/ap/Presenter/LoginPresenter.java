@@ -1,11 +1,11 @@
 package ir.sharif.ap.Presenter;
-
-import com.gluonhq.charm.glisten.animation.FadeInLeftBigTransition;
-import com.gluonhq.charm.glisten.application.MobileApplication;
-import com.gluonhq.charm.glisten.control.AppBar;
-import com.gluonhq.charm.glisten.control.Snackbar;
+import com.gluonhq.charm.glisten.application.ViewStackPolicy;
+import com.gluonhq.charm.glisten.control.*;
 import com.gluonhq.charm.glisten.control.TextArea;
 import com.gluonhq.charm.glisten.control.TextField;
+import javafx.scene.control.DatePicker;
+import com.gluonhq.charm.glisten.animation.FadeInLeftBigTransition;
+import com.gluonhq.charm.glisten.application.MobileApplication;
 import com.gluonhq.charm.glisten.layout.Layer;
 import com.gluonhq.charm.glisten.mvc.View;
 import com.gluonhq.charm.glisten.visual.MaterialDesignIcon;
@@ -18,6 +18,8 @@ import javafx.scene.control.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+
+import static ir.sharif.ap.Main.PRIVATE_VIEW;
 import static ir.sharif.ap.Main.TIMELINE_VIEW;
 
 public class LoginPresenter implements Initializable {
@@ -115,7 +117,7 @@ public class LoginPresenter implements Initializable {
         snackbar.setMessage(responseArray[1]);
         snackbar.show();
         if(responseArray[0].equals("success")){
-            MobileApplication.getInstance().switchView(TIMELINE_VIEW);
+            MobileApplication.getInstance().switchView(PRIVATE_VIEW, ViewStackPolicy.SKIP);
         }
     }
 
@@ -124,7 +126,7 @@ public class LoginPresenter implements Initializable {
         snackbar.setMessage(responseArray[1]);
         snackbar.show();
         if(responseArray[0].equals("success")){
-            MobileApplication.getInstance().switchView(TIMELINE_VIEW);
+            MobileApplication.getInstance().switchView(PRIVATE_VIEW, ViewStackPolicy.SKIP);
         }
     }
 

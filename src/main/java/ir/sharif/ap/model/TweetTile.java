@@ -31,7 +31,7 @@ public class TweetTile {
         this.retweeted = false;
     }
 
-    public TweetTile copyTweetTile(TweetTile tweet) {
+    public static TweetTile copyTweetTile(TweetTile tweet) {
         TweetTile newTweetTile = new TweetTile();
         newTweetTile.setTweetText(String.copyValueOf(tweet.getTweetText().toCharArray()))
                 .setUserName(String.copyValueOf(tweet.getUserName().toCharArray()))
@@ -43,11 +43,16 @@ public class TweetTile {
                 .setUserID(tweet.getUserID())
                 .setParentTweetID(tweet.getParentTweetID())
                 .setTweetDateTime(LocalDateTime.from(tweet.getTweetDateTime()))
-                .setTweetImage(Arrays.copyOf(tweet.getTweetImage(),tweet.getTweetImage().length))
-                .setUserImage(Arrays.copyOf(tweet.getUserImage(),tweet.getUserImage().length))
                 .setMainTweet(tweet.isMainTweet())
                 .setYouLiked(tweet.isYouLiked())
                 .setRetweeted(tweet.isRetweeted());
+
+        if(tweet.getTweetImage()!= null){
+            newTweetTile.setTweetImage(Arrays.copyOf(tweet.getTweetImage(),tweet.getTweetImage().length));
+        }
+        if(tweet.getUserImage()!= null) {
+            newTweetTile.setUserImage(Arrays.copyOf(tweet.getUserImage(),tweet.getUserImage().length));
+        }
         return newTweetTile;
     }
 

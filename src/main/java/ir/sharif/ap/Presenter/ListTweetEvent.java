@@ -1,24 +1,22 @@
 package ir.sharif.ap.Presenter;
 
+import ir.sharif.ap.model.TweetListType;
+
 import java.time.LocalDateTime;
 
 public class ListTweetEvent {
-    private boolean isTimeline;
+
     private int maxNum;
     private LocalDateTime lastTweetDateTime;
+    private TweetListType tweetListType;
+    private long parentTweetID;
 
-    public ListTweetEvent(boolean isTimeline, int maxNum, LocalDateTime lastTweetDateTime) {
-        this.isTimeline = isTimeline;
+    public ListTweetEvent(int maxNum, LocalDateTime lastTweetDateTime, TweetListType tweetListType,
+                          long parentTweetID) {
         this.maxNum = maxNum;
         this.lastTweetDateTime = lastTweetDateTime;
-    }
-
-    public boolean isTimeline() {
-        return isTimeline;
-    }
-
-    public void setTimeline(boolean timeline) {
-        isTimeline = timeline;
+        this.tweetListType = tweetListType;
+        this.parentTweetID=parentTweetID;
     }
 
     public int getMaxNum() {
@@ -36,4 +34,21 @@ public class ListTweetEvent {
     public void setLastTweetDateTime(LocalDateTime lastTweetDateTime) {
         this.lastTweetDateTime = lastTweetDateTime;
     }
+
+    public TweetListType getTweetListType() {
+        return tweetListType;
+    }
+
+    public void setTweetListType(TweetListType tweetListType) {
+        this.tweetListType = tweetListType;
+    }
+
+    public long getParentTweetID() {
+        return parentTweetID;
+    }
+
+    public void setParentTweetID(long parentTweetID) {
+        this.parentTweetID = parentTweetID;
+    }
 }
+

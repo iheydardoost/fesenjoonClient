@@ -6,6 +6,8 @@ import com.gluonhq.charm.glisten.mvc.View;
 import com.gluonhq.charm.glisten.visual.MaterialDesignIcon;
 import ir.sharif.ap.Main;
 import ir.sharif.ap.View.TweetDetailView;
+import ir.sharif.ap.controller.LogHandler;
+import ir.sharif.ap.model.ActionType;
 import ir.sharif.ap.model.TweetTile;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -20,6 +22,7 @@ import javafx.scene.text.Text;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
 import static ir.sharif.ap.Main.NEW_TWEET_VIEW;
@@ -51,7 +54,16 @@ public class TweetTilePresenter implements Initializable {
     private Label likesNum, commentsNum;
     private TweetTile tweet;
 
+    private ActionTweetEventListener actionTweetEventListener;
+    private NewTweetListener newTweetListener;
 
+    public void addNewTweetListener(NewTweetListener newTweetListener) {
+        this.newTweetListener = newTweetListener;
+    }
+
+    public void addActionTweetEventListener(ActionTweetEventListener actionTweetEventListener) {
+        this.actionTweetEventListener = actionTweetEventListener;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -59,14 +71,44 @@ public class TweetTilePresenter implements Initializable {
         tweetImage.setManaged(false);
         tweetImage.setVisible(false);
 
-        retweetButton = MaterialDesignIcon.REPEAT.button(e -> System.out.println("retweet"));
-        likeButton = MaterialDesignIcon.FAVORITE.button(e -> System.out.println("likeButton"));
+        retweetButton = MaterialDesignIcon.REPEAT.button(e -> {
+            LogHandler.logger.info("retweet button pressed");
+            NewTweetEvent event =
+                    new NewTweetEvent(
+                      tweet.getTweetText(),
+                            LocalDateTime.now(),
+                      tweet.getUserID(),
+                      0,
+                      true,
+                      tweet.getTweetImage()
+                    );
+            newTweetListener.newTweetEventOccurred(event);
+        });
+        likeButton = MaterialDesignIcon.FAVORITE.button(e -> {
+            LogHandler.logger.info("tweet like button pressed");
+            ActionTweetEvent event =
+                    new ActionTweetEvent(ActionType.LIKE,tweet.getTweetID());
+            actionTweetEventListener.actionTweetEventOccurred(event);
+
+            if(tweet.isYouLiked()){
+                tweet.setLikesNum(tweet.getLikesNum()-1);
+            }else {
+                tweet.setLikesNum(tweet.getLikesNum()+1);
+            }
+            tweet.setYouLiked(!tweet.isYouLiked());
+            setLikeIcon(tweet.isYouLiked());
+            setLikesNum(String.valueOf(tweet.getLikesNum()));
+        });
         commentButton = MaterialDesignIcon.MESSAGE.button(e -> {
-                    System.out.println("hi");
+                    LogHandler.logger.info("comment button pressed");
                     MobileApplication.getInstance().switchView(NEW_TWEET_VIEW);
+                    Main.getNewTweetPresenter().setParentTweetID(tweet.getTweetID());;
+
                 }
         );
         tweetDetailButton = MaterialDesignIcon.MORE_HORIZ.button(e -> {
+            LogHandler.logger.info("more button pressed");
+
             if(tweet.isMainTweet()){//user is in tweet detail form and had pressed detail on main tweet, no need to create another detail form
                 return;
             }
@@ -75,7 +117,13 @@ public class TweetTilePresenter implements Initializable {
             MobileApplication.getInstance().addViewFactory(newViewLayer,() -> {
                 final TweetDetailView tweetDetailView = new TweetDetailView();
                 TweetDetailPresenter tweetDetailPresenter=(TweetDetailPresenter) tweetDetailView.getPresenter();
-                tweetDetailPresenter.setMainTweet(new TweetTile(tweet));
+                //tweetDetailPresenter.setMainTweet(TweetTile.copyTweetTile(tweet));
+                tweetDetailPresenter.setParentTweetID(tweet.getTweetID());
+                tweetDetailPresenter.addRelationUserEventListener(e1 -> Main.getMainController().handleRelationUserEvent(e1));
+                tweetDetailPresenter.addActionTweetEventListener(e1 -> Main.getMainController().handleActionTweetEvent(e1));
+                tweetDetailPresenter.addGetNewTweetEventListener(e1 -> Main.getMainController().handleGetTweetEvent(e1));
+                tweetDetailPresenter.addListTweetEventListener(e1 -> Main.getMainController().handleListTweetEvent(e1));
+
                 return (View) tweetDetailView.getView();
             });
 
@@ -100,7 +148,7 @@ public class TweetTilePresenter implements Initializable {
         }
     }
 
-    public void setTweetUsername(String tweetUsername) {
+    public void setTweetFullname(String tweetUsername) {
         this.tweetUsername.setText(tweetUsername);
     }
 
@@ -145,9 +193,9 @@ public class TweetTilePresenter implements Initializable {
         this.tweet = tweet;
 
         setTweetText(tweet.getTweetText());
-        setTweetUsername(tweet.getTweetUsername());
-        setCommentsNum(tweet.getCommentsNum());
-        setLikesNum(tweet.getLikesNum());
+        setTweetFullname(tweet.getFirstName() + " " + tweet.getLastName());
+        setCommentsNum(Integer.toString(tweet.getCommentsNum()));
+        setLikesNum(Integer.toString(tweet.getLikesNum()));
         byte[] userImageData = tweet.getUserImage(), tweetImageDate = tweet.getTweetImage();
         Image userImage = null, tweetImage = null;
 
@@ -176,6 +224,6 @@ public class TweetTilePresenter implements Initializable {
         setTweetAvatar(userImage);
         setTweetImage(tweetImage);
         setDarkBackgroundStyle(tweet.isMainTweet());
-        setLikeIcon(true);
+        setLikeIcon(tweet.isYouLiked());
     }
 }

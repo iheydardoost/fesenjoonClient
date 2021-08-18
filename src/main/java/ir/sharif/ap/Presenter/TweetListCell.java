@@ -11,6 +11,13 @@ public class TweetListCell extends ListCell<TweetTile> {
     private final TweetTilePresenter tweetTilePresenter = (TweetTilePresenter)tweetTileView.getPresenter();;
     private TweetTile tweet;
 
+    public void addNewTweetListener(NewTweetListener newTweetListener) {
+        tweetTilePresenter.addNewTweetListener(newTweetListener);
+    }
+
+    public void addActionTweetEventListener(ActionTweetEventListener actionTweetEventListener) {
+        tweetTilePresenter.addActionTweetEventListener(actionTweetEventListener);
+    }
 
     @Override
     protected void updateItem(TweetTile item, boolean empty) {

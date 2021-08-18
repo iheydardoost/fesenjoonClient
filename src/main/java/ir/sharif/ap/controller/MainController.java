@@ -1,16 +1,19 @@
 package ir.sharif.ap.controller;
 
+import com.gluonhq.charm.glisten.application.MobileApplication;
 import ir.sharif.ap.Main;
 import ir.sharif.ap.Presenter.*;
 import ir.sharif.ap.model.*;
 import javafx.application.Platform;
 
+import java.time.LocalDateTime;
 import java.util.Base64;
 
 public class MainController implements Runnable{
     private LoopHandler loopHandler;
     private SocketController socketController;
     private ConfigLoader configLoader;
+    public static final int MAX_TWEET_LIST_REQUEST_NUMBER = 10;
 
     public MainController() {
         this.socketController = new SocketController();
@@ -38,27 +41,32 @@ public class MainController implements Runnable{
                 Platform.runLater(() -> Main.getSettingPresenter().onUserDeleteResponse(response.getBody()));
                 break;
             case LOG_OUT_RES:
-                Platform.runLater(() -> Main.getSettingPresenter().onLogoutResponse(response.getBody()));
+//                Platform.runLater(() -> Main.getSettingPresenter().onLogoutResponse(response.getBody()));
+                Platform.runLater(() -> Main.onLogoutResponse(response.getBody()));
                 break;
             case SETTING_INFO_RES:
                 Platform.runLater(() -> Main.getSettingPresenter().onSettingInfoReceive(response.getBody()));
                 break;
             case TIMELINE_TWEET_RES:
+                Platform.runLater(() -> Main.getTimeLinePresenter().onTweetReceive(response.getBody()));
                 break;
             case EXPLORER_TWEET_RES:
+                Platform.runLater(() -> Main.getExplorePresenter().onTweetReceive(response.getBody()));
                 break;
             case NEW_TWEET_RES:
+                Platform.runLater(() -> Main.getNewTweetPresenter().onNewTweetResultRecive(response.getBody()));
+
                 break;
-            case REPORT_TWEET_RES:
-                break;
-            case LIKE_TWEET_RES:
-                break;
-            case REPORT_USER_RES:
-                break;
-            case MUTE_USER_RES:
-                break;
-            case BLOCK_USER_RES:
-                break;
+//            case REPORT_TWEET_RES:
+//                break;
+//            case LIKE_TWEET_RES:
+//                break;
+//            case REPORT_USER_RES:
+//                break;
+//            case MUTE_USER_RES:
+//                break;
+//            case BLOCK_USER_RES:
+//                break;
             default:
                 break;
         }
@@ -147,23 +155,36 @@ public class MainController implements Runnable{
         }
     }
 
+
+    public void handleGetTweetEvent(long tweetID){
+
+    }
     public void handleListTweetEvent(ListTweetEvent e){
-        if(e.isTimeline()) {
+        LocalDateTime lastTweetDateTime = e.getLastTweetDateTime();
+        String dateTimeStr = "";
+        if(lastTweetDateTime!=null)
+            dateTimeStr = lastTweetDateTime.toString();
+        if(e.getTweetListType()==TweetListType.TIMELINE) {
             socketController.addRequest(
                     new Packet(
                             PacketType.TIMELINE_TWEET_REQ,
-                            e.getMaxNum() + "," + e.getLastTweetDateTime(),
+                            e.getMaxNum() + "," + dateTimeStr,
                             socketController.getAuthToken(),
                             true));
         }
-        else {
+        else if(e.getTweetListType()==TweetListType.EXPLORE){
             socketController.addRequest(
                     new Packet(
                             PacketType.EXPLORER_TWEET_REQ,
-                            e.getMaxNum() + "," + e.getLastTweetDateTime(),
+                            e.getMaxNum() + "," + dateTimeStr,
                             socketController.getAuthToken(),
                             true));
+        }else if(e.getTweetListType()==TweetListType.COMMENT){
+
+        }else if(e.getTweetListType()==TweetListType.MY_TWEETS){
+
         }
+
     }
 
     public void handleActionTweetEvent(ActionTweetEvent e){
@@ -213,12 +234,16 @@ public class MainController implements Runnable{
     }
 
     public void handleNewTweetEvent(NewTweetEvent e){
+        String imageStr = "";
+        byte[] tweetImage = e.getTweetImage();
+        if(tweetImage!=null)
+            imageStr = Base64.getEncoder().encodeToString(e.getTweetImage());
         String body = e.getTweetText() + ","
                 + e.getTweetDateTime() + ","
                 + e.getUserID() + ","
                 + e.getParentTweetID() + ","
                 + e.isRetweeted() + ","
-                + Base64.getEncoder().encodeToString(e.getTweetImage());
+                + imageStr;
         socketController.addRequest(
                 new Packet(
                         PacketType.NEW_TWEET_REQ,
