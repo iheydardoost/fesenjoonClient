@@ -20,6 +20,7 @@ import java.time.LocalDateTime;
 import java.util.Random;
 import java.util.ResourceBundle;
 
+import static ir.sharif.ap.Main.USERINFO_VIEW;
 import static ir.sharif.ap.Main.mainAppBar;
 
 public class TweetDetailPresenter implements Initializable {
@@ -135,6 +136,7 @@ public class TweetDetailPresenter implements Initializable {
 
     @FXML
     void onVisitClick(ActionEvent event) {
+        MobileApplication.getInstance().switchView(USERINFO_VIEW);
 
     }
 

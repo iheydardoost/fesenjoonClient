@@ -1,5 +1,6 @@
 C:\Users\iman heydardoost\Desktop\fesenjoonDownloads\fesenjoonclient\src\main\java\ir\sharif\ap\Presenter\TimeLinePresenter.java
 C:\Users\iman heydardoost\Desktop\fesenjoonDownloads\fesenjoonclient\src\main\java\ir\sharif\ap\model\config\ConfigPaths.java
+C:\Users\iman heydardoost\Desktop\fesenjoonDownloads\fesenjoonclient\src\main\java\ir\sharif\ap\Presenter\UserInfoPresenter.java
 C:\Users\iman heydardoost\Desktop\fesenjoonDownloads\fesenjoonclient\src\main\java\ir\sharif\ap\model\config\ClientSocketConfig.java
 C:\Users\iman heydardoost\Desktop\fesenjoonDownloads\fesenjoonclient\src\main\java\ir\sharif\ap\Presenter\UserDeleteListener.java
 C:\Users\iman heydardoost\Desktop\fesenjoonDownloads\fesenjoonclient\src\main\java\ir\sharif\ap\View\TimeLineView.java
@@ -25,6 +26,7 @@ C:\Users\iman heydardoost\Desktop\fesenjoonDownloads\fesenjoonclient\src\main\ja
 C:\Users\iman heydardoost\Desktop\fesenjoonDownloads\fesenjoonclient\src\main\java\ir\sharif\ap\Presenter\SamplePresenter.java
 C:\Users\iman heydardoost\Desktop\fesenjoonDownloads\fesenjoonclient\src\main\java\ir\sharif\ap\controller\ConfigLoader.java
 C:\Users\iman heydardoost\Desktop\fesenjoonDownloads\fesenjoonclient\src\main\java\ir\sharif\ap\controller\PacketHandler.java
+C:\Users\iman heydardoost\Desktop\fesenjoonDownloads\fesenjoonclient\src\main\java\ir\sharif\ap\View\UserInfoView.java
 C:\Users\iman heydardoost\Desktop\fesenjoonDownloads\fesenjoonclient\src\main\java\ir\sharif\ap\model\MessageStatus.java
 C:\Users\iman heydardoost\Desktop\fesenjoonDownloads\fesenjoonclient\src\main\java\ir\sharif\ap\controller\JsonHandler.java
 C:\Users\iman heydardoost\Desktop\fesenjoonDownloads\fesenjoonclient\src\main\java\ir\sharif\ap\View\ExploreView.java
@@ -48,6 +50,7 @@ C:\Users\iman heydardoost\Desktop\fesenjoonDownloads\fesenjoonclient\src\main\ja
 C:\Users\iman heydardoost\Desktop\fesenjoonDownloads\fesenjoonclient\src\main\java\ir\sharif\ap\Presenter\Styles.java
 C:\Users\iman heydardoost\Desktop\fesenjoonDownloads\fesenjoonclient\src\main\java\ir\sharif\ap\model\TweetListType.java
 C:\Users\iman heydardoost\Desktop\fesenjoonDownloads\fesenjoonclient\src\main\java\ir\sharif\ap\Presenter\RelationUserEventListener.java
+C:\Users\iman heydardoost\Desktop\fesenjoonDownloads\fesenjoonclient\src\main\java\ir\sharif\ap\model\RelationListType.java
 C:\Users\iman heydardoost\Desktop\fesenjoonDownloads\fesenjoonclient\src\main\java\ir\sharif\ap\Presenter\LogoutListener.java
 C:\Users\iman heydardoost\Desktop\fesenjoonDownloads\fesenjoonclient\src\main\java\ir\sharif\ap\Presenter\TweetListCell.java
 C:\Users\iman heydardoost\Desktop\fesenjoonDownloads\fesenjoonclient\src\main\java\ir\sharif\ap\View\MessagingView.java

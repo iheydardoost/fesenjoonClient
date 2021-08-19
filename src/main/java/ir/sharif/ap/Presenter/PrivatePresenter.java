@@ -7,6 +7,8 @@ import com.gluonhq.charm.glisten.control.FloatingActionButton;
 import com.gluonhq.charm.glisten.mvc.View;
 import com.gluonhq.charm.glisten.visual.MaterialDesignIcon;
 import ir.sharif.ap.Main;
+import ir.sharif.ap.model.RelationListType;
+import ir.sharif.ap.model.RelationType;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -81,7 +83,9 @@ public class PrivatePresenter implements Initializable {
 
     @FXML
     void onBlockListClick(ActionEvent event) {
-
+        MobileApplication.getInstance().switchView(RELATION_LIST_VIEW);
+        Main.getRelationListPresenter().setRelationType(RelationListType.BLACKLIST);
+        Main.getRelationListPresenter().update();
     }
 
     @FXML
@@ -91,12 +95,16 @@ public class PrivatePresenter implements Initializable {
 
     @FXML
     void onFollowersClick(ActionEvent event) {
-
+        MobileApplication.getInstance().switchView(RELATION_LIST_VIEW);
+        Main.getRelationListPresenter().setRelationType(RelationListType.FOLLOWER_LIST);
+        Main.getRelationListPresenter().update();
     }
 
     @FXML
     void onFollowingsClick(ActionEvent event) {
-
+        MobileApplication.getInstance().switchView(RELATION_LIST_VIEW);
+        Main.getRelationListPresenter().setRelationType(RelationListType.FOLLOWING_LIST);
+        Main.getRelationListPresenter().update();
     }
 
     @FXML

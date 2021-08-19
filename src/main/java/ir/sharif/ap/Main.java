@@ -32,6 +32,7 @@ public class Main extends MobileApplication {
     public final static String RELATION_LIST_VIEW="RelationListView";
     public final static String MY_INFO_VIEW="MyInfoView";
     public final static String NOTIFICATIONS_VIEW="NotificationsView";
+    public final static String USERINFO_VIEW="UserInfoView";
 
     private static int lastViewIndex= 0;
     private static LogoutListener logoutListener = new LogoutListener() {
@@ -55,6 +56,7 @@ public class Main extends MobileApplication {
     private static RelationListPresenter relationListPresenter;
     private static MyInfoPresenter myInfoPresenter;
     private static NotificationsPresenter notificationsPresenter;
+    private static UserInfoPresenter userInfoPresenter;
 
     public static AppBar mainAppBar;
 
@@ -143,12 +145,19 @@ public class Main extends MobileApplication {
            notificationsPresenter = (NotificationsPresenter) notificationsView.getPresenter();
            return (View) notificationsView.getView();
        });
+
         addViewFactory(EXPLORE_VIEW, () -> {
             final ExploreView exploreView = new ExploreView();
             explorePresenter = (ExplorePresenter) exploreView.getPresenter();
             explorePresenter.addListTweetEventListener(e -> mainController.handleListTweetEvent(e));
             return (View) exploreView.getView();
         });
+        addViewFactory(USERINFO_VIEW, () -> {
+            final UserInfoView userInfoView = new UserInfoView();
+            userInfoPresenter = (UserInfoPresenter) userInfoView.getPresenter();
+            return (View) userInfoView.getView();
+        });
+
         addViewFactory(MESSAGING_VIEW, () -> {
             final MessagingView messagingView = new MessagingView();
             return (View) messagingView.getView();
@@ -234,6 +243,7 @@ public class Main extends MobileApplication {
         lastViewIndex++;
         return "ViewNumber" + String.valueOf(lastViewIndex);
     }
+
     public static long getUserID(){
         return 1;
     }
@@ -281,5 +291,9 @@ public class Main extends MobileApplication {
 
     public static PrivatePresenter getPrivatePresenter() {
         return privatePresenter;
+    }
+
+    public static UserInfoPresenter getUserInfoPresenter() {
+        return userInfoPresenter;
     }
 }

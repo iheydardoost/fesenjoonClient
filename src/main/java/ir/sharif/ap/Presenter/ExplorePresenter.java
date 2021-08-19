@@ -3,6 +3,7 @@ package ir.sharif.ap.Presenter;
 import com.gluonhq.charm.glisten.application.MobileApplication;
 import com.gluonhq.charm.glisten.control.AppBar;
 import com.gluonhq.charm.glisten.control.BottomNavigationButton;
+import com.gluonhq.charm.glisten.control.Snackbar;
 import com.gluonhq.charm.glisten.mvc.View;
 import com.gluonhq.charm.glisten.visual.MaterialDesignIcon;
 import ir.sharif.ap.Main;
@@ -43,6 +44,8 @@ public class ExplorePresenter implements Initializable {
 
     @FXML
     private ListView<TweetTile> exploreList;
+    private Snackbar snackbar;
+
 
     private final String TAB_NAME ="Explore";
     private ListTweetEventListener listTweetEventListener;
@@ -52,7 +55,11 @@ public class ExplorePresenter implements Initializable {
     }
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        searchButton = MaterialDesignIcon.SEARCH.button(e -> System.out.println("retweet"));
+        snackbar = new Snackbar("");
+        searchButton = MaterialDesignIcon.SEARCH.button(e -> {
+
+            onSearchResultReceive("");
+        });
         searchButton.setStyle(defaultButtonStyle);
         searchBar.getChildren().add(searchButton);
 
@@ -102,6 +109,7 @@ public class ExplorePresenter implements Initializable {
                 final AppBar appBar = MobileApplication.getInstance().getAppBar();
                 appBar.setTitleText(TAB_NAME);
                 appBar.getActionItems().addAll(mainAppBar.getActionItems());
+                searchText.setText("");
             }
         });
     }
@@ -122,6 +130,17 @@ public class ExplorePresenter implements Initializable {
             MobileApplication.getInstance().switchView(MESSAGING_VIEW);
         }else if(e.getSource() == navigationSetting){
             MobileApplication.getInstance().switchView(SETTING_VIEW);
+        }
+    }
+
+    public void onSearchResultReceive(String searchResult){
+        if(false){
+            snackbar.setMessage("User not found");
+            snackbar.show();
+        }else{
+            MobileApplication.getInstance().switchView(USERINFO_VIEW);
+            Main.getUserInfoPresenter().setUserID(1);
+            Main.getUserInfoPresenter().update();
         }
     }
 

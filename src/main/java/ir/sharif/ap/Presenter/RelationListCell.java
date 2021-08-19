@@ -3,7 +3,10 @@ package ir.sharif.ap.Presenter;
 import com.gluonhq.charm.glisten.control.Avatar;
 import com.gluonhq.charm.glisten.control.ListTile;
 import com.gluonhq.charm.glisten.visual.MaterialDesignIcon;
+import ir.sharif.ap.Main;
+import ir.sharif.ap.model.RelationListType;
 import ir.sharif.ap.model.RelationTile;
+import ir.sharif.ap.model.RelationType;
 import ir.sharif.ap.model.TweetTile;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
@@ -13,18 +16,28 @@ import javafx.scene.layout.VBox;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
+import static ir.sharif.ap.Presenter.Styles.defaultButtonStyle;
+
 public class RelationListCell extends ListCell<RelationTile> {
 
     private final ListTile tile = new ListTile();
     private RelationTile relationTile;
     private Avatar avatar;
+    private Button unlockButton;
 
     {
         avatar = new Avatar();
         final Button button = MaterialDesignIcon.DELETE.button();
-        tile.setSecondaryGraphic(new VBox(button));
+
         tile.setPrimaryGraphic(avatar);
 
+        unlockButton = MaterialDesignIcon.LOCK_OPEN.button(e->{
+            listViewProperty().get().getItems().remove(relationTile);
+
+            System.out.println("You Unlocked Him");
+        });
+        unlockButton.setStyle(defaultButtonStyle);
+        tile.setSecondaryGraphic(new VBox(unlockButton));
     }
 
     @Override
@@ -32,7 +45,7 @@ public class RelationListCell extends ListCell<RelationTile> {
         super.updateItem(item, empty);
         relationTile = item;
         if (!empty && item != null) {
-            tile.textProperty().setAll(item.getUserFullName());
+            tile.textProperty().setAll(item.getUserFullName(), item.getUsername());
             if(item.getUserImage()!=null){
                 ByteArrayInputStream bis = new ByteArrayInputStream(item.getUserImage());
                 avatar.setImage( new Image(bis));
@@ -41,7 +54,18 @@ public class RelationListCell extends ListCell<RelationTile> {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            }else{
+                avatar.setImage( new Image(Main.class.getResourceAsStream("/ir/sharif/ap/images/avatar.png")));
             }
+
+            if(relationTile.getRelationType() == RelationListType.BLACKLIST){
+                unlockButton.setManaged(true);
+                unlockButton.setVisible(true);
+            }else{
+                unlockButton.setManaged(false);
+                unlockButton.setVisible(false);
+            }
+
             setGraphic(tile);
         } else {
             setGraphic(null);

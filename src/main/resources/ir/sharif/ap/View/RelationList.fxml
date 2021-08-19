@@ -5,8 +5,22 @@
 <?import javafx.scene.layout.BorderPane?>
 
 
-<View prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ir.sharif.ap.Presenter.RelationListPresenter">
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextField?>
+<View fx:id="relationListTab" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ir.sharif.ap.Presenter.RelationListPresenter">
    <center>
       <ListView fx:id="relationListView" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
    </center>
+   <top>
+
+      <HBox fx:id="searchBar" alignment="CENTER" BorderPane.alignment="CENTER">
+         <children>
+            <Label text="Search" />
+            <TextField fx:id="searchText" prefHeight="26.0" prefWidth="298.0" />
+         </children>
+      </HBox>
+
+   </top>
+
 </View>

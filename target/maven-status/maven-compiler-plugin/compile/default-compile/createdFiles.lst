@@ -22,9 +22,11 @@ ir\sharif\ap\Presenter\SamplePresenter.class
 ir\sharif\ap\Presenter\NewTweetPresenter.class
 ir\sharif\ap\model\PacketType.class
 ir\sharif\ap\model\Message.class
+ir\sharif\ap\View\UserInfoView.class
 ir\sharif\ap\Presenter\AuthFormEvent.class
 ir\sharif\ap\Main$1.class
 ir\sharif\ap\Presenter\EditUserInfoPresenter.class
+ir\sharif\ap\model\RelationListType.class
 ir\sharif\ap\controller\ConsoleColors.class
 ir\sharif\ap\model\config\ClientSocketConfig.class
 ir\sharif\ap\Presenter\TweetTilePresenter.class
@@ -68,4 +70,5 @@ ir\sharif\ap\controller\ConfigLoader.class
 ir\sharif\ap\Presenter\ListTweetEventListener.class
 ir\sharif\ap\Presenter\NotificationsPresenter.class
 ir\sharif\ap\Presenter\NewTweetListener.class
+ir\sharif\ap\Presenter\UserInfoPresenter.class
 ir\sharif\ap\Presenter\UserDeleteListener.class
