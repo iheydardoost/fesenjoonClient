@@ -12,6 +12,8 @@ import ir.sharif.ap.View.*;
 import ir.sharif.ap.controller.JsonHandler;
 import ir.sharif.ap.controller.LogHandler;
 import ir.sharif.ap.controller.MainController;
+import ir.sharif.ap.model.NotificationListType;
+import ir.sharif.ap.model.RelationListType;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
 
@@ -61,6 +63,24 @@ public class Main extends MobileApplication {
     public static AppBar mainAppBar;
 
     private static boolean refreshTimeline=false, refreshExplore=false;
+    private static RelationListType relationListType;
+    private static NotificationListType notificationListType;
+
+    public static NotificationListType getNotificationListType() {
+        return notificationListType;
+    }
+
+    public static void setNotificationListType(NotificationListType notificationListType) {
+        Main.notificationListType = notificationListType;
+    }
+
+    public static RelationListType getRelationListType() {
+        return relationListType;
+    }
+
+    public static void setRelationListType(RelationListType relationType) {
+        relationListType = relationType;
+    }
 
     public static boolean refreshTimeline() {
         return refreshTimeline;

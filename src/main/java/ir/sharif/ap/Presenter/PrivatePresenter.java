@@ -7,6 +7,8 @@ import com.gluonhq.charm.glisten.control.FloatingActionButton;
 import com.gluonhq.charm.glisten.mvc.View;
 import com.gluonhq.charm.glisten.visual.MaterialDesignIcon;
 import ir.sharif.ap.Main;
+import ir.sharif.ap.model.NotificationListType;
+import ir.sharif.ap.model.NotificationTile;
 import ir.sharif.ap.model.RelationListType;
 import ir.sharif.ap.model.RelationType;
 import javafx.application.Platform;
@@ -83,9 +85,8 @@ public class PrivatePresenter implements Initializable {
 
     @FXML
     void onBlockListClick(ActionEvent event) {
+        Main.setRelationListType(RelationListType.BLACKLIST);
         MobileApplication.getInstance().switchView(RELATION_LIST_VIEW);
-        Main.getRelationListPresenter().setRelationType(RelationListType.BLACKLIST);
-        Main.getRelationListPresenter().update();
     }
 
     @FXML
@@ -95,16 +96,14 @@ public class PrivatePresenter implements Initializable {
 
     @FXML
     void onFollowersClick(ActionEvent event) {
+        Main.setRelationListType(RelationListType.FOLLOWER_LIST);
         MobileApplication.getInstance().switchView(RELATION_LIST_VIEW);
-        Main.getRelationListPresenter().setRelationType(RelationListType.FOLLOWER_LIST);
-        Main.getRelationListPresenter().update();
     }
 
     @FXML
     void onFollowingsClick(ActionEvent event) {
+        Main.setRelationListType(RelationListType.FOLLOWING_LIST);
         MobileApplication.getInstance().switchView(RELATION_LIST_VIEW);
-        Main.getRelationListPresenter().setRelationType(RelationListType.FOLLOWING_LIST);
-        Main.getRelationListPresenter().update();
     }
 
     @FXML
@@ -118,7 +117,20 @@ public class PrivatePresenter implements Initializable {
     }
 
     @FXML
-    void onNotificationsClick(ActionEvent event) {
+    void onNotificationListButton(ActionEvent event) {
+        Main.setNotificationListType(NotificationListType.NOTIFICATION_LIST);
+        MobileApplication.getInstance().switchView(NOTIFICATIONS_VIEW);
+    }
 
+    @FXML
+    void onSystemNotificationClick(ActionEvent event) {
+        Main.setNotificationListType(NotificationListType.SYSTEM_NOTIFICATIONS);
+        MobileApplication.getInstance().switchView(NOTIFICATIONS_VIEW);
+    }
+
+    @FXML
+    void onMyPendingListClick(ActionEvent event) {
+        Main.setNotificationListType(NotificationListType.MY_PENDING_LIST);
+        MobileApplication.getInstance().switchView(NOTIFICATIONS_VIEW);
     }
 }

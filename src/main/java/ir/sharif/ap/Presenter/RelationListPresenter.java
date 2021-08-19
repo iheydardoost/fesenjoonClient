@@ -28,7 +28,6 @@ import static ir.sharif.ap.Presenter.Styles.defaultButtonStyle;
 
 public class RelationListPresenter implements Initializable {
     private Snackbar snackbar;
-
     @FXML
     private View relationListTab;
     @FXML
@@ -38,30 +37,7 @@ public class RelationListPresenter implements Initializable {
     @FXML
     private HBox searchBar;
     private Button searchButton;
-
     private RelationListType relationListType;
-
-    public RelationListType getRelationType() {
-        return relationListType;
-    }
-
-    public void setRelationType(RelationListType relationType) {
-        this.relationListType = relationType;
-    }
-
-
-    public void update(){
-        updateAppbarTitle();
-        relationListView.getItems().clear();
-        onRelationListReceive("");
-    }
-
-    public void updateAppbarTitle(){
-        if(relationListType!=null){
-            final AppBar appBar = MobileApplication.getInstance().getAppBar();
-            appBar.setTitleText(relationListType.toString());
-        }
-    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -81,8 +57,14 @@ public class RelationListPresenter implements Initializable {
                 appBar.setTitleText("");
                 appBar.getActionItems().addAll(mainAppBar.getActionItems());
                 searchText.setText("");
-                update();
 
+                relationListType = Main.getRelationListType();
+                if(relationListType!=null){
+                    appBar.setTitleText(relationListType.toString());
+                }
+                relationListView.getItems().clear();
+
+                onRelationListReceive("");
             }
         });
     }

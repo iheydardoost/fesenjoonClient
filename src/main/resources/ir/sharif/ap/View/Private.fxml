@@ -59,9 +59,9 @@
             <Button fx:id="myInfoButton" mnemonicParsing="false" onAction="#onMyInfoButtonClick" text="My Info" />
             <HBox alignment="CENTER" prefHeight="33.0" prefWidth="640.0" spacing="52.0">
                <children>
-                  <Button fx:id="notificationsButton" mnemonicParsing="false" onAction="#onNotificationsClick" text="My pending list" />
-                  <Button mnemonicParsing="false" text="System notifications" />
-                  <Button mnemonicParsing="false" text="notification list" />
+                  <Button fx:id="myPendingListButton" mnemonicParsing="false" onAction="#onMyPendingListClick" text="My pending list" />
+                  <Button fx:id="systemNotificationsButton" mnemonicParsing="false" onAction="#onSystemNotificationClick" text="System notifications" />
+                  <Button fx:id="notificationListButton" mnemonicParsing="false" onAction="#onNotificationListButton" text="notification list" />
                </children>
             </HBox>
          </children>
