@@ -22,8 +22,6 @@ import javafx.scene.layout.HBox;
 
 import java.net.URL;
 import java.time.LocalDateTime;
-import java.util.Base64;
-import java.util.Random;
 import java.util.ResourceBundle;
 
 import static ir.sharif.ap.Main.*;
@@ -81,7 +79,7 @@ public class ExplorePresenter implements Initializable {
                 ListTweetEvent event = new ListTweetEvent(
                         MainController.MAX_TWEET_LIST_REQUEST_NUMBER,
                         lastTweetTime,
-                        TweetListType.EXPLORE,
+                        TweetListType.EXPLORER,
                         0);
                 listTweetEventListener.listTweetEventOccurred(event);
             }
@@ -101,7 +99,7 @@ public class ExplorePresenter implements Initializable {
                     ListTweetEvent event = new ListTweetEvent(
                             MainController.MAX_TWEET_LIST_REQUEST_NUMBER,
                             null,
-                            TweetListType.EXPLORE,
+                            TweetListType.EXPLORER,
                             0);
                     listTweetEventListener.listTweetEventOccurred(event);
                 }

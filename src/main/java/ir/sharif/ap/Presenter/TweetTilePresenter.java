@@ -77,8 +77,7 @@ public class TweetTilePresenter implements Initializable {
                     new NewTweetEvent(
                       tweet.getTweetText(),
                             LocalDateTime.now(),
-                      tweet.getUserID(),
-                      0,
+                            0,
                       true,
                       tweet.getTweetImage()
                     );
@@ -121,7 +120,7 @@ public class TweetTilePresenter implements Initializable {
                 tweetDetailPresenter.setParentTweetID(tweet.getTweetID());
                 tweetDetailPresenter.addRelationUserEventListener(e1 -> Main.getMainController().handleRelationUserEvent(e1));
                 tweetDetailPresenter.addActionTweetEventListener(e1 -> Main.getMainController().handleActionTweetEvent(e1));
-                tweetDetailPresenter.addGetNewTweetEventListener(e1 -> Main.getMainController().handleGetTweetEvent(e1));
+                tweetDetailPresenter.addGetTweetEventListener(e1 -> Main.getMainController().handleGetTweetEvent(e1));
                 tweetDetailPresenter.addListTweetEventListener(e1 -> Main.getMainController().handleListTweetEvent(e1));
 
                 return (View) tweetDetailView.getView();

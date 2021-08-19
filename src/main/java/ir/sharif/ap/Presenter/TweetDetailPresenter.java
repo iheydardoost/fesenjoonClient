@@ -56,14 +56,14 @@ public class TweetDetailPresenter implements Initializable {
     private ActionTweetEventListener actionTweetEventListener;
     private RelationUserEventListener relationUserEventListener;
     private ListTweetEventListener listTweetEventListener;
-    private GetNewTweetEventListener getNewTweetEventListener;
+    private GetTweetEventListener getTweetEventListener;
 
     public void addListTweetEventListener(ListTweetEventListener listTweetEventListener) {
         this.listTweetEventListener = listTweetEventListener;
     }
 
-    public void addGetNewTweetEventListener(GetNewTweetEventListener getNewTweetEventListener) {
-        this.getNewTweetEventListener = getNewTweetEventListener;
+    public void addGetTweetEventListener(GetTweetEventListener getTweetEventListener) {
+        this.getTweetEventListener = getTweetEventListener;
     }
 
     public void addRelationUserEventListener(RelationUserEventListener relationUserEventListener) {

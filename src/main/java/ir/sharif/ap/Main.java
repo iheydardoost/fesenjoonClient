@@ -244,10 +244,6 @@ public class Main extends MobileApplication {
         return "ViewNumber" + String.valueOf(lastViewIndex);
     }
 
-    public static long getUserID(){
-        return 1;
-    }
-
     public static void doLogout(){
         logoutListener.logoutOccurred(true);
     }

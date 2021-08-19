@@ -2,7 +2,7 @@ package ir.sharif.ap.model;
 
 public enum TweetListType {
     TIMELINE,
-    EXPLORE,
+    EXPLORER,
     COMMENT,
     MY_TWEETS
 }

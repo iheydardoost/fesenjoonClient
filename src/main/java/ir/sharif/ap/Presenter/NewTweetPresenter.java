@@ -59,7 +59,7 @@ public class NewTweetPresenter implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         snackbar = new Snackbar("");
-        parentTweetID = -1;
+        parentTweetID = 0;
         newTweetTab.showingProperty().addListener((obs, ov, nv) -> {
             if (nv) {
                 final AppBar appBar = MobileApplication.getInstance().getAppBar();
@@ -134,7 +134,6 @@ public class NewTweetPresenter implements Initializable {
                 new NewTweetEvent(
                         tweetTxt.getText(),
                         LocalDateTime.now(),
-                        Main.getUserID(),
                         parentTweetID,
                         false,
                         tweetImage

@@ -5,14 +5,13 @@ import java.time.LocalDateTime;
 public class NewTweetEvent {
     private String tweetText;
     private LocalDateTime tweetDateTime;
-    private long userID, parentTweetID;
+    private long parentTweetID;
     private boolean retweeted;
     private byte[] tweetImage;
 
-    public NewTweetEvent(String tweetText, LocalDateTime tweetDateTime, long userID, long parentTweetID, boolean retweeted, byte[] tweetImage) {
+    public NewTweetEvent(String tweetText, LocalDateTime tweetDateTime, long parentTweetID, boolean retweeted, byte[] tweetImage) {
         this.tweetText = tweetText;
         this.tweetDateTime = tweetDateTime;
-        this.userID = userID;
         this.parentTweetID = parentTweetID;
         this.retweeted = retweeted;
         this.tweetImage = tweetImage;
@@ -32,14 +31,6 @@ public class NewTweetEvent {
 
     public void setTweetDateTime(LocalDateTime tweetDateTime) {
         this.tweetDateTime = tweetDateTime;
-    }
-
-    public long getUserID() {
-        return userID;
-    }
-
-    public void setUserID(long userID) {
-        this.userID = userID;
     }
 
     public long getParentTweetID() {
