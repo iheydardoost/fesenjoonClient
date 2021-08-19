@@ -3,6 +3,7 @@ import com.gluonhq.charm.glisten.application.ViewStackPolicy;
 import com.gluonhq.charm.glisten.control.*;
 import com.gluonhq.charm.glisten.control.TextArea;
 import com.gluonhq.charm.glisten.control.TextField;
+import ir.sharif.ap.Main;
 import javafx.scene.control.DatePicker;
 import com.gluonhq.charm.glisten.animation.FadeInLeftBigTransition;
 import com.gluonhq.charm.glisten.application.MobileApplication;
@@ -117,6 +118,7 @@ public class LoginPresenter implements Initializable {
         snackbar.setMessage(responseArray[1]);
         snackbar.show();
         if(responseArray[0].equals("success")){
+            Main.setUserName(loginUsernameText.getText());
             MobileApplication.getInstance().switchView(PRIVATE_VIEW, ViewStackPolicy.SKIP);
         }
     }
@@ -126,6 +128,7 @@ public class LoginPresenter implements Initializable {
         snackbar.setMessage(responseArray[1]);
         snackbar.show();
         if(responseArray[0].equals("success")){
+            Main.setUserName(signupUsernameText.getText());
             MobileApplication.getInstance().switchView(PRIVATE_VIEW, ViewStackPolicy.SKIP);
         }
     }
@@ -148,8 +151,6 @@ public class LoginPresenter implements Initializable {
     }
 
     public void onSignupClick(ActionEvent actionEvent) {
-
-
         signupErrorText.setText("");
         if(signupFirstNameTxt.getText().isEmpty()){
             signupErrorText.setText("Please enter first name");

@@ -13,6 +13,7 @@ import javafx.scene.image.ImageView;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.net.URL;
+import java.util.Base64;
 import java.util.ResourceBundle;
 
 import static ir.sharif.ap.Main.mainAppBar;
@@ -47,11 +48,17 @@ public class MyInfoPresenter implements Initializable {
     @FXML
     private Label bioText;
 
+    private GetPrivateInfoEventListener getPrivateInfoEventListener;
+
+    public void addGetPrivateInfoEventListener(GetPrivateInfoEventListener getPrivateInfoEventListener) {
+        this.getPrivateInfoEventListener = getPrivateInfoEventListener;
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         myInfoView.showingProperty().addListener((obs, ov, nv) -> {
             if (nv) {
-                onInfoReceive();
+                getPrivateInfoEventListener.getPrivateInfoEventOccurred(true);
                 final AppBar appBar = MobileApplication.getInstance().getAppBar();
                 appBar.setTitleText("My info");
                 appBar.getActionItems().addAll(mainAppBar.getActionItems());
@@ -59,36 +66,36 @@ public class MyInfoPresenter implements Initializable {
         });
     }
 
-    public void onInfoReceive(){
+    public void onInfoReceive(String response){
+        String[] args = response.split(",",-1);
 
-        dateOfBirthText.setText("Blah blah ");
-        firstnameText.setText("Blah blah ");
-        lastnameText.setText("Blah blah ");
-        usernameTxt.setText("Blah blah ");
-        emailText.setText("Blah blah ");
-        phoneText.setText("Blah blah ");
-        bioText.setText("Blah blah ");
+        usernameTxt.setText(args[0]);
+        firstnameText.setText(args[1]);
+        lastnameText.setText(args[2]);
+        dateOfBirthText.setText(args[3]);
+        emailText.setText(args[4]);
+        phoneText.setText(args[5]);
+
+        String bio = args[7];
+        for(int i=8; i<args.length; i++){
+            bio += ("," + args[i]);
+        }
+        bioText.setText(bio);
 
         Image userImage = null;
         byte[] imageByteArray = null;
-        if(imageByteArray!=null){
-            System.out.println("Or Here ");;
-
+        if(!args[6].isEmpty()){
+            imageByteArray = Base64.getDecoder().decode(args[6]);
             ByteArrayInputStream bis = new ByteArrayInputStream(imageByteArray);
             userImage = new Image(bis);
             try {
                 bis.close();
             } catch (IOException e) {
-                e.printStackTrace();
+                //e.printStackTrace();
             }
         } else {
             userImage = new Image(Main.class.getResourceAsStream("/ir/sharif/ap/images/avatar.png"));
-            System.out.println("Heeereee ");;
-
         }
-
         userImageView.setImage(userImage);
-
-
     }
 }

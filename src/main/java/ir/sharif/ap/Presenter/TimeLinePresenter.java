@@ -44,6 +44,7 @@ public class TimeLinePresenter extends GluonPresenter<Main> implements Initializ
     public void addListTweetEventListener(ListTweetEventListener listTweetEventListener) {
         this.listTweetEventListener = listTweetEventListener;
     }
+    static LocalDateTime previousLastTweetTime = null;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -62,6 +63,11 @@ public class TimeLinePresenter extends GluonPresenter<Main> implements Initializ
                 if(timelineListView.getItems().size()>1){
                     lastTweetTime = timelineListView.getItems().get(timelineListView.getItems().size()-1).getTweetDateTime();
                 }
+                if(previousLastTweetTime != null)
+                    if(previousLastTweetTime.equals(lastTweetTime)){
+                        return;
+                    }
+                previousLastTweetTime = lastTweetTime;
                 ListTweetEvent event = new ListTweetEvent(
                         MainController.MAX_TWEET_LIST_REQUEST_NUMBER,
                         lastTweetTime,

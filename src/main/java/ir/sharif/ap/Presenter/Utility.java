@@ -28,6 +28,8 @@ public class Utility {
                 .setUserImage(userImage)
                 .setLikesNum(Integer.parseInt(args[11]))
                 .setCommentsNum(Integer.parseInt(args[12]));
+        if(args.length > 13)
+            tweet.setMute(Boolean.parseBoolean(args[13]));
         return tweet;
     }
 }

@@ -20,10 +20,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.HBox;
 
 import java.net.URL;
+import java.util.Base64;
 import java.util.ResourceBundle;
 
-import static ir.sharif.ap.Main.USERINFO_VIEW;
-import static ir.sharif.ap.Main.mainAppBar;
+import static ir.sharif.ap.Main.*;
 import static ir.sharif.ap.Presenter.Styles.defaultButtonStyle;
 
 public class RelationListPresenter implements Initializable {
@@ -39,16 +39,37 @@ public class RelationListPresenter implements Initializable {
     private Button searchButton;
     private RelationListType relationListType;
 
+    private RelationListEventListener relationListEventListener;
+    private RelationUserEventListener relationUserEventListener;
+    private SearchUsernameEventListener searchUsernameEventListener;
+
+    public void addSearchUsernameEventListener(SearchUsernameEventListener searchUsernameEventListener) {
+        this.searchUsernameEventListener = searchUsernameEventListener;
+    }
+    public void addRelationUserEventListener(RelationUserEventListener relationUserEventListener) {
+        this.relationUserEventListener = relationUserEventListener;
+    }
+
+    public void addRelationListEventListener(RelationListEventListener relationListEventListener) {
+        this.relationListEventListener = relationListEventListener;
+    }
+
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         snackbar = new Snackbar("");
         searchButton = MaterialDesignIcon.SEARCH.button(e -> {
-            onSearchResultReceive("Ok");
+            searchUsernameEventListener.searchUsernameEventOccurred(
+                    new SearchUsernameEvent(false,searchText.getText()));
         });
         searchButton.setStyle(defaultButtonStyle);
         searchBar.getChildren().add(searchButton);
 
-        relationListView.setCellFactory(p->new RelationListCell());
+        relationListView.setCellFactory(p->{
+            RelationListCell relationListCell = new RelationListCell();
+            relationListCell.addRelationUserEventListener(relationUserEventListener);
+            return relationListCell;
+        });
         relationListView.setPlaceholder(new Label("There are no Tweets"));
         relationListTab.showingProperty().addListener((obs, ov, nv) -> {
             if (nv) {
@@ -63,33 +84,46 @@ public class RelationListPresenter implements Initializable {
                     appBar.setTitleText(relationListType.toString());
                 }
                 relationListView.getItems().clear();
+                relationListEventListener.relationListEventOccurred(relationListType);
 
-                onRelationListReceive("");
             }
         });
     }
 
     public void onRelationListReceive(String response){
+
+        String[] args = response.split(",", -1);
+
         RelationTile relationTile = new RelationTile();
         relationTile.setRelationType(relationListType);
-        relationTile.setUserFullName("Mamad Agha");
-        relationTile.setUsername("Javaad");
-        relationListView.getItems().add(relationTile);
-        relationListView.getItems().add(relationTile);
-        relationListView.getItems().add(relationTile);
-        relationListView.getItems().add(relationTile);
-        relationListView.getItems().add(relationTile);
+        relationTile.setUserFullName(args[1]+" "+args[2]);
+        relationTile.setUsername(args[0]);
+        byte[] userImage = null;
+        if(!args[3].isEmpty())
+            userImage = Base64.getDecoder().decode(args[3]);
+        relationTile.setUserImage(userImage);
+        relationTile.setUserID(Long.parseLong(args[4]));
+
         relationListView.getItems().add(relationTile);
     }
 
     public void onSearchResultReceive(String searchResult){
-        if(false){
+        String args[] = searchResult.split(",",-1);
+        snackbar.setMessage(args[0]);
+        snackbar.show();
+        if(args[0].equals("found")){
+            if(Main.getUserName().equals(searchText.getText())){
+                MobileApplication.getInstance().switchView(MY_INFO_VIEW);
+            }else{
+                MobileApplication.getInstance().switchView(USERINFO_VIEW);
+                Main.getUserInfoPresenter().setUserID(Long.parseLong(args[1]));
+                Main.getUserInfoPresenter().update();
+            }
+
+        }else{
             snackbar.setMessage("User not found");
             snackbar.show();
-        }else{
-            MobileApplication.getInstance().switchView(USERINFO_VIEW);
-            Main.getUserInfoPresenter().setUserID(1);
-            Main.getUserInfoPresenter().update();
         }
     }
+
 }

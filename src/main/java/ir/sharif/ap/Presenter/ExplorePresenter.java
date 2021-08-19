@@ -47,16 +47,23 @@ public class ExplorePresenter implements Initializable {
 
     private final String TAB_NAME ="Explore";
     private ListTweetEventListener listTweetEventListener;
+    private SearchUsernameEventListener searchUsernameEventListener;
+
+    public void addSearchUsernameEventListener(SearchUsernameEventListener searchUsernameEventListener) {
+        this.searchUsernameEventListener = searchUsernameEventListener;
+    }
 
     public void addListTweetEventListener(ListTweetEventListener listTweetEventListener) {
         this.listTweetEventListener = listTweetEventListener;
     }
+    static LocalDateTime previousLastTweetTime = null;
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         snackbar = new Snackbar("");
         searchButton = MaterialDesignIcon.SEARCH.button(e -> {
-
-            onSearchResultReceive("");
+            searchUsernameEventListener.searchUsernameEventOccurred(
+                    new SearchUsernameEvent(true,searchText.getText()));
         });
         searchButton.setStyle(defaultButtonStyle);
         searchBar.getChildren().add(searchButton);
@@ -76,6 +83,11 @@ public class ExplorePresenter implements Initializable {
                 if(exploreList.getItems().size()>1){
                     lastTweetTime = exploreList.getItems().get(exploreList.getItems().size()-1).getTweetDateTime();
                 }
+                if(previousLastTweetTime != null)
+                    if(previousLastTweetTime.equals(lastTweetTime)){
+                        return;
+                    }
+                previousLastTweetTime = lastTweetTime;
                 ListTweetEvent event = new ListTweetEvent(
                         MainController.MAX_TWEET_LIST_REQUEST_NUMBER,
                         lastTweetTime,
@@ -83,11 +95,7 @@ public class ExplorePresenter implements Initializable {
                         0);
                 listTweetEventListener.listTweetEventOccurred(event);
             }
-
         });
-
-
-
 
         exploreTab.showingProperty().addListener((obs, ov, nv) -> {
             if (nv) {
@@ -132,13 +140,21 @@ public class ExplorePresenter implements Initializable {
     }
 
     public void onSearchResultReceive(String searchResult){
-        if(false){
+        String args[] = searchResult.split(",",-1);
+        snackbar.setMessage(args[0]);
+        snackbar.show();
+        if(args[0].equals("found")){
+            if(Main.getUserName().equals(searchText.getText())){
+                MobileApplication.getInstance().switchView(MY_INFO_VIEW);
+            }else{
+                MobileApplication.getInstance().switchView(USERINFO_VIEW);
+                Main.getUserInfoPresenter().setUserID(Long.parseLong(args[1]));
+                Main.getUserInfoPresenter().update();
+            }
+
+        }else{
             snackbar.setMessage("User not found");
             snackbar.show();
-        }else{
-            MobileApplication.getInstance().switchView(USERINFO_VIEW);
-            Main.getUserInfoPresenter().setUserID(1);
-            Main.getUserInfoPresenter().update();
         }
     }
 

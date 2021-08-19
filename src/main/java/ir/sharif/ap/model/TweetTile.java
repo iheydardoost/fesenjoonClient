@@ -11,7 +11,7 @@ public class TweetTile {
     private LocalDateTime tweetDateTime;
     private byte[] tweetImage, userImage;
     private boolean isMainTweet;
-    private boolean youLiked, retweeted;
+    private boolean youLiked, retweeted, isMute;
 
     public TweetTile() {
         this.tweetText = null;
@@ -29,6 +29,7 @@ public class TweetTile {
         this.isMainTweet = false;
         this.youLiked = false;
         this.retweeted = false;
+        this.isMute = false;
     }
 
     public static TweetTile copyTweetTile(TweetTile tweet) {
@@ -45,7 +46,8 @@ public class TweetTile {
                 .setTweetDateTime(LocalDateTime.from(tweet.getTweetDateTime()))
                 .setMainTweet(tweet.isMainTweet())
                 .setYouLiked(tweet.isYouLiked())
-                .setRetweeted(tweet.isRetweeted());
+                .setRetweeted(tweet.isRetweeted())
+                .setMute(tweet.isMute());
 
         if(tweet.getTweetImage()!= null){
             newTweetTile.setTweetImage(Arrays.copyOf(tweet.getTweetImage(),tweet.getTweetImage().length));
@@ -54,6 +56,15 @@ public class TweetTile {
             newTweetTile.setUserImage(Arrays.copyOf(tweet.getUserImage(),tweet.getUserImage().length));
         }
         return newTweetTile;
+    }
+
+    public boolean isMute() {
+        return isMute;
+    }
+
+    public TweetTile setMute(boolean mute) {
+        isMute = mute;
+        return this;
     }
 
     public TweetTile setTweetText(String tweetText) {

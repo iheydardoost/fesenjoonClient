@@ -1,5 +1,6 @@
 package ir.sharif.ap.controller;
 
+import com.gluonhq.charm.glisten.application.MobileApplication;
 import ir.sharif.ap.Main;
 import ir.sharif.ap.Presenter.*;
 import ir.sharif.ap.model.*;
@@ -8,6 +9,9 @@ import javafx.application.Platform;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Base64;
+
+import static ir.sharif.ap.Main.EDIT_USER_INFO_VIEW;
+import static ir.sharif.ap.Main.MY_INFO_VIEW;
 
 public class MainController implements Runnable{
     private LoopHandler loopHandler;
@@ -56,6 +60,52 @@ public class MainController implements Runnable{
             case NEW_TWEET_RES:
                 Platform.runLater(() -> Main.getNewTweetPresenter().onNewTweetResultRecive(response.getBody()));
                 break;
+            case GET_TWEET_LIST_RES:
+                Platform.runLater(()->Main.getMyTweetListPresenter().onTweetReceive(response.getBody()));
+                break;
+            case GET_COMMENTS_RES:
+                Platform.runLater(()->Main.getCurrentTweetDetailPresenter().onTweetReceive(false, response.getBody()));
+                break;
+            case GET_TWEET_RES:
+                Platform.runLater(()->Main.getCurrentTweetDetailPresenter().onTweetReceive(true, response.getBody()));
+                break;
+            case GET_BLACK_LIST_RES:
+            case GET_FOLLOWINGS_LIST_RES:
+            case GET_FOLLOWERS_LIST_RES:
+                Platform.runLater(() -> Main.getRelationListPresenter().onRelationListReceive(response.getBody()));
+                break;
+            case GET_USER_INFO_RES:
+                Platform.runLater(() -> Main.getUserInfoPresenter().onInfoReceive(response.getBody()));
+                break;
+            case GET_PRIVATE_INFO_RES:
+                Platform.runLater(() -> Main.getMyInfoPresenter().onInfoReceive(response.getBody()));
+
+                break;
+            case GET_EDIT_INFO_RES:
+                Platform.runLater(() -> Main.getEditUserInfoPresenter().onUserInfoReceive(response.getBody()));
+                break;
+
+            case FOLLOW_USER_RES:
+            case UNFOLLOW_USER_RES:
+            case REPORT_USER_RES:
+                Platform.runLater(() -> Main.getUserInfoPresenter().onResponseReceive(response.getBody()));
+                break;
+            case UNMUTE_USER_RES:
+            case MUTE_USER_RES:
+                Platform.runLater(()->Main.getCurrentTweetDetailPresenter().onMuteResponse(response.getBody()));
+                break;
+            case SEARCH_USERNAME_EXPLORER_RES:
+                Platform.runLater(()->Main.getExplorePresenter().onSearchResultReceive(response.getBody()));
+                break;
+            case SEARCH_USERNAME_LIST_RES:
+                Platform.runLater(()->Main.getRelationListPresenter().onSearchResultReceive(response.getBody()));
+                break;
+            case GET_NOTIFICATIONS_RES:
+            case GET_PENDING_FOLLOW_RES:
+                Platform.runLater(()->Main.getNotificationsPresenter().onNotificationReceive(response.getBody()));
+                break;
+
+
 //            case REPORT_TWEET_RES:
 //                break;
 //            case LIKE_TWEET_RES:
@@ -251,11 +301,11 @@ public class MainController implements Runnable{
                         true));
     }
 
-    public void handleSearchUsernameEvent(String userName){
+    public void handleSearchUsernameEvent(SearchUsernameEvent e){
         socketController.addRequest(
                 new Packet(
                         PacketType.SEARCH_USERNAME_REQ,
-                        userName,
+                        e.getUserName()+","+e.isExplorer(),
                         socketController.getAuthToken(),
                         true));
     }
@@ -382,14 +432,16 @@ public class MainController implements Runnable{
                             true));
         }
         byte[] userImage = e.getUserImage();
+        String userImageStr = "";
         if(userImage!=null) {
-            socketController.addRequest(
-                    new Packet(
-                            PacketType.EDIT_USER_INFO_REQ,
-                            "userImage," + Base64.getEncoder().encodeToString(userImage),
-                            socketController.getAuthToken(),
-                            true));
+            userImageStr = Base64.getEncoder().encodeToString(userImage);
         }
+        socketController.addRequest(
+                new Packet(
+                        PacketType.EDIT_USER_INFO_REQ,
+                        "userImage," + userImageStr,
+                        socketController.getAuthToken(),
+                        true));
     }
 
     public void handleGetUserInfoEvent(long userID){
@@ -405,6 +457,15 @@ public class MainController implements Runnable{
         socketController.addRequest(
                 new Packet(
                         PacketType.GET_PRIVATE_INFO_REQ,
+                        "",
+                        socketController.getAuthToken(),
+                        true));
+    }
+
+    public void handleGetEditInfoEvent(){
+        socketController.addRequest(
+                new Packet(
+                        PacketType.GET_EDIT_INFO_REQ,
                         "",
                         socketController.getAuthToken(),
                         true));

@@ -74,6 +74,11 @@ public class NewTweetPresenter implements Initializable {
     }
 
     @FXML
+    void onImagePathChange(ActionEvent event) {
+        tweetImage = null;
+    }
+
+    @FXML
     void onAddImageClick(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         configureFileChooser(fileChooser);
@@ -130,6 +135,7 @@ public class NewTweetPresenter implements Initializable {
 
     @FXML
     void onTweetButtonClick(ActionEvent event) {
+
         NewTweetEvent e =
                 new NewTweetEvent(
                         tweetTxt.getText(),
@@ -138,6 +144,10 @@ public class NewTweetPresenter implements Initializable {
                         false,
                         tweetImage
                 );
+
+        tweetImagePath.setText("");
+        tweetImage=null;
+
         newTweetListener.newTweetEventOccurred(e);
     }
 

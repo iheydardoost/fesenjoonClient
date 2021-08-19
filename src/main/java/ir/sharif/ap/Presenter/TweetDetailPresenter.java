@@ -3,6 +3,7 @@ package ir.sharif.ap.Presenter;
 import com.gluonhq.charm.glisten.application.MobileApplication;
 import com.gluonhq.charm.glisten.control.AppBar;
 import com.gluonhq.charm.glisten.mvc.View;
+import ir.sharif.ap.Main;
 import ir.sharif.ap.controller.MainController;
 import ir.sharif.ap.model.ActionType;
 import ir.sharif.ap.model.RelationType;
@@ -20,8 +21,7 @@ import java.time.LocalDateTime;
 import java.util.Random;
 import java.util.ResourceBundle;
 
-import static ir.sharif.ap.Main.USERINFO_VIEW;
-import static ir.sharif.ap.Main.mainAppBar;
+import static ir.sharif.ap.Main.*;
 
 public class TweetDetailPresenter implements Initializable {
     @FXML
@@ -51,7 +51,7 @@ public class TweetDetailPresenter implements Initializable {
     private ListView<TweetTile> tweetDetailList;
 
     private TweetTile mainTweet;
-    private long parentTweetID;
+    private long parentTweetID = -1 ;
 
     private ActionTweetEventListener actionTweetEventListener;
     private RelationUserEventListener relationUserEventListener;
@@ -74,11 +74,17 @@ public class TweetDetailPresenter implements Initializable {
         this.actionTweetEventListener = actionTweetEventListener;
     }
 
+    static LocalDateTime previousLastTweetTime = null;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        tweetDetailList.setCellFactory(p -> new TweetListCell());
+        tweetDetailList.setCellFactory(p -> {
+            TweetListCell tweetListCell = new TweetListCell();
+            tweetListCell.addActionTweetEventListener(e -> Main.getMainController().handleActionTweetEvent(e));
+            tweetListCell.addNewTweetListener(e -> Main.getMainController().handleNewTweetEvent(e));
+            return tweetListCell;
+        });
         tweetDetailList.setPlaceholder(new Label("There are no Tweets"));
         tweetDetailList.setOnScroll(e -> {
             if(e.getDeltaY()<0){
@@ -87,6 +93,11 @@ public class TweetDetailPresenter implements Initializable {
                 if(tweetDetailList.getItems().size()>1){
                     lastTweetTime = tweetDetailList.getItems().get(tweetDetailList.getItems().size()-1).getTweetDateTime();
                 }
+                if(previousLastTweetTime != null)
+                    if(previousLastTweetTime.equals(lastTweetTime)){
+                        return;
+                    }
+                previousLastTweetTime = lastTweetTime;
                 ListTweetEvent event = new ListTweetEvent(
                         MainController.MAX_TWEET_LIST_REQUEST_NUMBER,
                         lastTweetTime,
@@ -102,6 +113,18 @@ public class TweetDetailPresenter implements Initializable {
                 final AppBar appBar = MobileApplication.getInstance().getAppBar();
                 appBar.setTitleText("Tweet");
                 appBar.getActionItems().addAll(mainAppBar.getActionItems());
+                if(parentTweetID>0){
+                    tweetDetailList.getItems().clear();
+                    getTweetEventListener.getTweetEventOccurred(this.parentTweetID);
+                    ListTweetEvent event = new ListTweetEvent(
+                            MainController.MAX_TWEET_LIST_REQUEST_NUMBER,
+                            null,
+                            TweetListType.COMMENT,
+                            this.parentTweetID);
+
+                    listTweetEventListener.listTweetEventOccurred(event);
+                }
+
             }
         });
     }
@@ -120,12 +143,29 @@ public class TweetDetailPresenter implements Initializable {
 
     @FXML
     void onMuteClick(ActionEvent event) {
-        RelationUserEvent e =
-                new RelationUserEvent(RelationType.MUTE,mainTweet.getUserID());
+        RelationUserEvent e;
+        if(mainTweet.isMute()){
+            e =  new RelationUserEvent(RelationType.UNMUTE,mainTweet.getUserID());
+        }else {
+            e =  new RelationUserEvent(RelationType.MUTE,mainTweet.getUserID());
+        }
+
         relationUserEventListener.relationUserEventOccurred(e);
     }
 
+    public void onMuteResponse(String response){
+        if(response.contains("success")){
+            mainTweet.setMute(!mainTweet.isMute());
+        }
+        updateMuteText();
+    }
 
+    public void updateMuteText(){
+        if(mainTweet.isMute())
+            muteButton.setText("UnMute");
+        else
+            muteButton.setText("Mute");
+    }
 
     @FXML
     void onReportClick(ActionEvent event) {
@@ -136,7 +176,15 @@ public class TweetDetailPresenter implements Initializable {
 
     @FXML
     void onVisitClick(ActionEvent event) {
-        MobileApplication.getInstance().switchView(USERINFO_VIEW);
+
+        if(Main.getUserName().equals(mainTweet.getUserName())){
+            MobileApplication.getInstance().switchView(MY_INFO_VIEW);
+        }else{
+            MobileApplication.getInstance().switchView(USERINFO_VIEW);
+            Main.getUserInfoPresenter().setUserID(mainTweet.getUserID());
+            Main.getUserInfoPresenter().update();
+        }
+
 
     }
 
@@ -144,8 +192,29 @@ public class TweetDetailPresenter implements Initializable {
         this.mainTweet = mainTweet;//new TweetTile(mainTweet);
         mainTweet.setMainTweet(true);
         tweetDetailList.getItems().clear();
-        tweetDetailList.getItems().add(mainTweet);
+        updateMuteText();
 
+        if(Main.getUserName().equals(mainTweet.getUserName())){
+
+            blockButton.setManaged(false);
+            blockButton.setVisible(false);
+
+            reportButton.setManaged(false);
+            reportButton.setVisible(false);
+
+            muteButton.setManaged(false);
+            muteButton.setVisible(false);
+
+        }else{
+            blockButton.setManaged(true);
+            blockButton.setVisible(true);
+
+            reportButton.setManaged(true);
+            reportButton.setVisible(true);
+
+            muteButton.setManaged(true);
+            muteButton.setVisible(true);
+        }
     }
 
     public long getParentTweetID() {
@@ -154,8 +223,9 @@ public class TweetDetailPresenter implements Initializable {
 
     public void setParentTweetID(long parentTweetID) {
         this.parentTweetID = parentTweetID;
+
         tweetDetailList.getItems().clear();
-        getNewTweetEventListener.newTweetEventOccurred(this.parentTweetID);
+        getTweetEventListener.getTweetEventOccurred(this.parentTweetID);
         ListTweetEvent event = new ListTweetEvent(
                 MainController.MAX_TWEET_LIST_REQUEST_NUMBER,
                 null,
@@ -168,7 +238,7 @@ public class TweetDetailPresenter implements Initializable {
     public void onTweetReceive(Boolean isMainTweet, String response){
         TweetTile tweet = Utility.createTweetFromResponse(response);
         if(isMainTweet)
-            tweet.setMainTweet(true);
+            setMainTweet(tweet);
         tweetDetailList.getItems().add(tweet);
     }
 

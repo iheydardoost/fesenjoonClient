@@ -4,10 +4,7 @@ import com.gluonhq.charm.glisten.control.Avatar;
 import com.gluonhq.charm.glisten.control.ListTile;
 import com.gluonhq.charm.glisten.visual.MaterialDesignIcon;
 import ir.sharif.ap.Main;
-import ir.sharif.ap.model.NotificationListType;
-import ir.sharif.ap.model.NotificationTile;
-import ir.sharif.ap.model.RelationListType;
-import ir.sharif.ap.model.RelationTile;
+import ir.sharif.ap.model.*;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
@@ -29,6 +26,12 @@ public class NotificationListCell extends ListCell<NotificationTile> {
     private Label statusText;
     private HBox buttonBox;
 
+    private FollowResponseEventListener followResponseEventListener;
+
+    public void addFollowResponseEventListener(FollowResponseEventListener followResponseEventListener) {
+        this.followResponseEventListener = followResponseEventListener;
+    }
+
     {
         avatar = new Avatar();
         final Button button = MaterialDesignIcon.DELETE.button();
@@ -36,27 +39,27 @@ public class NotificationListCell extends ListCell<NotificationTile> {
         tile.setPrimaryGraphic(avatar);
 
         acceptButton = MaterialDesignIcon.THUMB_UP.button(e->{
+            followResponseEventListener.followResponseEventOccurred(new FollowResponseEvent(FollowResponseType.ACCEPT,
+                    notificationTile.getUsername()));
             listViewProperty().get().getItems().remove(notificationTile);
-
-            System.out.println("You Unlocked Him");
         });
         rejectWithNotifyButton = MaterialDesignIcon.THUMB_DOWN.button(e->{
+            followResponseEventListener.followResponseEventOccurred(new FollowResponseEvent(FollowResponseType.REJECT_NOTIFY,
+                    notificationTile.getUsername()));
             listViewProperty().get().getItems().remove(notificationTile);
-
-            System.out.println("You Unlocked Him");
         });
         rejectWithoutNotifyButton = MaterialDesignIcon.NOTIFICATIONS_OFF.button(e->{
+            followResponseEventListener.followResponseEventOccurred(new FollowResponseEvent(FollowResponseType.REJECT,
+                    notificationTile.getUsername()));
             listViewProperty().get().getItems().remove(notificationTile);
-
-            System.out.println("You Unlocked Him");
         });
+
         acceptButton.setStyle(defaultButtonStyle);
         rejectWithNotifyButton.setStyle(defaultButtonStyle);
         rejectWithoutNotifyButton.setStyle(defaultButtonStyle);
         buttonBox = new HBox(acceptButton, rejectWithNotifyButton, rejectWithoutNotifyButton);
 
         statusText = new Label("");
-
     }
 
     @Override

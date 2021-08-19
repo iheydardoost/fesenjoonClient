@@ -30,6 +30,7 @@ public class MyTweetListPresenter implements Initializable {
     }
     @FXML
     private ListView<TweetTile> myTweetListView;
+    static LocalDateTime previousLastTweetTime = null;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -49,6 +50,11 @@ public class MyTweetListPresenter implements Initializable {
                 if(myTweetListView.getItems().size()>1){
                     lastTweetTime = myTweetListView.getItems().get(myTweetListView.getItems().size()-1).getTweetDateTime();
                 }
+                if(previousLastTweetTime != null)
+                    if(previousLastTweetTime.equals(lastTweetTime)){
+                        return;
+                    }
+                previousLastTweetTime = lastTweetTime;
                 ListTweetEvent event = new ListTweetEvent(
                         MainController.MAX_TWEET_LIST_REQUEST_NUMBER,
                         lastTweetTime,

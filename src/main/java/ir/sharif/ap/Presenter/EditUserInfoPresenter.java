@@ -12,14 +12,11 @@ import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
+import java.io.*;
 import java.net.URL;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.ResourceBundle;
 
 import static ir.sharif.ap.Main.mainAppBar;
@@ -55,9 +52,20 @@ public class EditUserInfoPresenter implements Initializable {
 
     @FXML
     private Button cancelButton;
-    private byte[] userImage, lastUserImage;
+    private byte[] userImage=null, lastUserImage;
     private String lastFirstnameStr, lastLastnameStr, lastPhoneNumberStr, lastBioStr;
     LocalDate lastDateOfBirth;
+    private EditUserInfoEventListener editUserInfoEventListener;
+    private GetPrivateInfoEventListener getPrivateInfoEventListener;
+
+    public void addGetPrivateInfoEventListener(GetPrivateInfoEventListener getPrivateInfoEventListener) {
+        this.getPrivateInfoEventListener = getPrivateInfoEventListener;
+    }
+
+    public void addEditUserInfoEventListener(EditUserInfoEventListener userInfoEventListener) {
+        this.editUserInfoEventListener = userInfoEventListener;
+    }
+
 
     @FXML
     void onAddImageClick(ActionEvent event) {
@@ -111,35 +119,47 @@ public class EditUserInfoPresenter implements Initializable {
 
     @FXML
     void onApplyButtonClick(ActionEvent event) {
+        EditUserInfoEvent e = new EditUserInfoEvent();
         if (!phoneNumberText.getText().equals(lastPhoneNumberStr)) {
-
+            e.setPhoneNumber(phoneNumberText.getText());
         }
         if (!bioText.getText().equals(lastBioStr)) {
-
+            e.setBio(bioText.getText());
         }
-        if (lastDateOfBirth.compareTo(dateOfBirthText.getValue()) != 0) {
-
-        }
+        e.setDateOfBirth(dateOfBirthText.getValue());
         if (!firstnameText.getText().equals(lastFirstnameStr)) {
-
+            e.setFirstName(firstnameText.getText());
         }
         if (!lastnameText.getText().equals(lastLastnameStr)) {
-
+            e.setLastName(lastnameText.getText());
         }
         if (!Arrays.equals(lastUserImage, userImage)) {
-
+            e.setUserImage(userImage);
         }
+        editUserInfoEventListener.editUserInfoEventOccurred(e);
+        getPrivateInfoEventListener.getPrivateInfoEventOccurred(true);
+
     }
 
     @FXML
     void onCancelButtonClick(ActionEvent event) {
-        MobileApplication.getInstance().switchToPreviousView();
+
+        phoneNumberText.setText(lastPhoneNumberStr);
+        bioText.setText(lastBioStr);
+        dateOfBirthText.setValue(lastDateOfBirth);
+        firstnameText.setText(lastFirstnameStr);
+        lastnameText.setText(lastLastnameStr);
+
+
+//        MobileApplication.getInstance().switchToPreviousView();
     }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         editUserInfoTab.showingProperty().addListener((obs, ov, nv) -> {
             if (nv) {
+                getPrivateInfoEventListener.getPrivateInfoEventOccurred(true);
+
                 final AppBar appBar = MobileApplication.getInstance().getAppBar();
                 appBar.setTitleText("Edit User Info");
                 appBar.getActionItems().addAll(mainAppBar.getActionItems());
@@ -147,21 +167,31 @@ public class EditUserInfoPresenter implements Initializable {
         });
     }
 
-    public void onUserInfoReceive() {
-        lastBioStr = "";
-        lastDateOfBirth = LocalDate.parse("");
-        lastFirstnameStr = "";
-        lastLastnameStr = "";
+    public void onUserInfoReceive(String response){
+        String[] args = response.split(",",-1);
+
+        String bio = args[7];
+        for(int i=8; i<args.length; i++){
+            bio += ("," + args[i]);
+        }
+        lastBioStr = bio;
+
+        lastDateOfBirth = null;
+        if(!args[3].isEmpty())
+            lastDateOfBirth = LocalDate.parse(args[3]);
+        lastFirstnameStr = args[1];
+        lastLastnameStr = args[2];
         lastUserImage = null;
-        lastPhoneNumberStr = "";
+        if(!args[6].isEmpty()){
+            lastUserImage = Base64.getDecoder().decode(args[6]);
+        }
+        lastPhoneNumberStr = args[5];
 
         phoneNumberText.setText(lastPhoneNumberStr);
         bioText.setText(lastBioStr);
         dateOfBirthText.setValue(lastDateOfBirth);
         firstnameText.setText(lastFirstnameStr);
         lastnameText.setText(lastLastnameStr);
-        Arrays.equals(lastUserImage, userImage);
-
 
     }
 

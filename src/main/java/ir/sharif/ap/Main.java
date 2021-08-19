@@ -17,8 +17,6 @@ import ir.sharif.ap.model.RelationListType;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
 
-import javax.management.Notification;
-
 public class Main extends MobileApplication {
 
     private static MainController mainController;
@@ -59,12 +57,32 @@ public class Main extends MobileApplication {
     private static MyInfoPresenter myInfoPresenter;
     private static NotificationsPresenter notificationsPresenter;
     private static UserInfoPresenter userInfoPresenter;
+    private static String userName;
+
+
 
     public static AppBar mainAppBar;
+    private static TweetDetailPresenter currentTweetDetailPresenter;
 
     private static boolean refreshTimeline=false, refreshExplore=false;
     private static RelationListType relationListType;
     private static NotificationListType notificationListType;
+
+    public static void setUserName(String userName) {
+        Main.userName = userName;
+    }
+
+    public static String getUserName() {
+        return userName;
+    }
+
+    public static TweetDetailPresenter getCurrentTweetDetailPresenter() {
+        return currentTweetDetailPresenter;
+    }
+
+    public static void setCurrentTweetDetailPresenter(TweetDetailPresenter currentTweetDetailPresenter) {
+        Main.currentTweetDetailPresenter = currentTweetDetailPresenter;
+    }
 
     public static NotificationListType getNotificationListType() {
         return notificationListType;
@@ -148,21 +166,31 @@ public class Main extends MobileApplication {
         addViewFactory(EDIT_USER_INFO_VIEW,() -> {
             final EditUserInfoView editUserInfoView = new EditUserInfoView();
             editUserInfoPresenter = (EditUserInfoPresenter) editUserInfoView.getPresenter();
+            editUserInfoPresenter.addEditUserInfoEventListener(e -> mainController.handleEditUserInfoEvent(e));
+            editUserInfoPresenter.addGetPrivateInfoEventListener(sure -> mainController.handleGetEditInfoEvent());
             return (View) editUserInfoView.getView();
         });
         addViewFactory(RELATION_LIST_VIEW,() -> {
             final RelationListView relationListView = new RelationListView();
             relationListPresenter = (RelationListPresenter) relationListView.getPresenter();
+            relationListPresenter.addRelationListEventListener(e-> mainController.handleRelationListEvent(e));
+            relationListPresenter.addRelationUserEventListener(e -> mainController.handleRelationUserEvent(e));
+            relationListPresenter.addSearchUsernameEventListener(e -> mainController.handleSearchUsernameEvent(e));
+
             return (View) relationListView.getView();
         });
         addViewFactory(MY_INFO_VIEW,() -> {
             final MyInfoView myInfoView = new MyInfoView();
             myInfoPresenter = (MyInfoPresenter) myInfoView.getPresenter();
+            myInfoPresenter.addGetPrivateInfoEventListener(sure -> mainController.handleGetPrivateInfoEvent());
             return (View) myInfoView.getView();
         });
        addViewFactory(NOTIFICATIONS_VIEW,() -> {
            final NotificationsView notificationsView = new NotificationsView();
            notificationsPresenter = (NotificationsPresenter) notificationsView.getPresenter();
+           notificationsPresenter.addGetPendingListEventListener(sure -> mainController.handleGetPendingListEvent());
+           notificationsPresenter.addFollowResponseEventListener(e -> mainController.handleFollowResponseEvent(e));
+           notificationsPresenter.addGetNotificationsEventListener(isSystem -> mainController.handleGetNotificationsEvent(isSystem));
            return (View) notificationsView.getView();
        });
 
@@ -170,11 +198,14 @@ public class Main extends MobileApplication {
             final ExploreView exploreView = new ExploreView();
             explorePresenter = (ExplorePresenter) exploreView.getPresenter();
             explorePresenter.addListTweetEventListener(e -> mainController.handleListTweetEvent(e));
+            explorePresenter.addSearchUsernameEventListener(e -> mainController.handleSearchUsernameEvent(e));
             return (View) exploreView.getView();
         });
         addViewFactory(USERINFO_VIEW, () -> {
             final UserInfoView userInfoView = new UserInfoView();
             userInfoPresenter = (UserInfoPresenter) userInfoView.getPresenter();
+            userInfoPresenter.addGetUserInfoEventListener(userID -> mainController.handleGetUserInfoEvent(userID));
+            userInfoPresenter.addRelationUserEventListener(e -> mainController.handleRelationUserEvent(e));
             return (View) userInfoView.getView();
         });
 

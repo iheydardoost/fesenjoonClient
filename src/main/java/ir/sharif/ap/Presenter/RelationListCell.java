@@ -24,6 +24,13 @@ public class RelationListCell extends ListCell<RelationTile> {
     private RelationTile relationTile;
     private Avatar avatar;
     private Button unlockButton;
+    private long userID;
+
+    private RelationUserEventListener relationUserEventListener;
+
+    public void addRelationUserEventListener(RelationUserEventListener relationUserEventListener) {
+        this.relationUserEventListener = relationUserEventListener;
+    }
 
     {
         avatar = new Avatar();
@@ -33,8 +40,9 @@ public class RelationListCell extends ListCell<RelationTile> {
 
         unlockButton = MaterialDesignIcon.LOCK_OPEN.button(e->{
             listViewProperty().get().getItems().remove(relationTile);
+            RelationUserEvent relationUserEvent = new RelationUserEvent(RelationType.UNBLOCK, userID);
+            relationUserEventListener.relationUserEventOccurred(relationUserEvent);
 
-            System.out.println("You Unlocked Him");
         });
         unlockButton.setStyle(defaultButtonStyle);
         tile.setSecondaryGraphic(new VBox(unlockButton));
@@ -45,6 +53,7 @@ public class RelationListCell extends ListCell<RelationTile> {
         super.updateItem(item, empty);
         relationTile = item;
         if (!empty && item != null) {
+            userID = relationTile.getUserID();
             tile.textProperty().setAll(item.getUserFullName(), item.getUsername());
             if(item.getUserImage()!=null){
                 ByteArrayInputStream bis = new ByteArrayInputStream(item.getUserImage());

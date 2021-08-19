@@ -72,7 +72,6 @@ public class TweetTilePresenter implements Initializable {
         tweetImage.setVisible(false);
 
         retweetButton = MaterialDesignIcon.REPEAT.button(e -> {
-            LogHandler.logger.info("retweet button pressed");
             NewTweetEvent event =
                     new NewTweetEvent(
                       tweet.getTweetText(),
@@ -116,12 +115,13 @@ public class TweetTilePresenter implements Initializable {
             MobileApplication.getInstance().addViewFactory(newViewLayer,() -> {
                 final TweetDetailView tweetDetailView = new TweetDetailView();
                 TweetDetailPresenter tweetDetailPresenter=(TweetDetailPresenter) tweetDetailView.getPresenter();
+                Main.setCurrentTweetDetailPresenter(tweetDetailPresenter);
                 //tweetDetailPresenter.setMainTweet(TweetTile.copyTweetTile(tweet));
-                tweetDetailPresenter.setParentTweetID(tweet.getTweetID());
                 tweetDetailPresenter.addRelationUserEventListener(e1 -> Main.getMainController().handleRelationUserEvent(e1));
                 tweetDetailPresenter.addActionTweetEventListener(e1 -> Main.getMainController().handleActionTweetEvent(e1));
                 tweetDetailPresenter.addGetTweetEventListener(e1 -> Main.getMainController().handleGetTweetEvent(e1));
                 tweetDetailPresenter.addListTweetEventListener(e1 -> Main.getMainController().handleListTweetEvent(e1));
+                tweetDetailPresenter.setParentTweetID(tweet.getTweetID());
 
                 return (View) tweetDetailView.getView();
             });
