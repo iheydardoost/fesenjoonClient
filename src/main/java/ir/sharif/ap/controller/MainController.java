@@ -104,6 +104,10 @@ public class MainController implements Runnable{
             case GET_PENDING_FOLLOW_RES:
                 Platform.runLater(()->Main.getNotificationsPresenter().onNotificationReceive(response.getBody()));
                 break;
+            case GET_CHATROOM_LIST_RES:
+                Platform.runLater(()->Main.getChatsRoomPresenter().onChatItemReceive(response.getBody()));
+                break;
+
 
 
 //            case REPORT_TWEET_RES:

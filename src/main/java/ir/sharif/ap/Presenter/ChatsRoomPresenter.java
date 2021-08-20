@@ -21,6 +21,11 @@ public class ChatsRoomPresenter implements Initializable {
 
     @FXML
     private ListView<ChatItem> chatsRoomListView;
+    private GetChatRommListEventListner getChatRommListEventListner;
+
+    public void addGetChatRommListEventListner(GetChatRommListEventListner getChatRommListEventListner) {
+        this.getChatRommListEventListner = getChatRommListEventListner;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -35,21 +40,20 @@ public class ChatsRoomPresenter implements Initializable {
                 appBar.setTitleText("Chats room");
                 appBar.getActionItems().addAll(mainAppBar.getActionItems());
                 chatsRoomListView.getItems().clear();
-                onChatItemReceive("");
+
+                getChatRommListEventListner.getChatromListEventOccured(true);
+
             }
         });
     }
 
     public void onChatItemReceive(String respose){
+        String[] args = respose.split(",", -1);
+
         ChatItem chatItem = new ChatItem();
-        chatItem.setChatID(123l);
-        chatItem.setChatName("Mamad Agha");
-        chatItem.setUnReadMessages(0);
-        chatsRoomListView.getItems().add(chatItem);
-        chatsRoomListView.getItems().add(chatItem);
-        chatsRoomListView.getItems().add(chatItem);
-        chatsRoomListView.getItems().add(chatItem);
-        chatsRoomListView.getItems().add(chatItem);
+        chatItem.setChatID(Long.parseLong(args[0]));
+        chatItem.setChatName(args[1]);
+        chatItem.setUnReadMessages(Integer.parseInt(unSeen));
         chatsRoomListView.getItems().add(chatItem);
     }
 
