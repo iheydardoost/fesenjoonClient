@@ -63,8 +63,8 @@ public class ManageCollectionPresenter implements Initializable {
         addCollection = MaterialDesignIcon.ADD.button(actionEvent -> {
             if(newCollectionText.getText().isEmpty())
                 return;
-            newCollectionText.setText("");
             newCollectionEventListener.newCollectionEventOccurred(collectionListType, newCollectionText.getText());
+            newCollectionText.setText("");
 
             System.out.println("Added Collection");
         });

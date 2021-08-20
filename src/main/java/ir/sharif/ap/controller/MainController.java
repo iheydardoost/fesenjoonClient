@@ -107,6 +107,11 @@ public class MainController implements Runnable{
                 Platform.runLater(()->Main.getManageCollectionPresenter().onCollectionReceive(response.getBody()));
                 break;
 
+            case GET_MESSAGES_RES:
+                Platform.runLater(()->Main.getChatPresenter().onMessageReceive(response.getBody()));
+
+                break;
+
 //            case REPORT_TWEET_RES:
 //                break;
 //            case LIKE_TWEET_RES:

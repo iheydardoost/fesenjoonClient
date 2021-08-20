@@ -295,6 +295,7 @@ public class Main extends MobileApplication {
         addViewFactory(CHAT_VIEW, () -> {
             final ChatView chatView = new ChatView();
             chatPresenter = (ChatPresenter) chatView.getPresenter();
+            chatPresenter.addGetMessagesEventListener(e -> mainController.handleGetMessagesEvent(e));
             return (View) chatView.getView();
         });
 

@@ -5,7 +5,6 @@ import java.time.LocalDateTime;
 public class Message {
     private String msgText;
     private LocalDateTime msgDateTime;
-    private long userID;
     private long chatID;
     private long msgID;
     private boolean forwarded;
@@ -19,11 +18,10 @@ public class Message {
     }
 
     public Message(String msgText, LocalDateTime msgDateTime,
-                   long userID, long chatID, long msgID,
+                   long chatID, long msgID,
                    boolean forwarded, MessageStatus msgStatus, byte[] msgImage,String userFullName,boolean isOwner) {
         this.msgText = msgText;
         this.msgDateTime = msgDateTime;
-        this.userID = userID;
         this.chatID = chatID;
         this.msgID = msgID;
         this.forwarded = forwarded;
@@ -55,14 +53,6 @@ public class Message {
 
     public void setMsgDateTime(LocalDateTime msgDateTime) {
         this.msgDateTime = msgDateTime;
-    }
-
-    public long getUserID() {
-        return userID;
-    }
-
-    public void setUserID(long userID) {
-        this.userID = userID;
     }
 
     public long getChatID() {

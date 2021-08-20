@@ -5,8 +5,11 @@ import com.gluonhq.charm.glisten.control.AppBar;
 import com.gluonhq.charm.glisten.mvc.View;
 import com.gluonhq.charm.glisten.visual.MaterialDesignIcon;
 import ir.sharif.ap.Main;
+import ir.sharif.ap.controller.MainController;
 import ir.sharif.ap.model.Message;
 import ir.sharif.ap.model.MessageStatus;
+import ir.sharif.ap.model.TweetListType;
+import ir.sharif.ap.presenter.listeners.GetMessagesEventListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -24,6 +27,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
 import java.util.Arrays;
+import java.util.Base64;
 import java.util.ResourceBundle;
 
 import static ir.sharif.ap.Main.mainAppBar;
@@ -46,6 +50,11 @@ public class ChatPresenter implements Initializable {
     private TextField messageText;
     private Button sendButton, attachButton;
     static LocalDateTime previousLastMessageTime = null;
+    private GetMessagesEventListener getMessagesEventListener;
+
+    public void addGetMessagesEventListener(GetMessagesEventListener getMessagesEventListener) {
+        this.getMessagesEventListener = getMessagesEventListener;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -82,6 +91,8 @@ public class ChatPresenter implements Initializable {
                         return;
                     }
                 previousLastMessageTime = lastMessageTime;
+                getMessagesEventListener.getMessagesEventOccurred(new GetMessagesEvent(MainController.MAX_TWEET_LIST_REQUEST_NUMBER,
+                        lastMessageTime, chatID));
 
             }
 
@@ -94,30 +105,22 @@ public class ChatPresenter implements Initializable {
                 appBar.getActionItems().addAll(mainAppBar.getActionItems());
                 chatID = Main.getChatID();
                 messageListView.getItems().clear();
-                onMessageReceive("");
+                getMessagesEventListener.getMessagesEventOccurred(new GetMessagesEvent(MainController.MAX_TWEET_LIST_REQUEST_NUMBER,
+                         null, chatID));
             }
         });
     }
 
     public void onMessageReceive(String response){
-        Message message1 = new Message("First Message", LocalDateTime.now(),
-            1, 1, 1,
-            true, MessageStatus.SENDING, null, "mamad Agha",true);
-        Message message2 = new Message("Second", LocalDateTime.now(),
-                1, 1, 2,
-                true, MessageStatus.SEEN, null, "javad Agha",false);
-        Message message3 = new Message("ThirdMessage", LocalDateTime.now(),
-                1, 1, 3,
-                true, MessageStatus.RECEIVED, null, "mamad Agha",true);
+        String[] args = response.split(",", -1);
+        byte[] messageImage = null;
+        if(!args[2].isEmpty())
+            messageImage = Base64.getDecoder().decode(args[2]);
+        Message message = new Message(args[1], LocalDateTime.parse(args[3]),
+                chatID, Long.parseLong(args[0]),
+            Boolean.parseBoolean(args[4]), MessageStatus.valueOf(args[5]), messageImage, args[7] + " "+ args[8], Boolean.parseBoolean(args[6]));
 
-        Message message4 = new Message("Forth message", LocalDateTime.now(),
-                1, 1, 4,
-                true, MessageStatus.SENT, null, "javad Agha",false);
-
-        messageListView.getItems().add(message1);
-        messageListView.getItems().add(message2);
-        messageListView.getItems().add(message3);
-        messageListView.getItems().add(message4);
+        messageListView.getItems().add(message);
     }
 
     void resetImage(){
