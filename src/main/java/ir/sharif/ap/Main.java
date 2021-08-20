@@ -317,6 +317,9 @@ public class Main extends MobileApplication {
             manageCollectionPresenter=(ManageCollectionPresenter) manageCollectionView.getPresenter();
             manageCollectionPresenter.addGetCollectionListEventListener(e->mainController.handleGetCollectionListEvent(e));
             manageCollectionPresenter.addNewCollectionEventListener(e->mainController.handleNewCollectionEvent(e));
+            manageCollectionPresenter.addDeleteCollectionEventListener(e -> mainController.handleDeleteCollectionEvent(e));
+            manageCollectionPresenter.addGetEditCollectionListEventListener(e->mainController.handleGetEditCollectionListEvent(e));
+            manageCollectionPresenter.addSetEditCollectionListEventListener(e -> mainController.handleSetEditCollectionListEvent(e));
             return (View) manageCollectionView.getView();
         });
 

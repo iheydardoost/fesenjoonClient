@@ -7,7 +7,11 @@ import com.gluonhq.charm.glisten.mvc.View;
 import ir.sharif.ap.Main;
 import ir.sharif.ap.model.CollectionItem;
 import ir.sharif.ap.model.CollectionItemType;
+import ir.sharif.ap.model.CollectionListType;
 import ir.sharif.ap.model.EditCollectionListType;
+import ir.sharif.ap.presenter.listeners.DeleteCollectionEventListener;
+import ir.sharif.ap.presenter.listeners.GetEditCollectionListEventListener;
+import ir.sharif.ap.presenter.listeners.SetEditCollectionListEventListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -39,6 +43,17 @@ public class CollectionEditPresenter implements Initializable {
     private long targetCollectionID;
     private String checkedItems = "";
 
+    private GetEditCollectionListEventListener getEditCollectionListEventListener;
+    private SetEditCollectionListEventListener setEditCollectionListEventListener;
+    private Get
+    public void addGetEditCollectionListEventListener(GetEditCollectionListEventListener getEditCollectionListEventListener) {
+        this.getEditCollectionListEventListener = getEditCollectionListEventListener;
+    }
+
+    public void addSetEditCollectionListEventListener(SetEditCollectionListEventListener setEditCollectionListEventListener) {
+        this.setEditCollectionListEventListener = setEditCollectionListEventListener;
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         snackbar = new Snackbar("");
@@ -58,6 +73,23 @@ public class CollectionEditPresenter implements Initializable {
                 appBar.setTitleText(editCollectionListType.toString());
 
                 editCollectionListView.getItems().clear();
+                switch (editCollectionListType){
+                    case EDIT_CHAT:
+                        getEditCollectionListEventListener.getEditCollectionListEventOccurred(new GetEditCollectionListEvent(CollectionListType.GROUP, targetCollectionID));
+                        break;
+                    case EDIT_FOLDER:
+                        getEditCollectionListEventListener.getEditCollectionListEventOccurred(new GetEditCollectionListEvent(CollectionListType.FOLDER, targetCollectionID));
+                        break;
+                    case FORWARD_LIST:
+                        break;
+                    case NEW_MESSAGE:
+                        break;
+                }
+
+                if(editCollectionListType == EditCollectionListType.EDIT_FOLDER)
+                else if(editCollectionListType == EditCollectionListType.EDIT_CHAT)
+                else if(editCollectionListType ==)
+
                 onCollectionReceive("");
 
             }

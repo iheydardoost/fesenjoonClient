@@ -8,8 +8,8 @@ import ir.sharif.ap.Main;
 import ir.sharif.ap.model.CollectionItemType;
 import ir.sharif.ap.model.CollectionListType;
 import ir.sharif.ap.model.CollectionItem;
-import ir.sharif.ap.presenter.listeners.GetCollectionListEventListener;
-import ir.sharif.ap.presenter.listeners.NewCollectionEventListener;
+import ir.sharif.ap.model.EditCollectionListType;
+import ir.sharif.ap.presenter.listeners.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -43,6 +43,21 @@ public class ManageCollectionPresenter implements Initializable {
     private CollectionListType collectionListType;
     private GetCollectionListEventListener getCollectionListEventListener;
     private NewCollectionEventListener newCollectionEventListener;
+    private GetEditCollectionListEventListener getEditCollectionListEventListener;
+    private SetEditCollectionListEventListener setEditCollectionListEventListener;
+    private DeleteCollectionEventListener deleteCollectionEventListener;
+
+    public void addDeleteCollectionEventListener(DeleteCollectionEventListener deleteCollectionEventListener) {
+        this.deleteCollectionEventListener = deleteCollectionEventListener;
+    }
+
+    public void addGetEditCollectionListEventListener(GetEditCollectionListEventListener getEditCollectionListEventListener) {
+        this.getEditCollectionListEventListener = getEditCollectionListEventListener;
+    }
+
+    public void addSetEditCollectionListEventListener(SetEditCollectionListEventListener setEditCollectionListEventListener) {
+        this.setEditCollectionListEventListener = setEditCollectionListEventListener;
+    }
 
     public void addGetCollectionListEventListener(GetCollectionListEventListener getCollectionListEventListener) {
         this.getCollectionListEventListener = getCollectionListEventListener;
@@ -63,7 +78,7 @@ public class ManageCollectionPresenter implements Initializable {
         addCollection = MaterialDesignIcon.ADD.button(actionEvent -> {
             if(newCollectionText.getText().isEmpty())
                 return;
-            newCollectionEventListener.newCollectionEventOccurred(collectionListType, newCollectionText.getText());
+            newCollectionEventListener.newCollectionEventOccurred(new NewCollectionEvent(collectionListType, newCollectionText.getText()));
             newCollectionText.setText("");
 
             System.out.println("Added Collection");
