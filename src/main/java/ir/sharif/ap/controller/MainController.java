@@ -471,6 +471,15 @@ public class MainController implements Runnable{
                         true));
     }
 
+    public void handleGetChatroomListEvent(){
+        socketController.addRequest(
+                new Packet(
+                        PacketType.GET_CHATROOM_LIST_REQ,
+                        "",
+                        socketController.getAuthToken(),
+                        true));
+    }
+
     public void doClose(){
         this.loopHandler.pause();
         socketController.closeSocket();
