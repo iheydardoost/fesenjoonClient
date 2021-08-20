@@ -1,17 +1,13 @@
 package ir.sharif.ap.controller;
 
-import com.gluonhq.charm.glisten.application.MobileApplication;
 import ir.sharif.ap.Main;
-import ir.sharif.ap.Presenter.*;
+import ir.sharif.ap.presenter.*;
 import ir.sharif.ap.model.*;
 import javafx.application.Platform;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Base64;
-
-import static ir.sharif.ap.Main.EDIT_USER_INFO_VIEW;
-import static ir.sharif.ap.Main.MY_INFO_VIEW;
 
 public class MainController implements Runnable{
     private LoopHandler loopHandler;
@@ -480,6 +476,62 @@ public class MainController implements Runnable{
                 new Packet(
                         PacketType.GET_CHATROOM_LIST_REQ,
                         "",
+                        socketController.getAuthToken(),
+                        true));
+    }
+
+    public void handleGetCollectionListEvent(CollectionListType collectionListType){
+        PacketType packetType = null;
+        if(collectionListType==CollectionListType.FOLDER)
+            packetType = PacketType.GET_FOLDER_LIST_REQ;
+        else if(collectionListType==CollectionListType.GROUP)
+            packetType = PacketType.GET_GROUP_LIST_REQ;
+        socketController.addRequest(
+                new Packet(
+                        packetType,
+                        "",
+                        socketController.getAuthToken(),
+                        true));
+    }
+
+    public void handleNewCollectionEvent(CollectionListType collectionListType, String name){
+        PacketType packetType = null;
+        if(collectionListType==CollectionListType.FOLDER)
+            packetType = PacketType.NEW_FOLDER_REQ;
+        else if(collectionListType==CollectionListType.GROUP)
+            packetType = PacketType.NEW_GROUP_REQ;
+        socketController.addRequest(
+                new Packet(
+                        packetType,
+                        name,
+                        socketController.getAuthToken(),
+                        true));
+    }
+
+    public void handleDeleteCollectionEvent(CollectionListType collectionListType,long id){
+        PacketType packetType = null;
+        if(collectionListType==CollectionListType.FOLDER)
+            packetType = PacketType.DELETE_FOLDER_REQ;
+        else if(collectionListType==CollectionListType.GROUP)
+            packetType = PacketType.DELETE_GROUP_REQ;
+        socketController.addRequest(
+                new Packet(
+                        packetType,
+                        Long.toString(id),
+                        socketController.getAuthToken(),
+                        true));
+    }
+
+    public void handleGetEditCollectionListEvent(CollectionListType collectionListType,long id){
+        PacketType packetType = null;
+        if(collectionListType==CollectionListType.FOLDER)
+            packetType = PacketType.GET_EDIT_FOLDER_LIST_REQ;
+        else if(collectionListType==CollectionListType.GROUP)
+            packetType = PacketType.GET_EDIT_GROUP_LIST_REQ;
+        socketController.addRequest(
+                new Packet(
+                        packetType,
+                        Long.toString(id),
                         socketController.getAuthToken(),
                         true));
     }

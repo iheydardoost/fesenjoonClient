@@ -7,12 +7,13 @@ import com.gluonhq.charm.glisten.control.AppBar;
 import com.gluonhq.charm.glisten.control.Snackbar;
 import com.gluonhq.charm.glisten.mvc.View;
 import com.gluonhq.charm.glisten.visual.MaterialDesignIcon;
-import ir.sharif.ap.Presenter.*;
+import ir.sharif.ap.presenter.*;
 import ir.sharif.ap.View.*;
 import ir.sharif.ap.controller.JsonHandler;
 import ir.sharif.ap.controller.LogHandler;
 import ir.sharif.ap.controller.MainController;
 import ir.sharif.ap.model.*;
+import ir.sharif.ap.presenter.listeners.LogoutListener;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
 

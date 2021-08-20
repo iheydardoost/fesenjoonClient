@@ -173,7 +173,7 @@
                     </bundlesList>
                     <reflectionList>
                         <list>ir.sharif.ap.MainController</list>
-                        <list>ir.sharif.ap.Presenter.LoginPresenter</list>
+                        <list>ir.sharif.ap.presenter.LoginPresenter</list>
                         <list>ir.sharif.ap.View.LoginView</list>
                     </reflectionList>
                 </configuration>
