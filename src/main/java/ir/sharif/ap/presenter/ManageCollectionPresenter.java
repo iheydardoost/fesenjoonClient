@@ -8,6 +8,8 @@ import ir.sharif.ap.Main;
 import ir.sharif.ap.model.CollectionItemType;
 import ir.sharif.ap.model.CollectionListType;
 import ir.sharif.ap.model.CollectionItem;
+import ir.sharif.ap.presenter.listeners.GetCollectionListEventListener;
+import ir.sharif.ap.presenter.listeners.NewCollectionEventListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -18,6 +20,7 @@ import javafx.scene.layout.HBox;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+import java.util.logging.LogManager;
 
 import static ir.sharif.ap.Main.mainAppBar;
 import static ir.sharif.ap.presenter.Styles.defaultButtonStyle;
@@ -38,6 +41,16 @@ public class ManageCollectionPresenter implements Initializable {
     private Button addCollection;
 
     private CollectionListType collectionListType;
+    private GetCollectionListEventListener getCollectionListEventListener;
+    private NewCollectionEventListener newCollectionEventListener;
+
+    public void addGetCollectionListEventListener(GetCollectionListEventListener getCollectionListEventListener) {
+        this.getCollectionListEventListener = getCollectionListEventListener;
+    }
+
+    public void addNewCollectionEventListener(NewCollectionEventListener newCollectionEventListener) {
+        this.newCollectionEventListener = newCollectionEventListener;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -51,6 +64,8 @@ public class ManageCollectionPresenter implements Initializable {
             if(newCollectionText.getText().isEmpty())
                 return;
             newCollectionText.setText("");
+            newCollectionEventListener.newCollectionEventOccurred(collectionListType, newCollectionText.getText());
+
             System.out.println("Added Collection");
         });
         addCollection.setStyle(defaultButtonStyle);
@@ -72,27 +87,24 @@ public class ManageCollectionPresenter implements Initializable {
 
                 }
                 collectionListView.getItems().clear();
-                onCollectionReceive("");
+                getCollectionListEventListener.getCollectionListEventOccurred(collectionListType);
+//                onCollectionReceive("");
             }
         });
     }
 
-    private void onCollectionReceive(String response){
-//        String args[] = response.split(",", -1);
+    public void onCollectionReceive(String response){
+        String args[] = response.split(",", -1);
         CollectionItem collectionItem = new CollectionItem();
         if(collectionListType == CollectionListType.GROUP){
             collectionItem.setCollectionItemType(CollectionItemType.CHAT);
         }else if(collectionListType == CollectionListType.FOLDER){
             collectionItem.setCollectionItemType(CollectionItemType.FOLDER);
         }
-        collectionItem.setCollectionID(23231l);
-        collectionItem.setCollectionName("This Collections");
+        collectionItem.setCollectionID(Long.parseLong(args[0]));
+        collectionItem.setCollectionName(args[1]);
         collectionListView.getItems().add(collectionItem);
-        collectionListView.getItems().add(collectionItem);
-        collectionListView.getItems().add(collectionItem);
-        collectionListView.getItems().add(collectionItem);
-        collectionListView.getItems().add(collectionItem);
-        collectionListView.getItems().add(collectionItem);
+
     }
 
 

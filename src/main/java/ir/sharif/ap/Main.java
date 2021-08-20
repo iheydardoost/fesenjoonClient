@@ -314,6 +314,8 @@ public class Main extends MobileApplication {
         addViewFactory(MANAGE_COLLECTION_VIEW, () -> {
             final ManageCollectionView manageCollectionView = new ManageCollectionView();
             manageCollectionPresenter=(ManageCollectionPresenter) manageCollectionView.getPresenter();
+            manageCollectionPresenter.addGetCollectionListEventListener(e->mainController.handleGetCollectionListEvent(e));
+            manageCollectionPresenter.addNewCollectionEventListener(e->mainController.handleNewCollectionEvent(e));
             return (View) manageCollectionView.getView();
         });
 
