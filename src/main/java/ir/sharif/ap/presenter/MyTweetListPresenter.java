@@ -48,7 +48,7 @@ public class MyTweetListPresenter implements Initializable {
         myTweetListView.setOnScroll(e -> {
             if(e.getDeltaY()<0) {
                 LocalDateTime lastTweetTime = null;
-                if(myTweetListView.getItems().size()>1){
+                if(myTweetListView.getItems().size()>0){
                     lastTweetTime = myTweetListView.getItems().get(myTweetListView.getItems().size()-1).getTweetDateTime();
                 }
                 if(previousLastTweetTime != null)

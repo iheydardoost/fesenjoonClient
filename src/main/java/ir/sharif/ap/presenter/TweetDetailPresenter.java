@@ -93,7 +93,7 @@ public class TweetDetailPresenter implements Initializable {
             if(e.getDeltaY()<0){
 
                 LocalDateTime lastTweetTime = null;
-                if(tweetDetailList.getItems().size()>1){
+                if(tweetDetailList.getItems().size()>0){
                     lastTweetTime = tweetDetailList.getItems().get(tweetDetailList.getItems().size()-1).getTweetDateTime();
                 }
                 if(previousLastTweetTime != null)

@@ -82,7 +82,7 @@ public class ExplorePresenter implements Initializable {
             if(e.getDeltaY()<0){
 
                 LocalDateTime lastTweetTime = null;
-                if(exploreList.getItems().size()>1){
+                if(exploreList.getItems().size()>0){
                     lastTweetTime = exploreList.getItems().get(exploreList.getItems().size()-1).getTweetDateTime();
                 }
                 if(previousLastTweetTime != null)

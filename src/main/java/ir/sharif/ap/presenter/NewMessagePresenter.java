@@ -8,6 +8,7 @@ import com.gluonhq.charm.glisten.mvc.View;
 import ir.sharif.ap.Main;
 import ir.sharif.ap.model.CollectionItem;
 import ir.sharif.ap.model.EditCollectionListType;
+import ir.sharif.ap.presenter.listeners.NewMessageEventListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -22,6 +23,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.ResourceBundle;
@@ -51,6 +53,12 @@ public class NewMessagePresenter implements Initializable {
     private byte[] messageImage;
 
     private Snackbar snackbar;
+
+    private NewMessageEventListener newMessageEventListener;
+
+    public void addNewMessageEventListener(NewMessageEventListener newMessageEventListener) {
+        this.newMessageEventListener = newMessageEventListener;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -150,9 +158,24 @@ public class NewMessagePresenter implements Initializable {
             alert.showAndWait();
             return;
         }
-        System.out.println(collectionItems.size());
+        NewMessageEvent newMessageEvent =new NewMessageEvent();
+        newMessageEvent.setForwarded(false)
+            .setMsgText(messageTxt.getText())
+            .setMsgImage(messageImage)
+            .setMsgDateTime(LocalDateTime.now());
+
+        for (CollectionItem c: Main.getMessageReceiverList()) {
+            newMessageEvent
+                    .addID(c.getCollectionID())
+                    .addCollectionItemType(c.getCollectionItemType());
+        }
+
+        newMessageEventListener.newMessageEventOccurred(newMessageEvent);
+
         resetToDefault();
         Main.clearMessageReceiverList();
+        MobileApplication.getInstance().switchToPreviousView();
+
     }
 
     public void onNewMessageResultReceive(String result){

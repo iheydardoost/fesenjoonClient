@@ -3,6 +3,7 @@ ir\sharif\ap\Presenter\TweetDetailPresenter.class
 ir\sharif\ap\Presenter\TimeLinePresenter.class
 ir\sharif\ap\controller\LoopHandler.class
 ir\sharif\ap\Presenter\listeners\GetCollectionListEventListener.class
+ir\sharif\ap\Presenter\listeners\GetSelectListEventListener.class
 ir\sharif\ap\View\PrivateView.class
 ir\sharif\ap\Presenter\MyInfoPresenter.class
 ir\sharif\ap\View\ChatTileView.class
@@ -13,6 +14,7 @@ ir\sharif\ap\Presenter\PrivatePresenter.class
 ir\sharif\ap\Main.class
 ir\sharif\ap\Presenter\MessagingPresenter.class
 ir\sharif\ap\controller\LogHandler.class
+ir\sharif\ap\Presenter\listeners\DeleteMessageEventListener.class
 ir\sharif\ap\View\MyTweetListView.class
 ir\sharif\ap\Presenter\listeners\NewTweetListener.class
 ir\sharif\ap\controller\PacketHandler.class
@@ -42,9 +44,11 @@ ir\sharif\ap\Presenter\listeners\GetChatroomListEventListener.class
 ir\sharif\ap\Presenter\TweetTilePresenter.class
 ir\sharif\ap\model\Packet.class
 ir\sharif\ap\Presenter\listeners\RelationListEventListener.class
+ir\sharif\ap\Presenter\listeners\NewMessageEventListener.class
 ir\sharif\ap\Presenter\SettingPresenter.class
 ir\sharif\ap\Presenter\DeleteCollectionEvent.class
 ir\sharif\ap\Presenter\listeners\GetNotificationsEventListener.class
+ir\sharif\ap\Presenter\NewMessageEvent.class
 ir\sharif\ap\Presenter\listeners\GetEditCollectionListEventListener.class
 ir\sharif\ap\View\NewMessageView.class
 ir\sharif\ap\model\Tweet.class
@@ -61,6 +65,7 @@ ir\sharif\ap\Presenter\ChatsRoomListCell.class
 ir\sharif\ap\Presenter\SettingChangeFormEvent.class
 ir\sharif\ap\Presenter\TweetListCell.class
 ir\sharif\ap\Presenter\MyTweetListPresenter.class
+ir\sharif\ap\Presenter\EditMessageEvent.class
 ir\sharif\ap\model\Notification$NOTIFICATION_CONTEX.class
 ir\sharif\ap\model\LastSeenStatus.class
 ir\sharif\ap\Presenter\listeners\SearchUsernameEventListener.class
@@ -90,10 +95,12 @@ ir\sharif\ap\Presenter\listeners\GetPendingListEventListener.class
 ir\sharif\ap\model\ChatItem.class
 ir\sharif\ap\Presenter\listeners\RelationUserEventListener.class
 ir\sharif\ap\Presenter\listeners\ListTweetEventListener.class
+ir\sharif\ap\Presenter\listeners\EditMessageEventListener.class
 ir\sharif\ap\Presenter\listeners\DeleteCollectionEventListener.class
 ir\sharif\ap\Presenter\NotificationListCell.class
 ir\sharif\ap\Presenter\listeners\ActionTweetEventListener.class
 ir\sharif\ap\Presenter\LoginPresenter.class
+ir\sharif\ap\Presenter\CollectionEditPresenter$1.class
 ir\sharif\ap\Presenter\SearchUsernameEvent.class
 ir\sharif\ap\Presenter\listeners\GetPrivateInfoEventListener.class
 ir\sharif\ap\Presenter\GetEditCollectionListEvent.class

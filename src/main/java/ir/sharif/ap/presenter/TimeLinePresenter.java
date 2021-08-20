@@ -57,7 +57,7 @@ public class TimeLinePresenter extends GluonPresenter<Main> implements Initializ
         timelineListView.setOnScroll(e -> {
             if(e.getDeltaY()<0) {
                 LocalDateTime lastTweetTime = null;
-                if(timelineListView.getItems().size()>1){
+                if(timelineListView.getItems().size()>0){
                     lastTweetTime = timelineListView.getItems().get(timelineListView.getItems().size()-1).getTweetDateTime();
                 }
                 if(previousLastTweetTime != null)

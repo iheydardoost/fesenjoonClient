@@ -5,7 +5,9 @@ import com.gluonhq.charm.glisten.control.ListTile;
 import com.gluonhq.charm.glisten.visual.MaterialDesignIcon;
 import ir.sharif.ap.Main;
 import ir.sharif.ap.model.CollectionItem;
+import ir.sharif.ap.model.CollectionListType;
 import ir.sharif.ap.model.EditCollectionListType;
+import ir.sharif.ap.presenter.listeners.DeleteCollectionEventListener;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.HBox;
@@ -17,8 +19,13 @@ public class ManageCollectionListCell extends ListCell<CollectionItem> {
 
     private final ListTile tile = new ListTile();
     private CollectionItem collectionItem;
-    private Button editButton, DeleteButton;
+    private Button editButton, deleteButton;
     private HBox buttonBox;
+    private DeleteCollectionEventListener deleteCollectionEventListener;
+
+    public void addDeleteCollectionEventListener(DeleteCollectionEventListener deleteCollectionEventListener) {
+        this.deleteCollectionEventListener = deleteCollectionEventListener;
+    }
 
     {
         editButton = MaterialDesignIcon.EDIT.button(e->{
@@ -36,14 +43,26 @@ public class ManageCollectionListCell extends ListCell<CollectionItem> {
             Main.setTargetCollectionID(collectionItem.getCollectionID());
             MobileApplication.getInstance().switchView(COLLECTION_EDIT_VIEW);
         });
-        DeleteButton = MaterialDesignIcon.DELETE.button(e->{
+        deleteButton = MaterialDesignIcon.DELETE.button(e->{
+            CollectionListType collectionListType =  null;
 
+            switch (collectionItem.getCollectionItemType()){
+                    case CHAT:
+                        collectionListType = CollectionListType.GROUP;
+                        break;
+                    case FOLDER:
+                        collectionListType = CollectionListType.FOLDER;
+                        break;
+                    default:
+                        break;
+                }
+            deleteCollectionEventListener.deleteCollectionEventOccurred(new DeleteCollectionEvent(collectionListType, collectionItem.getCollectionID()));
             listViewProperty().get().getItems().remove(collectionItem);
         });
 
         editButton.setStyle(defaultButtonStyle);
-        DeleteButton.setStyle(defaultButtonStyle);
-        buttonBox = new HBox(editButton, DeleteButton);
+        deleteButton.setStyle(defaultButtonStyle);
+        buttonBox = new HBox(editButton, deleteButton);
         tile.setSecondaryGraphic(buttonBox);
     }
 
@@ -52,6 +71,12 @@ public class ManageCollectionListCell extends ListCell<CollectionItem> {
         super.updateItem(item, empty);
         collectionItem = item;
         if (!empty && item != null) {
+            if(collectionItem.getCollectionName().equals("savedMessages")) {
+                deleteButton.setManaged(false);
+                deleteButton.setVisible(false);
+                editButton.setManaged(false);
+                editButton.setVisible(false);
+            }
             tile.textProperty().setAll(item.getCollectionName());
             setGraphic(tile);
         } else {

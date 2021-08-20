@@ -43,20 +43,10 @@ public class ManageCollectionPresenter implements Initializable {
     private CollectionListType collectionListType;
     private GetCollectionListEventListener getCollectionListEventListener;
     private NewCollectionEventListener newCollectionEventListener;
-    private GetEditCollectionListEventListener getEditCollectionListEventListener;
-    private SetEditCollectionListEventListener setEditCollectionListEventListener;
     private DeleteCollectionEventListener deleteCollectionEventListener;
 
     public void addDeleteCollectionEventListener(DeleteCollectionEventListener deleteCollectionEventListener) {
         this.deleteCollectionEventListener = deleteCollectionEventListener;
-    }
-
-    public void addGetEditCollectionListEventListener(GetEditCollectionListEventListener getEditCollectionListEventListener) {
-        this.getEditCollectionListEventListener = getEditCollectionListEventListener;
-    }
-
-    public void addSetEditCollectionListEventListener(SetEditCollectionListEventListener setEditCollectionListEventListener) {
-        this.setEditCollectionListEventListener = setEditCollectionListEventListener;
     }
 
     public void addGetCollectionListEventListener(GetCollectionListEventListener getCollectionListEventListener) {
@@ -71,7 +61,7 @@ public class ManageCollectionPresenter implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         collectionListView.setCellFactory(e -> {
             ManageCollectionListCell manageCollectionListCell = new ManageCollectionListCell();
-
+            manageCollectionListCell.addDeleteCollectionEventListener(deleteCollectionEventListener);
             return manageCollectionListCell;
         });
 
@@ -80,6 +70,8 @@ public class ManageCollectionPresenter implements Initializable {
                 return;
             newCollectionEventListener.newCollectionEventOccurred(new NewCollectionEvent(collectionListType, newCollectionText.getText()));
             newCollectionText.setText("");
+            collectionListView.getItems().clear();
+            getCollectionListEventListener.getCollectionListEventOccurred(collectionListType);
 
             System.out.println("Added Collection");
         });
@@ -103,7 +95,6 @@ public class ManageCollectionPresenter implements Initializable {
                 }
                 collectionListView.getItems().clear();
                 getCollectionListEventListener.getCollectionListEventOccurred(collectionListType);
-//                onCollectionReceive("");
             }
         });
     }
@@ -119,7 +110,6 @@ public class ManageCollectionPresenter implements Initializable {
         collectionItem.setCollectionID(Long.parseLong(args[0]));
         collectionItem.setCollectionName(args[1]);
         collectionListView.getItems().add(collectionItem);
-
     }
 
 

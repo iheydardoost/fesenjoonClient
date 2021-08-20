@@ -4,6 +4,8 @@ import com.gluonhq.charm.glisten.control.Icon;
 import com.gluonhq.charm.glisten.visual.MaterialDesignIcon;
 import ir.sharif.ap.model.Message;
 import ir.sharif.ap.model.MessageStatus;
+import ir.sharif.ap.presenter.listeners.DeleteMessageEventListener;
+import ir.sharif.ap.presenter.listeners.EditMessageEventListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -56,6 +58,18 @@ public class ChatTilePresenter implements Initializable {
     private HBox actionBox;
     private Button deleteMessageButton, editMessageButton;
 
+    private DeleteMessageEventListener deleteMessageEventListener;
+    private EditMessageEventListener editMessageEventListener;
+
+    public void addDeleteMessageEventListener(DeleteMessageEventListener deleteMessageEventListener) {
+        this.deleteMessageEventListener = deleteMessageEventListener;
+    }
+
+    public void addEditMessageEventListener(EditMessageEventListener editMessageEventListener) {
+        this.editMessageEventListener = editMessageEventListener;
+    }
+
+
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -64,10 +78,10 @@ public class ChatTilePresenter implements Initializable {
         messageImage.setVisible(false);
 
         editMessageButton = MaterialDesignIcon.EDIT.button(e->{
-            System.out.println("edit");
+            editMessageEventListener.editMessageEventOccurred(new EditMessageEvent(0,""));
         });
         deleteMessageButton = MaterialDesignIcon.DELETE.button(e->{
-            System.out.println("Delete");
+            deleteMessageEventListener.deleteMessageEventOccurred(message.getMsgID());
         });
 
         editMessageButton.setStyle(defaultButtonStyle);

@@ -201,6 +201,7 @@ public class Main extends MobileApplication {
         addViewFactory(NEW_MESSAGE_VIEW, () -> {
             final NewMessageView newMessageView = new NewMessageView();
             newMessagePresenter = (NewMessagePresenter) newMessageView.getPresenter();
+            newMessagePresenter.addNewMessageEventListener(e -> mainController.handleNewMessageEvent(e));
             return (View) newMessageView.getView();
         });
         addViewFactory(NEW_TWEET_VIEW, () -> {
@@ -296,6 +297,8 @@ public class Main extends MobileApplication {
             final ChatView chatView = new ChatView();
             chatPresenter = (ChatPresenter) chatView.getPresenter();
             chatPresenter.addGetMessagesEventListener(e -> mainController.handleGetMessagesEvent(e));
+            chatPresenter.addNewMessageEventListener(e -> mainController.handleNewMessageEvent(e));
+            chatPresenter.addEditMessageEventListener(e -> mainController.handleEditMessageEvent(e));
             return (View) chatView.getView();
         });
 
@@ -321,8 +324,6 @@ public class Main extends MobileApplication {
             manageCollectionPresenter.addGetCollectionListEventListener(e->mainController.handleGetCollectionListEvent(e));
             manageCollectionPresenter.addNewCollectionEventListener(e->mainController.handleNewCollectionEvent(e));
             manageCollectionPresenter.addDeleteCollectionEventListener(e -> mainController.handleDeleteCollectionEvent(e));
-            manageCollectionPresenter.addGetEditCollectionListEventListener(e->mainController.handleGetEditCollectionListEvent(e));
-            manageCollectionPresenter.addSetEditCollectionListEventListener(e -> mainController.handleSetEditCollectionListEvent(e));
             return (View) manageCollectionView.getView();
         });
 

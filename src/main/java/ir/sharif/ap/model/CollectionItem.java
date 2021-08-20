@@ -2,9 +2,18 @@ package ir.sharif.ap.model;
 
 public class CollectionItem {
     private String collectionName;
+    private String userName;
     private Long collectionID;
     private Boolean isSelected;
     private CollectionItemType collectionItemType;
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
 
     public Boolean getSelected() {
         return isSelected;

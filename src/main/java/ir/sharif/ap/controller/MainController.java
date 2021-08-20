@@ -104,6 +104,7 @@ public class MainController implements Runnable{
                 Platform.runLater(()->Main.getChatsRoomPresenter().onChatItemReceive(response.getBody()));
                 break;
             case GET_FOLDER_LIST_RES:
+            case GET_GROUP_LIST_RES:
                 Platform.runLater(()->Main.getManageCollectionPresenter().onCollectionReceive(response.getBody()));
                 break;
 
@@ -118,6 +119,25 @@ public class MainController implements Runnable{
             case GET_EDIT_FOLDER_LIST_RES:
                 Platform.runLater(()->Main.getCollectionEditPresenter().onEditCollectionReceive(response.getBody()));
 
+                break;
+            case DELETE_MESSAGE_RES:
+                Platform.runLater(()->Main.getChatPresenter().onDeleteMessageReceive(response.getBody()));
+                break;
+            case SET_EDIT_FOLDER_LIST_RES:
+            case SET_EDIT_GROUP_LIST_RES:
+            case DELETE_FOLDER_RES:
+            case DELETE_GROUP_RES:
+                Platform.runLater(()->Main.getCollectionEditPresenter().onResponseReceive(response.getBody()));
+                break;
+            case NEW_MESSAGE_RES:
+                Platform.runLater(()-> {
+                    if (Main.getNewMessagePresenter() != null);
+                        //Main.getNewMessagePresenter().onNewMessageResultReceive(response.getBody());
+                        }
+                );
+                break;
+            case EDIT_MESSAGE_RES:
+                Platform.runLater(()->Main.getChatPresenter().onEditMessageReceive(response.getBody()));
                 break;
 
 //            case REPORT_TWEET_RES:
@@ -557,11 +577,10 @@ public class MainController implements Runnable{
         else if(e.getCollectionListType()==CollectionListType.GROUP)
             packetType = PacketType.SET_EDIT_GROUP_LIST_REQ;
 
-        String body = "";
+        String body = Long.toString(e.getCollectionID());
         for (String userName: e.getUserNames()) {
-            body += (userName + ",");
+            body += ( "," + userName);
         }
-        body += e.getCollectionID();
         socketController.addRequest(
                 new Packet(
                         packetType,

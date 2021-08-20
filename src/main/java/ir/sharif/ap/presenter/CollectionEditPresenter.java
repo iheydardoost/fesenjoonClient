@@ -101,6 +101,7 @@ public class CollectionEditPresenter implements Initializable {
         collectionItem.setCollectionID(0l);
         collectionItem.setCollectionName(args[0] + " " + args[1]);
         collectionItem.setCollectionItemType(CollectionItemType.USER);
+        collectionItem.setUserName(args[2]);
         collectionItem.setSelected(Boolean.parseBoolean(args[3]));
         editCollectionListView.getItems().add(collectionItem);
     }
@@ -131,21 +132,41 @@ public class CollectionEditPresenter implements Initializable {
     }
     @FXML
     void onApplyButton(ActionEvent event) {
-        System.out.println("Apply");
+
         List<CollectionItem> numbers = editCollectionListView.getItems();
         ArrayList<CollectionItem> arrayList = new ArrayList<>(numbers);
         arrayList.removeIf(collectionItem -> !collectionItem.getSelected());
 
-        if(editCollectionListType == EditCollectionListType.NEW_MESSAGE){
+        if(editCollectionListType == EditCollectionListType.NEW_MESSAGE || editCollectionListType == EditCollectionListType.FORWARD_LIST){
             Main.setMessageReceiverList(arrayList);
             MobileApplication.getInstance().switchToPreviousView();
 
         }else{
             checkedItems="";
             arrayList.forEach(collectionItem -> {checkedItems += collectionItem.getCollectionItemType() +","+collectionItem.getCollectionID()+","; });
+            SetEditCollectionListEvent setEditCollectionListEvent = new SetEditCollectionListEvent();
+            setEditCollectionListEvent.setCollectionID(targetCollectionID);
+            for (CollectionItem collectionItem: arrayList) {
+                setEditCollectionListEvent.addUserName(collectionItem.getUserName());
+            }
 
+            switch (editCollectionListType){
+                case EDIT_CHAT:
+                    setEditCollectionListEvent.setCollectionListType(CollectionListType.GROUP);
+                    break;
+                case EDIT_FOLDER:
+                    setEditCollectionListEvent.setCollectionListType(CollectionListType.FOLDER);
+                    break;
+            }
+            setEditCollectionListEventListener.setEditCollectionListEventOccurred(setEditCollectionListEvent);
         }
+    }
 
+    public void onResponseReceive(String response){
+        snackbar.setMessage(response);
+        snackbar.show();
+        if(response.contains("success"))
+            MobileApplication.getInstance().switchToPreviousView();
     }
 
     @FXML
