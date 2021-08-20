@@ -11,13 +11,16 @@ public class Message {
     private boolean forwarded;
     private MessageStatus msgStatus;
     private byte[] msgImage;
+    private String userFullName;
+    private boolean isOwner;
+
 
     public Message() {
     }
 
     public Message(String msgText, LocalDateTime msgDateTime,
                    long userID, long chatID, long msgID,
-                   boolean forwarded, MessageStatus msgStatus, byte[] msgImage) {
+                   boolean forwarded, MessageStatus msgStatus, byte[] msgImage,String userFullName,boolean isOwner) {
         this.msgText = msgText;
         this.msgDateTime = msgDateTime;
         this.userID = userID;
@@ -26,6 +29,16 @@ public class Message {
         this.forwarded = forwarded;
         this.msgStatus = msgStatus;
         this.msgImage = msgImage;
+        this.userFullName = userFullName;
+        this.isOwner = isOwner;
+    }
+
+    public String getUserFullName() {
+        return userFullName;
+    }
+
+    public void setUserFullName(String userFullName) {
+        this.userFullName = userFullName;
     }
 
     public String getMsgText() {
@@ -90,5 +103,13 @@ public class Message {
 
     public void setMsgImage(byte[] msgImage) {
         this.msgImage = msgImage;
+    }
+
+    public boolean isOwner() {
+        return isOwner;
+    }
+
+    public void setOwner(boolean owner) {
+        isOwner = owner;
     }
 }

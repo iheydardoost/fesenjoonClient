@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.gluonhq.charm.glisten.control.Icon?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
+
+<GridPane xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ir.sharif.ap.Presenter.ChatTilePresenter">
+   <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+   </rowConstraints>
+   <children>
+      <BorderPane fx:id="messagePane">
+         <center>
+            <Text fx:id="messageText" strokeType="OUTSIDE" strokeWidth="0.0" text="This is Tweet Txt" wrappingWidth="182.4007568359375" BorderPane.alignment="TOP_LEFT">
+               <BorderPane.margin>
+                  <Insets left="20.0" top="10.0" />
+               </BorderPane.margin></Text>
+         </center>
+         <bottom>
+            <BorderPane BorderPane.alignment="CENTER">
+               <center>
+                  <ImageView fx:id="messageImage" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" />
+               </center>
+               <bottom>
+                  <HBox fx:id="messageDateBox" alignment="CENTER_LEFT" spacing="90.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <Label fx:id="messageDateText" prefHeight="18.0" prefWidth="234.0" text="Label" />
+                     </children></HBox>
+               </bottom>
+               <right>
+                  <VBox fx:id="statusBox" alignment="BOTTOM_LEFT" prefWidth="32.0" BorderPane.alignment="CENTER">
+                     <children>
+                        <Icon fx:id="messageStatusIcon" content="CHECK" />
+                     </children>
+                  </VBox>
+               </right>
+            </BorderPane>
+         </bottom>
+         <top>
+            <BorderPane prefHeight="27.0" prefWidth="234.0" BorderPane.alignment="CENTER">
+               <right>
+                  <HBox fx:id="actionBox" alignment="TOP_RIGHT" prefHeight="27.0" prefWidth="62.0" spacing="10.0" BorderPane.alignment="CENTER" />
+               </right>
+               <left>
+                  <Label fx:id="messageFullName" prefHeight="18.0" prefWidth="156.0" text="Label" BorderPane.alignment="CENTER" />
+               </left>
+            </BorderPane>
+         </top>
+      </BorderPane>
+   </children>
+</GridPane>

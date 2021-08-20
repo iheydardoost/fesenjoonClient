@@ -12,10 +12,11 @@ import ir.sharif.ap.View.*;
 import ir.sharif.ap.controller.JsonHandler;
 import ir.sharif.ap.controller.LogHandler;
 import ir.sharif.ap.controller.MainController;
-import ir.sharif.ap.model.NotificationListType;
-import ir.sharif.ap.model.RelationListType;
+import ir.sharif.ap.model.*;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
+
+import java.util.ArrayList;
 
 public class Main extends MobileApplication {
 
@@ -33,6 +34,11 @@ public class Main extends MobileApplication {
     public final static String MY_INFO_VIEW="MyInfoView";
     public final static String NOTIFICATIONS_VIEW="NotificationsView";
     public final static String USERINFO_VIEW="UserInfoView";
+    public final static String CHAT_VIEW="ChatView";
+    public final static String CHATS_ROOM_VIEW="ChatsRoomView";
+    public final static String COLLECTION_EDIT_VIEW="CollectionEditView";
+    public final static String MANAGE_COLLECTION_VIEW="ManageCollectionView";
+    public final static String NEW_MESSAGE_VIEW="NewMessageView";
 
     private static int lastViewIndex= 0;
     private static LogoutListener logoutListener = new LogoutListener() {
@@ -57,16 +63,70 @@ public class Main extends MobileApplication {
     private static MyInfoPresenter myInfoPresenter;
     private static NotificationsPresenter notificationsPresenter;
     private static UserInfoPresenter userInfoPresenter;
+    private static MessagingPresenter messagingPresenter;
+    private static ChatPresenter chatPresenter;
+    private static ChatsRoomPresenter chatsRoomPresenter;
+    private static CollectionEditPresenter collectionEditPresenter;
+    private static ManageCollectionPresenter manageCollectionPresenter;
+    private static NewMessagePresenter newMessagePresenter;
+
     private static String userName;
-
-
-
     public static AppBar mainAppBar;
     private static TweetDetailPresenter currentTweetDetailPresenter;
 
     private static boolean refreshTimeline=false, refreshExplore=false;
     private static RelationListType relationListType;
     private static NotificationListType notificationListType;
+    private static CollectionListType collectionListType;
+    private static EditCollectionListType editCollectionListType;
+    private static long targetCollectionID;
+    private static ArrayList<CollectionItem> messageReceiverList = new ArrayList<CollectionItem>();
+    private static long chatID;
+
+    public static long getChatID() {
+        return chatID;
+    }
+
+    public static void setChatID(long chatID) {
+        Main.chatID = chatID;
+    }
+
+    public static ArrayList<CollectionItem> getMessageReceiverList() {
+        return messageReceiverList;
+    }
+
+    public static void setMessageReceiverList(ArrayList<CollectionItem> messageReceiverList) {
+        Main.messageReceiverList.clear();
+        Main.messageReceiverList.addAll(messageReceiverList);
+    }
+
+    public static long getTargetCollectionID() {
+        return targetCollectionID;
+    }
+
+    public static void clearMessageReceiverList(){
+        Main.messageReceiverList.clear();
+    }
+
+    public static void setTargetCollectionID(long targetCollectionID) {
+        Main.targetCollectionID = targetCollectionID;
+    }
+
+    public static EditCollectionListType getEditCollectionListType() {
+        return editCollectionListType;
+    }
+
+    public static void setEditCollectionListType(EditCollectionListType editCollectionListType) {
+        Main.editCollectionListType = editCollectionListType;
+    }
+
+    public static CollectionListType getCollectionType() {
+        return collectionListType;
+    }
+
+    public static void setCollectionType(CollectionListType collectionListType) {
+        Main.collectionListType = collectionListType;
+    }
 
     public static void setUserName(String userName) {
         Main.userName = userName;
@@ -137,6 +197,11 @@ public class Main extends MobileApplication {
             return (View) loginView.getView();
         });
 
+        addViewFactory(NEW_MESSAGE_VIEW, () -> {
+            final NewMessageView newMessageView = new NewMessageView();
+            newMessagePresenter = (NewMessagePresenter) newMessageView.getPresenter();
+            return (View) newMessageView.getView();
+        });
         addViewFactory(NEW_TWEET_VIEW, () -> {
             final NewTweetView newTweetView = new NewTweetView();
             newTweetPresenter = (NewTweetPresenter) newTweetView.getPresenter();
@@ -209,10 +274,6 @@ public class Main extends MobileApplication {
             return (View) userInfoView.getView();
         });
 
-        addViewFactory(MESSAGING_VIEW, () -> {
-            final MessagingView messagingView = new MessagingView();
-            return (View) messagingView.getView();
-        });
 
         addViewFactory(SETTING_VIEW, () -> {
             final SettingView settingView = new SettingView();
@@ -223,6 +284,37 @@ public class Main extends MobileApplication {
             settingPresenter.addSettingChangeFormListener(e->mainController.handleSettingChangeEvent(e));
             return (View) settingView.getView();
         });
+
+        addViewFactory(MESSAGING_VIEW, () -> {
+            final MessagingView messagingView = new MessagingView();
+            messagingPresenter = (MessagingPresenter) messagingView.getPresenter();
+            return (View) messagingView.getView();
+        });
+
+        addViewFactory(CHAT_VIEW, () -> {
+            final ChatView chatView = new ChatView();
+            chatPresenter = (ChatPresenter) chatView.getPresenter();
+            return (View) chatView.getView();
+        });
+
+        addViewFactory(CHATS_ROOM_VIEW, () -> {
+            final ChatsRoomView chatsRoomView = new ChatsRoomView();
+            chatsRoomPresenter = (ChatsRoomPresenter) chatsRoomView.getPresenter();
+            return (View) chatsRoomView.getView();
+        });
+
+        addViewFactory(COLLECTION_EDIT_VIEW, () -> {
+            final CollectionEditView collectionEditView = new CollectionEditView();
+            collectionEditPresenter = (CollectionEditPresenter) collectionEditView.getPresenter();
+            return (View) collectionEditView.getView();
+        });
+
+        addViewFactory(MANAGE_COLLECTION_VIEW, () -> {
+            final ManageCollectionView manageCollectionView = new ManageCollectionView();
+            manageCollectionPresenter=(ManageCollectionPresenter) manageCollectionView.getPresenter();
+            return (View) manageCollectionView.getView();
+        });
+
 
 //        addViewFactory(HOME_VIEW, () -> {
 //            FloatingActionButton fab = new FloatingActionButton(MaterialDesignIcon.SEARCH.text,
@@ -342,5 +434,29 @@ public class Main extends MobileApplication {
 
     public static UserInfoPresenter getUserInfoPresenter() {
         return userInfoPresenter;
+    }
+
+    public static MessagingPresenter getMessagingPresenter() {
+        return messagingPresenter;
+    }
+
+    public static ChatPresenter getChatPresenter() {
+        return chatPresenter;
+    }
+
+    public static ChatsRoomPresenter getChatsRoomPresenter() {
+        return chatsRoomPresenter;
+    }
+
+    public static CollectionEditPresenter getCollectionEditPresenter() {
+        return collectionEditPresenter;
+    }
+
+    public static ManageCollectionPresenter getManageCollectionPresenter() {
+        return manageCollectionPresenter;
+    }
+
+    public static NewMessagePresenter getNewMessagePresenter() {
+        return newMessagePresenter;
     }
 }

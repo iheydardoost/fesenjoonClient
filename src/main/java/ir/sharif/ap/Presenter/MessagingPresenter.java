@@ -4,13 +4,12 @@ import com.gluonhq.charm.glisten.application.MobileApplication;
 import com.gluonhq.charm.glisten.control.AppBar;
 import com.gluonhq.charm.glisten.control.BottomNavigationButton;
 import com.gluonhq.charm.glisten.mvc.View;
-import com.gluonhq.charm.glisten.visual.MaterialDesignIcon;
 import ir.sharif.ap.Main;
-import javafx.application.Platform;
+import ir.sharif.ap.model.CollectionListType;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
+import javafx.scene.control.Button;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -24,25 +23,56 @@ public class MessagingPresenter implements Initializable {
     @FXML
     private BottomNavigationButton navigationTimeline, navigationPrivate, navigationExplore, navigationMessaging, navigationSetting;
 
+    @FXML
+    private Button chatsRoomButton;
 
-    final static String tabName="Messaging";
+    @FXML
+    private Button manageCollectionButton;
+
+    @FXML
+    private Button manageGroupsButton;
+
+    @FXML
+    private Button newMessageButton;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        Label b = new Label("Hello Dear this is "+tabName+" PAge");
 
-        messagingTab.setCenter(b);
         messagingTab.showingProperty().addListener((obs, ov, nv) -> {
             if (nv) {
                 navigationMessaging.setSelected(true);
 
                 final AppBar appBar = MobileApplication.getInstance().getAppBar();
-                appBar.setTitleText(tabName);
+                appBar.setTitleText("Messaging");
                 appBar.getActionItems().addAll(mainAppBar.getActionItems());
 
 
             }
         });
+    }
+
+    @FXML
+    void onChatsRoomClick(ActionEvent event) {
+        MobileApplication.getInstance().switchView(CHATS_ROOM_VIEW);
+    }
+
+    @FXML
+    void onManageCollectionClick(ActionEvent event) {
+        Main.setCollectionType(CollectionListType.FOLDER);
+        MobileApplication.getInstance().switchView(MANAGE_COLLECTION_VIEW);
+
+    }
+
+    @FXML
+    void onManageGroupsClick(ActionEvent event) {
+        Main.setCollectionType(CollectionListType.GROUP);
+        MobileApplication.getInstance().switchView(MANAGE_COLLECTION_VIEW);
+
+    }
+
+    @FXML
+    void onNewMessageClick(ActionEvent event) {
+        MobileApplication.getInstance().switchView(NEW_MESSAGE_VIEW);
     }
 
     public void onNavigationBarChange(ActionEvent e){
