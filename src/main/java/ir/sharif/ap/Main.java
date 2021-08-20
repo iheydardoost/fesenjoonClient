@@ -301,6 +301,7 @@ public class Main extends MobileApplication {
         addViewFactory(CHATS_ROOM_VIEW, () -> {
             final ChatsRoomView chatsRoomView = new ChatsRoomView();
             chatsRoomPresenter = (ChatsRoomPresenter) chatsRoomView.getPresenter();
+            chatsRoomPresenter.addGetChatroomListEventListener(sure -> mainController.handleGetChatroomListEvent());
             return (View) chatsRoomView.getView();
         });
 

@@ -4,6 +4,7 @@ import com.gluonhq.charm.glisten.application.MobileApplication;
 import com.gluonhq.charm.glisten.control.AppBar;
 import com.gluonhq.charm.glisten.mvc.View;
 import ir.sharif.ap.model.ChatItem;
+import ir.sharif.ap.presenter.listeners.GetChatroomListEventListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -21,10 +22,11 @@ public class ChatsRoomPresenter implements Initializable {
 
     @FXML
     private ListView<ChatItem> chatsRoomListView;
-    private GetChatRommListEventListner getChatRommListEventListner;
+    private GetChatroomListEventListener getChatroomListEventListener;
 
-    public void addGetChatRommListEventListner(GetChatRommListEventListner getChatRommListEventListner) {
-        this.getChatRommListEventListner = getChatRommListEventListner;
+
+    public void addGetChatroomListEventListener(GetChatroomListEventListener getChatroomListEventListener) {
+        this.getChatroomListEventListener = getChatroomListEventListener;
     }
 
     @Override
@@ -40,9 +42,7 @@ public class ChatsRoomPresenter implements Initializable {
                 appBar.setTitleText("Chats room");
                 appBar.getActionItems().addAll(mainAppBar.getActionItems());
                 chatsRoomListView.getItems().clear();
-
-                getChatRommListEventListner.getChatromListEventOccured(true);
-
+                getChatroomListEventListener.getChatroomListEventOccurred(true);
             }
         });
     }
@@ -53,7 +53,7 @@ public class ChatsRoomPresenter implements Initializable {
         ChatItem chatItem = new ChatItem();
         chatItem.setChatID(Long.parseLong(args[0]));
         chatItem.setChatName(args[1]);
-        chatItem.setUnReadMessages(Integer.parseInt(unSeen));
+        chatItem.setUnReadMessages(Integer.parseInt(args[2]));
         chatsRoomListView.getItems().add(chatItem);
     }
 
