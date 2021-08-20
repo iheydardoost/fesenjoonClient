@@ -577,6 +577,43 @@ public class MainController implements Runnable{
                         true));
     }
 
+    public void handleDeleteMessageEvent(long msgID){
+        socketController.addRequest(
+                new Packet(
+                        PacketType.DELETE_MESSAGE_REQ,
+                        Long.toString(msgID),
+                        socketController.getAuthToken(),
+                        true));
+    }
+
+    public void handleEditMessageEvent(EditMessageEvent e){
+        socketController.addRequest(
+                new Packet(
+                        PacketType.EDIT_MESSAGE_REQ,
+                        Long.toString(e.getMsgID()) + "," + e.getMsgText(),
+                        socketController.getAuthToken(),
+                        true));
+    }
+
+    public void handleGetSelectListEvent(){
+        socketController.addRequest(
+                new Packet(
+                        PacketType.GET_SELECT_LIST_REQ,
+                        "",
+                        socketController.getAuthToken(),
+                        true));
+    }
+
+    public void handleNewMessageEvent(NewMessageEvent e){
+//        byte[] msgImage = e.getMsgImage();
+//        String msgImageStr = "";
+//        if(msgImage!=null) {
+//            msgImageStr = Base64.getEncoder().encodeToString(msgImage);
+//
+//        String body = e.getMsgText() + ","
+//                    +
+    }
+
     public void doClose(){
         this.loopHandler.pause();
         socketController.closeSocket();
