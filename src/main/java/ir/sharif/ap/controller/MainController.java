@@ -537,6 +537,41 @@ public class MainController implements Runnable{
                         true));
     }
 
+    public void handleSetEditCollectionListEvent(SetEditCollectionListEvent e){
+        PacketType packetType = null;
+        if(e.getCollectionListType()==CollectionListType.FOLDER)
+            packetType = PacketType.SET_EDIT_FOLDER_LIST_REQ;
+        else if(e.getCollectionListType()==CollectionListType.GROUP)
+            packetType = PacketType.SET_EDIT_GROUP_LIST_REQ;
+
+        String body = "";
+        for (String userName: e.getUserNames()) {
+            body += (userName + ",");
+        }
+        body += e.getCollectionID();
+        socketController.addRequest(
+                new Packet(
+                        packetType,
+                        body,
+                        socketController.getAuthToken(),
+                        true));
+    }
+
+    public void handleGetMessagesEvent(GetMessagesEvent e){
+        LocalDateTime lastMessageDateTime = e.getLastMessageDateTime();
+        String dateTimeStr = "";
+        if(lastMessageDateTime!=null)
+            dateTimeStr = lastMessageDateTime.toString();
+
+        String body = e.getMaxNum() + "," + dateTimeStr + "," + e.getChatID();
+        socketController.addRequest(
+                new Packet(
+                        PacketType.GET_MESSAGES_REQ,
+                        body,
+                        socketController.getAuthToken(),
+                        true));
+    }
+
     public void doClose(){
         this.loopHandler.pause();
         socketController.closeSocket();
