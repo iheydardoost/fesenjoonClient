@@ -1,7 +1,8 @@
 package ir.sharif.ap.presenter.listeners;
 
 import ir.sharif.ap.model.CollectionListType;
+import ir.sharif.ap.presenter.NewCollectionEvent;
 
 public interface NewCollectionEventListener {
-    public void newCollectionEventOccurred(CollectionListType collectionListType, String name);
+    public void newCollectionEventOccurred(NewCollectionEvent e);
 }

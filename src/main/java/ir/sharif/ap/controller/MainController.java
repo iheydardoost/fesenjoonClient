@@ -495,44 +495,44 @@ public class MainController implements Runnable{
                         true));
     }
 
-    public void handleNewCollectionEvent(CollectionListType collectionListType, String name){
+    public void handleNewCollectionEvent(NewCollectionEvent e){
         PacketType packetType = null;
-        if(collectionListType==CollectionListType.FOLDER)
+        if(e.getCollectionListType()==CollectionListType.FOLDER)
             packetType = PacketType.NEW_FOLDER_REQ;
-        else if(collectionListType==CollectionListType.GROUP)
+        else if(e.getCollectionListType()==CollectionListType.GROUP)
             packetType = PacketType.NEW_GROUP_REQ;
         socketController.addRequest(
                 new Packet(
                         packetType,
-                        name,
+                        e.getName(),
                         socketController.getAuthToken(),
                         true));
     }
 
-    public void handleDeleteCollectionEvent(CollectionListType collectionListType,long id){
+    public void handleDeleteCollectionEvent(DeleteCollectionEvent e){
         PacketType packetType = null;
-        if(collectionListType==CollectionListType.FOLDER)
+        if(e.getCollectionListType()==CollectionListType.FOLDER)
             packetType = PacketType.DELETE_FOLDER_REQ;
-        else if(collectionListType==CollectionListType.GROUP)
+        else if(e.getCollectionListType()==CollectionListType.GROUP)
             packetType = PacketType.DELETE_GROUP_REQ;
         socketController.addRequest(
                 new Packet(
                         packetType,
-                        Long.toString(id),
+                        Long.toString(e.getId()),
                         socketController.getAuthToken(),
                         true));
     }
 
-    public void handleGetEditCollectionListEvent(CollectionListType collectionListType,long id){
+    public void handleGetEditCollectionListEvent(GetEditCollectionListEvent e){
         PacketType packetType = null;
-        if(collectionListType==CollectionListType.FOLDER)
+        if(e.getCollectionListType()==CollectionListType.FOLDER)
             packetType = PacketType.GET_EDIT_FOLDER_LIST_REQ;
-        else if(collectionListType==CollectionListType.GROUP)
+        else if(e.getCollectionListType()==CollectionListType.GROUP)
             packetType = PacketType.GET_EDIT_GROUP_LIST_REQ;
         socketController.addRequest(
                 new Packet(
                         packetType,
-                        Long.toString(id),
+                        Long.toString(e.getId()),
                         socketController.getAuthToken(),
                         true));
     }
