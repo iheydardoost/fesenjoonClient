@@ -605,13 +605,47 @@ public class MainController implements Runnable{
     }
 
     public void handleNewMessageEvent(NewMessageEvent e){
-//        byte[] msgImage = e.getMsgImage();
-//        String msgImageStr = "";
-//        if(msgImage!=null) {
-//            msgImageStr = Base64.getEncoder().encodeToString(msgImage);
-//
-//        String body = e.getMsgText() + ","
-//                    +
+        byte[] msgImage = e.getMsgImage();
+        String msgImageStr = "";
+        if(msgImage!=null)
+            msgImageStr = Base64.getEncoder().encodeToString(msgImage);
+
+        String dateTimeStr = "";
+        LocalDateTime lastMessageDateTime = e.getMsgDateTime();
+        if(lastMessageDateTime!=null)
+            dateTimeStr = lastMessageDateTime.toString();
+
+        String body = e.getMsgText() + ","
+                    + msgImageStr + ","
+                    + dateTimeStr + ","
+                    + e.isForwarded();
+        for (int i = 0; i < e.getIDs().size(); i++) {
+            body += ("," + e.getCollectionItemTypes().get(i) + "," + e.getIDs().get(i));
+        }
+        socketController.addRequest(
+                new Packet(
+                        PacketType.NEW_MESSAGE_REQ,
+                        body,
+                        socketController.getAuthToken(),
+                        true));
+    }
+
+    public void handleWantUpdateChatroomEvent(boolean want){
+        socketController.addRequest(
+                new Packet(
+                        PacketType.WANT_UPDATE_CHATROOM_REQ,
+                        Boolean.toString(want),
+                        socketController.getAuthToken(),
+                        true));
+    }
+
+    public void handleWantUpdateChatEvent(boolean want){
+        socketController.addRequest(
+                new Packet(
+                        PacketType.WANT_UPDATE_CHAT_REQ,
+                        Boolean.toString(want),
+                        socketController.getAuthToken(),
+                        true));
     }
 
     public void doClose(){
