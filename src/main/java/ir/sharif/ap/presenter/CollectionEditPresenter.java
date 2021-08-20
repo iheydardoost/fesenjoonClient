@@ -11,6 +11,7 @@ import ir.sharif.ap.model.CollectionListType;
 import ir.sharif.ap.model.EditCollectionListType;
 import ir.sharif.ap.presenter.listeners.DeleteCollectionEventListener;
 import ir.sharif.ap.presenter.listeners.GetEditCollectionListEventListener;
+import ir.sharif.ap.presenter.listeners.GetSelectListEventListener;
 import ir.sharif.ap.presenter.listeners.SetEditCollectionListEventListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -45,13 +46,18 @@ public class CollectionEditPresenter implements Initializable {
 
     private GetEditCollectionListEventListener getEditCollectionListEventListener;
     private SetEditCollectionListEventListener setEditCollectionListEventListener;
-    private Get
+    private GetSelectListEventListener getSelectListEventListener;
+
     public void addGetEditCollectionListEventListener(GetEditCollectionListEventListener getEditCollectionListEventListener) {
         this.getEditCollectionListEventListener = getEditCollectionListEventListener;
     }
 
     public void addSetEditCollectionListEventListener(SetEditCollectionListEventListener setEditCollectionListEventListener) {
         this.setEditCollectionListEventListener = setEditCollectionListEventListener;
+    }
+
+    public void addGetSelectListEventListener(GetSelectListEventListener getSelectListEventListener) {
+        this.getSelectListEventListener = getSelectListEventListener;
     }
 
     @Override
@@ -81,60 +87,34 @@ public class CollectionEditPresenter implements Initializable {
                         getEditCollectionListEventListener.getEditCollectionListEventOccurred(new GetEditCollectionListEvent(CollectionListType.FOLDER, targetCollectionID));
                         break;
                     case FORWARD_LIST:
-                        break;
                     case NEW_MESSAGE:
+                        getSelectListEventListener.getSelectListEventOccurred(true);
                         break;
                 }
-
-                if(editCollectionListType == EditCollectionListType.EDIT_FOLDER)
-                else if(editCollectionListType == EditCollectionListType.EDIT_CHAT)
-                else if(editCollectionListType ==)
-
-                onCollectionReceive("");
-
             }
         });
     }
+    public void onEditCollectionReceive(String response){
 
-    public void onCollectionReceive(String response){
+        String[] args = response.split(",", -1);
         CollectionItem collectionItem = new CollectionItem();
-        collectionItem.setCollectionID(231l);
-        collectionItem.setCollectionName("user1");
+        collectionItem.setCollectionID(0l);
+        collectionItem.setCollectionName(args[0] + " " + args[1]);
         collectionItem.setCollectionItemType(CollectionItemType.USER);
-        collectionItem.setSelected(false);
-
-        CollectionItem collectionItem2 = new CollectionItem();
-        collectionItem2.setCollectionID(1l);
-        collectionItem2.setCollectionName("user12");
-        collectionItem2.setCollectionItemType(CollectionItemType.USER);
-        collectionItem2.setSelected(false);
-
-        CollectionItem collectionItem3 = new CollectionItem();
-        collectionItem3.setCollectionID(2l);
-        collectionItem3.setCollectionName("user3");
-        collectionItem3.setCollectionItemType(CollectionItemType.USER);
-        collectionItem3.setSelected(false);
-
-        CollectionItem collectionItem4 = new CollectionItem();
-        collectionItem4.setCollectionID(3l);
-        collectionItem4.setCollectionName("user4");
-        collectionItem4.setCollectionItemType(CollectionItemType.USER);
-        collectionItem4.setSelected(false);
-
-        CollectionItem collectionItem5 = new CollectionItem();
-        collectionItem5.setCollectionID(4l);
-        collectionItem5.setCollectionName("user5");
-        collectionItem5.setCollectionItemType(CollectionItemType.USER);
-        collectionItem5.setSelected(false);
-
+        collectionItem.setSelected(Boolean.parseBoolean(args[3]));
         editCollectionListView.getItems().add(collectionItem);
-        editCollectionListView.getItems().add(collectionItem2);
-        editCollectionListView.getItems().add(collectionItem3);
-        editCollectionListView.getItems().add(collectionItem4);
-        editCollectionListView.getItems().add(collectionItem5);
-
-
     }
+
+    public void onSelectCollectionReceive(String response){
+        String[] args = response.split(",", -1);
+        CollectionItem collectionItem = new CollectionItem();
+        collectionItem.setCollectionID(Long.parseLong(args[2]));
+        collectionItem.setCollectionName(args[0]);
+        collectionItem.setCollectionItemType(CollectionItemType.valueOf(args[1]));
+        collectionItem.setSelected(false);
+        editCollectionListView.getItems().add(collectionItem);
+    }
+
 
     public long getTargetCollectionID() {
         return targetCollectionID;

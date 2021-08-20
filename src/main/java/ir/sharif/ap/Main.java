@@ -309,6 +309,9 @@ public class Main extends MobileApplication {
         addViewFactory(COLLECTION_EDIT_VIEW, () -> {
             final CollectionEditView collectionEditView = new CollectionEditView();
             collectionEditPresenter = (CollectionEditPresenter) collectionEditView.getPresenter();
+            collectionEditPresenter.addGetSelectListEventListener(sure -> mainController.handleGetSelectListEvent());
+            collectionEditPresenter.addGetEditCollectionListEventListener(e -> mainController.handleGetEditCollectionListEvent(e));
+            collectionEditPresenter.addSetEditCollectionListEventListener(e -> mainController.handleSetEditCollectionListEvent(e));
             return (View) collectionEditView.getView();
         });
 
