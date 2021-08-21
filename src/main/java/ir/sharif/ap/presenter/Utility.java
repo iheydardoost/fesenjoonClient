@@ -1,5 +1,6 @@
 package ir.sharif.ap.presenter;
 
+import ir.sharif.ap.controller.PacketHandler;
 import ir.sharif.ap.model.TweetTile;
 
 import java.time.LocalDateTime;
@@ -14,16 +15,16 @@ public class Utility {
             tweetImage = Base64.getDecoder().decode(args[6]);
         if(!args[10].isEmpty())
             userImage = Base64.getDecoder().decode(args[10]);
-        tweet.setTweetText(args[0])
+        tweet.setTweetText(PacketHandler.getDecodedArg(args[0]))
                 .setTweetDateTime(LocalDateTime.parse(args[1]))
                 .setUserID(Long.parseLong(args[2]))
                 .setTweetID(Long.parseLong(args[3]))
                 .setRetweeted(Boolean.parseBoolean(args[4]))
                 .setYouLiked(Boolean.parseBoolean(args[5]))
                 .setTweetImage(tweetImage)
-                .setUserName(args[7])
-                .setFirstName(args[8])
-                .setLastName(args[9])
+                .setUserName(PacketHandler.getDecodedArg(args[7]))
+                .setFirstName(PacketHandler.getDecodedArg(args[8]))
+                .setLastName(PacketHandler.getDecodedArg(args[9]))
                 .setUserImage(userImage)
                 .setLikesNum(Integer.parseInt(args[11]))
                 .setCommentsNum(Integer.parseInt(args[12]));

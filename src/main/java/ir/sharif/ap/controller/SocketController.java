@@ -118,7 +118,11 @@ public class SocketController implements Runnable{
     }
 
     public void closeSocket(){
-        Packet request = new Packet(PacketType.BYE,"",this.authToken,this.authTokenAvailable);
+        Packet request = new Packet(
+                PacketType.BYE,
+                "",
+                this.authToken,
+                this.authTokenAvailable);
         try {
             output.write(packetHandler.makePacketStr(request).getBytes(StandardCharsets.UTF_8));
         } catch (IOException e) {

@@ -7,11 +7,16 @@ import com.gluonhq.charm.glisten.mvc.View;
 import com.gluonhq.charm.glisten.visual.MaterialDesignIcon;
 import ir.sharif.ap.Main;
 import ir.sharif.ap.controller.MainController;
+import ir.sharif.ap.controller.PacketHandler;
 import ir.sharif.ap.model.*;
-import ir.sharif.ap.presenter.listeners.DeleteMessageEventListener;
+import ir.sharif.ap.presenter.events.EditMessageEvent;
+import ir.sharif.ap.presenter.events.GetMessagesEvent;
+import ir.sharif.ap.presenter.events.NewMessageEvent;
 import ir.sharif.ap.presenter.listeners.EditMessageEventListener;
 import ir.sharif.ap.presenter.listeners.GetMessagesEventListener;
 import ir.sharif.ap.presenter.listeners.NewMessageEventListener;
+import ir.sharif.ap.presenter.listeners.WantUpdateChatEventListener;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -28,14 +33,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Base64;
-import java.util.ResourceBundle;
+import java.time.chrono.ChronoLocalDateTime;
+import java.util.*;
 
 import static ir.sharif.ap.Main.mainAppBar;
-import static ir.sharif.ap.presenter.Styles.defaultButtonStyle;
-import static ir.sharif.ap.presenter.Styles.redButtonStyle;
+import static ir.sharif.ap.presenter.Styles.DEFAULT_BUTTON_STYLE;
+import static ir.sharif.ap.presenter.Styles.RED_BUTTON_STYLE;
 
 public class ChatPresenter implements Initializable {
 
@@ -57,9 +60,14 @@ public class ChatPresenter implements Initializable {
     private GetMessagesEventListener getMessagesEventListener;
     private NewMessageEventListener newMessageEventListener;
     private EditMessageEventListener editMessageEventListener;
+    private WantUpdateChatEventListener wantUpdateChatEventListener;
     private boolean isEditing;
     private long editingMessageID;
     private Snackbar snackBar;
+
+    public void addWantUpdateChatEventListener(WantUpdateChatEventListener wantUpdateChatEventListener) {
+        this.wantUpdateChatEventListener = wantUpdateChatEventListener;
+    }
 
     public void setEditingMessageID(long editingMessageID) {
         this.editingMessageID = editingMessageID;
@@ -76,9 +84,9 @@ public class ChatPresenter implements Initializable {
     }
     public void updateSendButton(){
         if (isEditing)
-            sendButton.setStyle(redButtonStyle);
+            sendButton.setStyle(RED_BUTTON_STYLE);
         else
-            sendButton.setStyle(defaultButtonStyle);
+            sendButton.setStyle(DEFAULT_BUTTON_STYLE);
     }
 
     public void addEditMessageEventListener(EditMessageEventListener editMessageEventListener) {
@@ -106,13 +114,9 @@ public class ChatPresenter implements Initializable {
                 newMessageEvent.setForwarded(false)
                         .setMsgText(messageText.getText())
                         .setMsgImage(messageImage)
-                        .setMsgDateTime(LocalDateTime.now());
-
-                for (CollectionItem c: Main.getMessageReceiverList()) {
-                    newMessageEvent
-                            .addID(c.getCollectionID())
-                            .addCollectionItemType(c.getCollectionItemType());
-                }
+                        .setMsgDateTime(LocalDateTime.now())
+                        .addID(chatID)
+                        .addCollectionItemType(CollectionItemType.CHAT);
                 newMessageEventListener.newMessageEventOccurred(newMessageEvent);
             }
 
@@ -124,16 +128,16 @@ public class ChatPresenter implements Initializable {
         attachButton = MaterialDesignIcon.ATTACH_FILE.button(e -> {
             onAddImageClick(e);
         });
-        sendButton.setStyle(defaultButtonStyle);
-        attachButton.setStyle(defaultButtonStyle);
+        sendButton.setStyle(DEFAULT_BUTTON_STYLE);
+        attachButton.setStyle(DEFAULT_BUTTON_STYLE);
         bottomBar.getChildren().addAll(sendButton, attachButton);
 
         messageListView.setCellFactory(e ->{
             ChatListCell chatListCell = new ChatListCell();
             chatListCell.addEditMessageEventListener(e2 ->{
                 setEditing(true);
+                setEditingMessageID(chatListCell.getMessageID());
                 messageText.setText(chatListCell.getMessageText());
-
             });
             chatListCell.addDeleteMessageEventListener(e1 -> Main.getMainController().handleDeleteMessageEvent(e1));
             return chatListCell;
@@ -168,10 +172,12 @@ public class ChatPresenter implements Initializable {
                 getMessagesEventListener.getMessagesEventOccurred(new GetMessagesEvent(MainController.MAX_TWEET_LIST_REQUEST_NUMBER,
                          null, chatID));
             }
+            wantUpdateChatEventListener.wantUpdateChatEventOccurred(nv);
         });
 
         snackBar = new Snackbar("");
     }
+
     public void onDeleteMessageReceive(String response){
         long msgID=Long.parseLong(response);
         ArrayList<Message> messageArrayList= new ArrayList<>(messageListView.getItems());
@@ -182,6 +188,7 @@ public class ChatPresenter implements Initializable {
             }
         }
     }
+
     public void onEditMessageReceive(String response){
         String[] args = response.split(",",-1);
         if(args[0].contains("success")) {
@@ -189,7 +196,7 @@ public class ChatPresenter implements Initializable {
             ArrayList<Message> messageArrayList = new ArrayList<>(messageListView.getItems());
             for (Message m : messageArrayList) {
                 if (m.getMsgID() == msgID) {
-                    m.setMsgText(args[2]);
+                    m.setMsgText(PacketHandler.getDecodedArg(args[2]));
                     messageListView.getItems().set(messageArrayList.indexOf(m), m);
                     break;
                 }
@@ -199,17 +206,39 @@ public class ChatPresenter implements Initializable {
         snackBar.show();
     }
 
+    public void onChangeMessageStatus(String response){
+            String[] args = response.split(",", -1);
+            long msgID = Long.parseLong(args[0]);
+            ArrayList<Message> messageArrayList = new ArrayList<>(messageListView.getItems());
+            for (Message m : messageArrayList) {
+                if (m.getMsgID() == msgID) {
+                    m.setMsgStatus(MessageStatus.valueOf(args[1]));
+                    messageListView.getItems().set(messageArrayList.indexOf(m), m);
+                    break;
+                }
+            }
+    }
 
     public void onMessageReceive(String response){
-        String[] args = response.split(",", -1);
-        byte[] messageImage = null;
-        if(!args[2].isEmpty())
-            messageImage = Base64.getDecoder().decode(args[2]);
-        Message message = new Message(args[1], LocalDateTime.parse(args[3]),
-                chatID, Long.parseLong(args[0]),
-            Boolean.parseBoolean(args[4]), MessageStatus.valueOf(args[5]), messageImage, args[7] + " "+ args[8], Boolean.parseBoolean(args[6]));
+            String[] args = response.split(",", -1);
+            byte[] messageImage = null;
+            if (!args[2].isEmpty())
+                messageImage = Base64.getDecoder().decode(args[2]);
+            Message message = new Message(PacketHandler.getDecodedArg(args[1]), LocalDateTime.parse(args[3]),
+                    chatID, Long.parseLong(args[0]),
+                    Boolean.parseBoolean(args[4]),
+                    MessageStatus.valueOf(args[5]),
+                    messageImage,
+                    PacketHandler.getDecodedArg(args[7]) + " " + PacketHandler.getDecodedArg(args[8]),
+                    Boolean.parseBoolean(args[6]));
 
-        messageListView.getItems().add(message);
+            messageListView.getItems().add(message);
+            messageListView.getItems().sort(new Comparator<Message>() {
+                @Override
+                public int compare(Message o1, Message o2) {
+                    return o2.getMsgDateTime().compareTo(o1.getMsgDateTime());
+                }
+            });
     }
 
     void resetImage(){

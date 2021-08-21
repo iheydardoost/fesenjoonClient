@@ -7,6 +7,7 @@ import ir.sharif.ap.Main;
 import ir.sharif.ap.controller.MainController;
 import ir.sharif.ap.model.TweetListType;
 import ir.sharif.ap.model.TweetTile;
+import ir.sharif.ap.presenter.events.ListTweetEvent;
 import ir.sharif.ap.presenter.listeners.ListTweetEventListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -26,12 +27,13 @@ public class MyTweetListPresenter implements Initializable {
     private View myTweetView;
     private ListTweetEventListener listTweetEventListener;
 
-    public void addListTweetEventListener(ListTweetEventListener listTweetEventListener) {
-        this.listTweetEventListener = listTweetEventListener;
-    }
     @FXML
     private ListView<TweetTile> myTweetListView;
     static LocalDateTime previousLastTweetTime = null;
+
+    public void addListTweetEventListener(ListTweetEventListener listTweetEventListener) {
+        this.listTweetEventListener = listTweetEventListener;
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

@@ -5,7 +5,10 @@ import com.gluonhq.charm.glisten.control.AppBar;
 import com.gluonhq.charm.glisten.control.Snackbar;
 import com.gluonhq.charm.glisten.mvc.View;
 import ir.sharif.ap.Main;
+import ir.sharif.ap.controller.PacketHandler;
 import ir.sharif.ap.model.RelationType;
+import ir.sharif.ap.presenter.events.RelationUserEvent;
+import ir.sharif.ap.presenter.listeners.GetChatIDByUserIDEventListener;
 import ir.sharif.ap.presenter.listeners.GetUserInfoEventListener;
 import ir.sharif.ap.presenter.listeners.RelationUserEventListener;
 import javafx.event.ActionEvent;
@@ -22,6 +25,7 @@ import java.net.URL;
 import java.util.Base64;
 import java.util.ResourceBundle;
 
+import static ir.sharif.ap.Main.CHAT_VIEW;
 import static ir.sharif.ap.Main.mainAppBar;
 
 public class UserInfoPresenter implements Initializable {
@@ -88,6 +92,11 @@ public class UserInfoPresenter implements Initializable {
 
     private GetUserInfoEventListener getUserInfoEventListener;
     private RelationUserEventListener relationUserEventListener;
+    private GetChatIDByUserIDEventListener getChatIDByUserIDEventListener;
+
+    public void addGetChatIDByUserIDEventListener(GetChatIDByUserIDEventListener getChatIDByUserIDEventListener) {
+        this.getChatIDByUserIDEventListener = getChatIDByUserIDEventListener;
+    }
 
     public void addRelationUserEventListener(RelationUserEventListener relationUserEventListener) {
         this.relationUserEventListener = relationUserEventListener;
@@ -108,7 +117,6 @@ public class UserInfoPresenter implements Initializable {
 
     public void update(){
         getUserInfoEventListener.getUserInfoEventOccurred(userID);
-
     }
 
     @FXML
@@ -130,7 +138,12 @@ public class UserInfoPresenter implements Initializable {
 
     @FXML
     void onMessageButton(ActionEvent event) {
+        getChatIDByUserIDEventListener.getChatIDByUserIDEventOccurred(userID);
+    }
 
+    public void onChatIDReceive(String response){
+        Main.setChatID(Long.parseLong(response));
+        MobileApplication.getInstance().switchView(CHAT_VIEW);
     }
 
     @FXML
@@ -197,6 +210,7 @@ public class UserInfoPresenter implements Initializable {
         snackbar.setMessage(message);
         snackbar.show();
     }
+
     public void onResponseReceive(String response){
 
         showMessage(response);
@@ -208,19 +222,15 @@ public class UserInfoPresenter implements Initializable {
             followButton.setText("Unfollow");
         }
     }
+
     public void onInfoReceive(String response){
-
-
         String[] args = response.split(",",-1);
 
-        firstnameText.setText(args[2]);
-        lastnameText.setText(args[3]);
-        usernameTxt.setText(args[1]);
+        firstnameText.setText(PacketHandler.getDecodedArg(args[2]));
+        lastnameText.setText(PacketHandler.getDecodedArg(args[3]));
+        usernameTxt.setText(PacketHandler.getDecodedArg(args[1]));
 
-        String bio = args[10];
-        for(int i=11; i<args.length; i++){
-            bio += ("," + args[i]);
-        }
+        String bio = PacketHandler.getDecodedArg(args[10]);
         bioText.setText(bio);
         lastSeenText.setText(args[8]);
         isFollowing = Boolean.parseBoolean(args[9]);
@@ -230,8 +240,8 @@ public class UserInfoPresenter implements Initializable {
         blockButton.setText("Block");
 
         if(isFollowing){
-            emailText.setText(args[5]);
-            phoneText.setText(args[6]);
+            emailText.setText(PacketHandler.getDecodedArg(args[5]));
+            phoneText.setText(PacketHandler.getDecodedArg(args[6]));
             dateOfBirthText.setText(args[4]);
         }
         updateFollowText();

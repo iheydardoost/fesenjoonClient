@@ -4,8 +4,8 @@ import com.gluonhq.charm.glisten.application.MobileApplication;
 import com.gluonhq.charm.glisten.control.AppBar;
 import com.gluonhq.charm.glisten.control.Snackbar;
 import com.gluonhq.charm.glisten.mvc.View;
+import ir.sharif.ap.presenter.events.NewTweetEvent;
 import ir.sharif.ap.presenter.listeners.NewTweetListener;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -151,7 +151,7 @@ public class NewTweetPresenter implements Initializable {
     }
 
     public void onNewTweetResultRecive(String result){
-        String args[] = result.split(",", -1);
+        String[] args = result.split(",", -1);
         snackbar.setMessage(args[0]);
         snackbar.show();
         if(args[0].equals("success")){

@@ -1,17 +1,22 @@
 package ir.sharif.ap.presenter;
 
 import com.gluonhq.charm.glisten.application.MobileApplication;
+import com.gluonhq.charm.glisten.control.Alert;
 import com.gluonhq.charm.glisten.control.AppBar;
 import com.gluonhq.charm.glisten.control.Snackbar;
 import com.gluonhq.charm.glisten.mvc.View;
 import ir.sharif.ap.Main;
+import ir.sharif.ap.controller.PacketHandler;
 import ir.sharif.ap.model.CollectionItem;
 import ir.sharif.ap.model.CollectionItemType;
 import ir.sharif.ap.model.CollectionListType;
 import ir.sharif.ap.model.EditCollectionListType;
-import ir.sharif.ap.presenter.listeners.DeleteCollectionEventListener;
+import ir.sharif.ap.presenter.events.GetEditCollectionListEvent;
+import ir.sharif.ap.presenter.events.NewMessageEvent;
+import ir.sharif.ap.presenter.events.SetEditCollectionListEvent;
 import ir.sharif.ap.presenter.listeners.GetEditCollectionListEventListener;
 import ir.sharif.ap.presenter.listeners.GetSelectListEventListener;
+import ir.sharif.ap.presenter.listeners.NewMessageEventListener;
 import ir.sharif.ap.presenter.listeners.SetEditCollectionListEventListener;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -20,6 +25,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -47,6 +53,11 @@ public class CollectionEditPresenter implements Initializable {
     private GetEditCollectionListEventListener getEditCollectionListEventListener;
     private SetEditCollectionListEventListener setEditCollectionListEventListener;
     private GetSelectListEventListener getSelectListEventListener;
+    private NewMessageEventListener newMessageEventListener;
+
+    public void addNewMessageEventListener(NewMessageEventListener newMessageEventListener) {
+        this.newMessageEventListener = newMessageEventListener;
+    }
 
     public void addGetEditCollectionListEventListener(GetEditCollectionListEventListener getEditCollectionListEventListener) {
         this.getEditCollectionListEventListener = getEditCollectionListEventListener;
@@ -94,14 +105,15 @@ public class CollectionEditPresenter implements Initializable {
             }
         });
     }
+
     public void onEditCollectionReceive(String response){
 
         String[] args = response.split(",", -1);
         CollectionItem collectionItem = new CollectionItem();
-        collectionItem.setCollectionID(0l);
-        collectionItem.setCollectionName(args[0] + " " + args[1]);
+        collectionItem.setCollectionID(0L);
+        collectionItem.setCollectionName(PacketHandler.getDecodedArg(args[0]) + " " + PacketHandler.getDecodedArg(args[1]));
         collectionItem.setCollectionItemType(CollectionItemType.USER);
-        collectionItem.setUserName(args[2]);
+        collectionItem.setUserName(PacketHandler.getDecodedArg(args[2]));
         collectionItem.setSelected(Boolean.parseBoolean(args[3]));
         editCollectionListView.getItems().add(collectionItem);
     }
@@ -110,7 +122,7 @@ public class CollectionEditPresenter implements Initializable {
         String[] args = response.split(",", -1);
         CollectionItem collectionItem = new CollectionItem();
         collectionItem.setCollectionID(Long.parseLong(args[2]));
-        collectionItem.setCollectionName(args[0]);
+        collectionItem.setCollectionName(PacketHandler.getDecodedArg(args[0]));
         collectionItem.setCollectionItemType(CollectionItemType.valueOf(args[1]));
         collectionItem.setSelected(false);
         editCollectionListView.getItems().add(collectionItem);
@@ -125,11 +137,6 @@ public class CollectionEditPresenter implements Initializable {
         this.targetCollectionID = targetCollectionID;
     }
 
-    void onApplyResponse(String response){
-        snackbar.setMessage(response);
-        snackbar.show();
-        MobileApplication.getInstance().switchToPreviousView();
-    }
     @FXML
     void onApplyButton(ActionEvent event) {
 
@@ -137,8 +144,34 @@ public class CollectionEditPresenter implements Initializable {
         ArrayList<CollectionItem> arrayList = new ArrayList<>(numbers);
         arrayList.removeIf(collectionItem -> !collectionItem.getSelected());
 
-        if(editCollectionListType == EditCollectionListType.NEW_MESSAGE || editCollectionListType == EditCollectionListType.FORWARD_LIST){
+        if(editCollectionListType == EditCollectionListType.NEW_MESSAGE){
             Main.setMessageReceiverList(arrayList);
+            MobileApplication.getInstance().switchToPreviousView();
+
+        } else if( editCollectionListType == EditCollectionListType.FORWARD_LIST){
+
+            if(arrayList == null || arrayList.size()<1){
+                Alert alert = new Alert(javafx.scene.control.Alert.AlertType.ERROR);
+                alert.setTitleText("Error");
+                alert.setContentText("Please select message receiver.");
+                alert.showAndWait();
+                return;
+            }
+            NewMessageEvent newMessageEvent =new NewMessageEvent();
+            newMessageEvent.setForwarded(true)
+                    .setMsgText(Main.getForwardMessageText())
+                    .setMsgImage(Main.getForwardMessageImage())
+                    .setMsgDateTime(LocalDateTime.now());
+
+            for (CollectionItem c: arrayList) {
+                newMessageEvent
+                        .addID(c.getCollectionID())
+                        .addCollectionItemType(c.getCollectionItemType());
+            }
+
+            newMessageEventListener.newMessageEventOccurred(newMessageEvent);
+
+            Main.clearMessageReceiverList();
             MobileApplication.getInstance().switchToPreviousView();
 
         }else{

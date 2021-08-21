@@ -10,9 +10,10 @@ import ir.sharif.ap.Main;
 import ir.sharif.ap.controller.MainController;
 import ir.sharif.ap.model.TweetListType;
 import ir.sharif.ap.model.TweetTile;
+import ir.sharif.ap.presenter.events.ListTweetEvent;
+import ir.sharif.ap.presenter.events.SearchUsernameEvent;
 import ir.sharif.ap.presenter.listeners.ListTweetEventListener;
 import ir.sharif.ap.presenter.listeners.SearchUsernameEventListener;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -27,7 +28,7 @@ import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
 import static ir.sharif.ap.Main.*;
-import static ir.sharif.ap.presenter.Styles.defaultButtonStyle;
+import static ir.sharif.ap.presenter.Styles.DEFAULT_BUTTON_STYLE;
 
 public class ExplorePresenter implements Initializable {
     @FXML
@@ -50,6 +51,7 @@ public class ExplorePresenter implements Initializable {
     private final String TAB_NAME ="Explore";
     private ListTweetEventListener listTweetEventListener;
     private SearchUsernameEventListener searchUsernameEventListener;
+    private static LocalDateTime previousLastTweetTime = null;
 
     public void addSearchUsernameEventListener(SearchUsernameEventListener searchUsernameEventListener) {
         this.searchUsernameEventListener = searchUsernameEventListener;
@@ -58,7 +60,6 @@ public class ExplorePresenter implements Initializable {
     public void addListTweetEventListener(ListTweetEventListener listTweetEventListener) {
         this.listTweetEventListener = listTweetEventListener;
     }
-    static LocalDateTime previousLastTweetTime = null;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -67,7 +68,7 @@ public class ExplorePresenter implements Initializable {
             searchUsernameEventListener.searchUsernameEventOccurred(
                     new SearchUsernameEvent(true,searchText.getText()));
         });
-        searchButton.setStyle(defaultButtonStyle);
+        searchButton.setStyle(DEFAULT_BUTTON_STYLE);
         searchBar.getChildren().add(searchButton);
 
 
@@ -142,7 +143,7 @@ public class ExplorePresenter implements Initializable {
     }
 
     public void onSearchResultReceive(String searchResult){
-        String args[] = searchResult.split(",",-1);
+        String[] args = searchResult.split(",",-1);
         snackbar.setMessage(args[0]);
         snackbar.show();
         if(args[0].equals("found")){

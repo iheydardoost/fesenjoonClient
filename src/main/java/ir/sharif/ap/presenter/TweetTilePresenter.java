@@ -5,7 +5,9 @@ import com.gluonhq.charm.glisten.control.Avatar;
 import com.gluonhq.charm.glisten.mvc.View;
 import com.gluonhq.charm.glisten.visual.MaterialDesignIcon;
 import ir.sharif.ap.Main;
-import ir.sharif.ap.View.TweetDetailView;
+import ir.sharif.ap.presenter.events.ActionTweetEvent;
+import ir.sharif.ap.presenter.events.NewTweetEvent;
+import ir.sharif.ap.view.TweetDetailView;
 import ir.sharif.ap.controller.LogHandler;
 import ir.sharif.ap.model.ActionType;
 import ir.sharif.ap.model.TweetTile;
@@ -132,10 +134,10 @@ public class TweetTilePresenter implements Initializable {
 
         });
 
-        retweetButton.setStyle(defaultButtonStyle);
-        likeButton.setStyle(defaultButtonStyle);
-        commentButton.setStyle(defaultButtonStyle);
-        tweetDetailButton.setStyle(defaultButtonStyle);
+        retweetButton.setStyle(DEFAULT_BUTTON_STYLE);
+        likeButton.setStyle(DEFAULT_BUTTON_STYLE);
+        commentButton.setStyle(DEFAULT_BUTTON_STYLE);
+        tweetDetailButton.setStyle(DEFAULT_BUTTON_STYLE);
 
         likesNum = new Label("0");
         commentsNum = new Label("0");
@@ -149,7 +151,7 @@ public class TweetTilePresenter implements Initializable {
         }
     }
 
-    public void setTweetFullname(String tweetUsername) {
+    public void setTweetFullName(String tweetUsername) {
         this.tweetUsername.setText(tweetUsername);
     }
 
@@ -175,18 +177,20 @@ public class TweetTilePresenter implements Initializable {
     public void setCommentsNum(String commentsNum) {
         this.commentsNum.setText(commentsNum);
     }
+
     public void setDarkBackgroundStyle(boolean setDarkBackgroundStyle){
         if(setDarkBackgroundStyle){
-            this.tweetPane.setStyle(darkBackgroundStyle);
+            this.tweetPane.setStyle(DARK_BACKGROUND_STYLE);
         }else {
-            this.tweetPane.setStyle(lightBackgroundStyle);
+            this.tweetPane.setStyle(LIGHT_BACKGROUND_STYLE);
         }
     }
+
     public void setLikeIcon(boolean isLiked){
         if(isLiked){
-            likeButton.setStyle(redButtonStyle);
+            likeButton.setStyle(RED_BUTTON_STYLE);
         }else {
-            likeButton.setStyle(defaultButtonStyle);
+            likeButton.setStyle(DEFAULT_BUTTON_STYLE);
         }
     }
 
@@ -194,7 +198,7 @@ public class TweetTilePresenter implements Initializable {
         this.tweet = tweet;
 
         setTweetText(tweet.getTweetText());
-        setTweetFullname(tweet.getFirstName() + " " + tweet.getLastName());
+        setTweetFullName(tweet.getFirstName() + " " + tweet.getLastName());
         setCommentsNum(Integer.toString(tweet.getCommentsNum()));
         setLikesNum(Integer.toString(tweet.getLikesNum()));
         byte[] userImageData = tweet.getUserImage(), tweetImageDate = tweet.getTweetImage();

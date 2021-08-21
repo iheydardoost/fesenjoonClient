@@ -4,6 +4,7 @@ import com.gluonhq.charm.glisten.control.Icon;
 import com.gluonhq.charm.glisten.visual.MaterialDesignIcon;
 import ir.sharif.ap.model.Message;
 import ir.sharif.ap.model.MessageStatus;
+import ir.sharif.ap.presenter.events.EditMessageEvent;
 import ir.sharif.ap.presenter.listeners.DeleteMessageEventListener;
 import ir.sharif.ap.presenter.listeners.EditMessageEventListener;
 import javafx.fxml.FXML;
@@ -84,9 +85,9 @@ public class ChatTilePresenter implements Initializable {
             deleteMessageEventListener.deleteMessageEventOccurred(message.getMsgID());
         });
 
-        editMessageButton.setStyle(defaultButtonStyle);
+        editMessageButton.setStyle(DEFAULT_BUTTON_STYLE);
 
-        deleteMessageButton.setStyle(defaultButtonStyle);
+        deleteMessageButton.setStyle(DEFAULT_BUTTON_STYLE);
 
         actionBox.getChildren().addAll(editMessageButton, deleteMessageButton);
 
@@ -104,6 +105,7 @@ public class ChatTilePresenter implements Initializable {
         if(messageDate!=null)
             messageDateText.setText(messageDate.toString());
     }
+
     public void setMessageStatus(MessageStatus messageStatus){
         switch (messageStatus){
             case SENDING:
@@ -118,7 +120,6 @@ public class ChatTilePresenter implements Initializable {
             case SEEN:
                 messageStatusIcon.setContent(MaterialDesignIcon.VISIBILITY);
                 break;
-
         }
     }
 
@@ -135,10 +136,17 @@ public class ChatTilePresenter implements Initializable {
 
     public void setBackgroundStyle(boolean isOwner){
         if(isOwner){
-            this.messagePane.setStyle(chatMessageOwnerStyle);
+            this.messagePane.setStyle(CHAT_MESSAGE_OWNER_STYLE);
         }else {
-            this.messagePane.setStyle(lightBackgroundStyle);
+            this.messagePane.setStyle(LIGHT_BACKGROUND_STYLE);
         }
+    }
+
+    public void updateButtons(boolean isOwner){
+        deleteMessageButton.setManaged(isOwner);
+        deleteMessageButton.setVisible(isOwner);
+        editMessageButton.setManaged(isOwner);
+        editMessageButton.setVisible(isOwner);
     }
 
     public void setMessage(Message message){
@@ -160,7 +168,7 @@ public class ChatTilePresenter implements Initializable {
         setMessageDate(message.getMsgDateTime());
         setMessageStatus(message.getMsgStatus());
         setBackgroundStyle(message.isOwner());
-
+        updateButtons(message.isOwner());
     }
 
 }

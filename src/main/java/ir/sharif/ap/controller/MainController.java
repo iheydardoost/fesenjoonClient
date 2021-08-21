@@ -1,8 +1,8 @@
 package ir.sharif.ap.controller;
 
 import ir.sharif.ap.Main;
-import ir.sharif.ap.presenter.*;
 import ir.sharif.ap.model.*;
+import ir.sharif.ap.presenter.events.*;
 import javafx.application.Platform;
 
 import java.time.LocalDate;
@@ -125,9 +125,11 @@ public class MainController implements Runnable{
                 break;
             case SET_EDIT_FOLDER_LIST_RES:
             case SET_EDIT_GROUP_LIST_RES:
+                Platform.runLater(()->Main.getCollectionEditPresenter().onResponseReceive(response.getBody()));
+                break;
             case DELETE_FOLDER_RES:
             case DELETE_GROUP_RES:
-                Platform.runLater(()->Main.getCollectionEditPresenter().onResponseReceive(response.getBody()));
+                Platform.runLater(()->Main.getManageCollectionPresenter().onResponseReceive(response.getBody()));
                 break;
             case NEW_MESSAGE_RES:
                 Platform.runLater(()-> {
@@ -139,17 +141,15 @@ public class MainController implements Runnable{
             case EDIT_MESSAGE_RES:
                 Platform.runLater(()->Main.getChatPresenter().onEditMessageReceive(response.getBody()));
                 break;
-
-//            case REPORT_TWEET_RES:
-//                break;
-//            case LIKE_TWEET_RES:
-//                break;
-//            case REPORT_USER_RES:
-//                break;
-//            case MUTE_USER_RES:
-//                break;
-//            case BLOCK_USER_RES:
-//                break;
+            case MESSAGE_CHANGE_STATUS_RES:
+                Platform.runLater(()->Main.getChatPresenter().onChangeMessageStatus(response.getBody()));
+                break;
+            case REFRESH_CHATROOM_RES:
+                Platform.runLater(()->Main.getChatsRoomPresenter().onRefreshList(response.getBody()));
+                break;
+            case GET_CHAT_ID_BY_USER_ID_RES:
+                Platform.runLater(()->Main.getUserInfoPresenter().onChatIDReceive(response.getBody()));
+                break;
             default:
                 break;
         }
@@ -160,21 +160,22 @@ public class MainController implements Runnable{
         if(e.isLoginReq()){
            request = new Packet(
                    PacketType.LOG_IN_REQ,
-                   e.getUserName() + "," + e.getPassword(),
+                   PacketHandler.makeEncodedArg(e.getUserName()) + ","
+                           + PacketHandler.makeEncodedArg(e.getPassword()),
                    0,
                    false);
         }
         else{
             request = new Packet(
                     PacketType.SIGN_UP_REQ,
-                    e.getFirstName() + ","
-                            + e.getLastName() + ","
-                            + e.getUserName() + ","
-                            + e.getPassword() + ","
+                    PacketHandler.makeEncodedArg(e.getFirstName()) + ","
+                            + PacketHandler.makeEncodedArg(e.getLastName()) + ","
+                            + PacketHandler.makeEncodedArg(e.getUserName()) + ","
+                            + PacketHandler.makeEncodedArg(e.getPassword()) + ","
                             + e.getDateOfBirth() + ","
-                            + e.getEmail() + ","
-                            + e.getPhoneNumber() + ","
-                            + e.getBio(),
+                            + PacketHandler.makeEncodedArg(e.getEmail()) + ","
+                            + PacketHandler.makeEncodedArg(e.getPhoneNumber()) + ","
+                            + PacketHandler.makeEncodedArg(e.getBio()),
                     0,
                     false);
         }
@@ -213,26 +214,26 @@ public class MainController implements Runnable{
         socketController.addRequest(
                 new Packet(
                         PacketType.CHANGE_SETTING_REQ,
-                        "lastSeenStatus," + e.getLastSeenStatus(),
+                        "lastSeenStatus," + PacketHandler.makeEncodedArg(e.getLastSeenStatus().toString()),
                         socketController.getAuthToken(),
                         true));
         socketController.addRequest(
                 new Packet(
                         PacketType.CHANGE_SETTING_REQ,
-                        "accountPrivate," + e.isAccountPrivate(),
+                        "accountPrivate," + PacketHandler.makeEncodedArg(Boolean.toString(e.isAccountPrivate())),
                         socketController.getAuthToken(),
                         true));
         socketController.addRequest(
                 new Packet(
                         PacketType.CHANGE_SETTING_REQ,
-                        "accountActive," + e.isAccountActive(),
+                        "accountActive," + PacketHandler.makeEncodedArg(Boolean.toString(e.isAccountActive())),
                         socketController.getAuthToken(),
                         true));
         if(!e.getPassword().isEmpty()) {
             socketController.addRequest(
                     new Packet(
                             PacketType.CHANGE_SETTING_REQ,
-                            "password," + e.getPassword(),
+                            "password," + PacketHandler.makeEncodedArg(e.getPassword()),
                             socketController.getAuthToken(),
                             true));
         }
@@ -322,7 +323,7 @@ public class MainController implements Runnable{
         byte[] tweetImage = e.getTweetImage();
         if(tweetImage!=null)
             imageStr = Base64.getEncoder().encodeToString(e.getTweetImage());
-        String body = e.getTweetText() + ","
+        String body = PacketHandler.makeEncodedArg(e.getTweetText()) + ","
                 + e.getTweetDateTime() + ","
                 + e.getParentTweetID() + ","
                 + e.isRetweeted() + ","
@@ -339,7 +340,7 @@ public class MainController implements Runnable{
         socketController.addRequest(
                 new Packet(
                         PacketType.SEARCH_USERNAME_REQ,
-                        e.getUserName()+","+e.isExplorer(),
+                        PacketHandler.makeEncodedArg(e.getUserName())+","+e.isExplorer(),
                         socketController.getAuthToken(),
                         true));
     }
@@ -397,7 +398,7 @@ public class MainController implements Runnable{
 
     public void handleFollowResponseEvent(FollowResponseEvent e){
         PacketType packetType = null;
-        String body = e.getUserName();
+        String body = PacketHandler.makeEncodedArg(e.getUserName());
         switch (e.getFollowResponseType()){
             case ACCEPT:
                 packetType = PacketType.ACCEPT_FOLLOW_REQ;
@@ -425,7 +426,7 @@ public class MainController implements Runnable{
             socketController.addRequest(
                     new Packet(
                             PacketType.EDIT_USER_INFO_REQ,
-                            "firstName," + firstName,
+                            "firstName," + PacketHandler.makeEncodedArg(firstName),
                             socketController.getAuthToken(),
                             true));
         }
@@ -434,7 +435,7 @@ public class MainController implements Runnable{
             socketController.addRequest(
                     new Packet(
                             PacketType.EDIT_USER_INFO_REQ,
-                            "lastName," + lastName,
+                            "lastName," + PacketHandler.makeEncodedArg(lastName),
                             socketController.getAuthToken(),
                             true));
         }
@@ -443,7 +444,7 @@ public class MainController implements Runnable{
             socketController.addRequest(
                     new Packet(
                             PacketType.EDIT_USER_INFO_REQ,
-                            "dateOfBirth," + dateOfBirth,
+                            "dateOfBirth," + PacketHandler.makeEncodedArg(dateOfBirth.toString()),
                             socketController.getAuthToken(),
                             true));
         }
@@ -452,7 +453,7 @@ public class MainController implements Runnable{
             socketController.addRequest(
                     new Packet(
                             PacketType.EDIT_USER_INFO_REQ,
-                            "phoneNumber," + phoneNumber,
+                            "phoneNumber," + PacketHandler.makeEncodedArg(phoneNumber),
                             socketController.getAuthToken(),
                             true));
         }
@@ -461,7 +462,7 @@ public class MainController implements Runnable{
             socketController.addRequest(
                     new Packet(
                             PacketType.EDIT_USER_INFO_REQ,
-                            "bio," + bio,
+                            "bio," + PacketHandler.makeEncodedArg(bio),
                             socketController.getAuthToken(),
                             true));
         }
@@ -537,7 +538,7 @@ public class MainController implements Runnable{
         socketController.addRequest(
                 new Packet(
                         packetType,
-                        e.getName(),
+                        PacketHandler.makeEncodedArg(e.getName()),
                         socketController.getAuthToken(),
                         true));
     }
@@ -579,7 +580,7 @@ public class MainController implements Runnable{
 
         String body = Long.toString(e.getCollectionID());
         for (String userName: e.getUserNames()) {
-            body += ( "," + userName);
+            body += ( "," + PacketHandler.makeEncodedArg(userName));
         }
         socketController.addRequest(
                 new Packet(
@@ -617,7 +618,7 @@ public class MainController implements Runnable{
         socketController.addRequest(
                 new Packet(
                         PacketType.EDIT_MESSAGE_REQ,
-                        Long.toString(e.getMsgID()) + "," + e.getMsgText(),
+                        Long.toString(e.getMsgID()) + "," + PacketHandler.makeEncodedArg(e.getMsgText()),
                         socketController.getAuthToken(),
                         true));
     }
@@ -642,7 +643,7 @@ public class MainController implements Runnable{
         if(lastMessageDateTime!=null)
             dateTimeStr = lastMessageDateTime.toString();
 
-        String body = e.getMsgText() + ","
+        String body = PacketHandler.makeEncodedArg(e.getMsgText()) + ","
                     + msgImageStr + ","
                     + dateTimeStr + ","
                     + e.isForwarded();
@@ -671,6 +672,15 @@ public class MainController implements Runnable{
                 new Packet(
                         PacketType.WANT_UPDATE_CHAT_REQ,
                         Boolean.toString(want),
+                        socketController.getAuthToken(),
+                        true));
+    }
+
+    public void handleGetChatIDEvent(long userID){
+        socketController.addRequest(
+                new Packet(
+                        PacketType.GET_CHAT_ID_BY_USER_ID_REQ,
+                        Long.toString(userID),
                         socketController.getAuthToken(),
                         true));
     }

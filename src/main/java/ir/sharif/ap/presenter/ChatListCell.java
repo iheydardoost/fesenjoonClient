@@ -1,6 +1,6 @@
 package ir.sharif.ap.presenter;
 
-import ir.sharif.ap.View.ChatTileView;
+import ir.sharif.ap.view.ChatTileView;
 import ir.sharif.ap.model.Message;
 import ir.sharif.ap.presenter.listeners.DeleteMessageEventListener;
 import ir.sharif.ap.presenter.listeners.EditMessageEventListener;
@@ -8,8 +8,9 @@ import javafx.scene.control.ListCell;
 
 
 public class ChatListCell extends ListCell<Message> {
-
     private final ChatTileView chatTileView = new ChatTileView();
+    private final ChatTilePresenter chatTilePresenter = (ChatTilePresenter)chatTileView.getPresenter();;
+    private Message message;
 
     public void addDeleteMessageEventListener(DeleteMessageEventListener deleteMessageEventListener) {
         chatTilePresenter.addDeleteMessageEventListener(deleteMessageEventListener);
@@ -19,12 +20,11 @@ public class ChatListCell extends ListCell<Message> {
         chatTilePresenter.addEditMessageEventListener(editMessageEventListener);
     }
 
-    private final ChatTilePresenter chatTilePresenter = (ChatTilePresenter)chatTileView.getPresenter();;
-    private Message message;
     public String getMessageText(){
         return message.getMsgText();
     }
 
+    public long getMessageID(){ return message.getMsgID();}
 
     @Override
     protected void updateItem(Message item, boolean empty) {

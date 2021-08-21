@@ -31,6 +31,21 @@ public class Message {
         this.isOwner = isOwner;
     }
 
+    public static Message copy(Message message){
+        Message copiedMsg = new Message(
+                message.getMsgText(),
+                LocalDateTime.of(message.getMsgDateTime().toLocalDate(),message.getMsgDateTime().toLocalTime()),
+                message.getChatID(),
+                message.getMsgID(),
+                message.isForwarded(),
+                message.getMsgStatus(),
+                message.getMsgImage(),
+                message.getUserFullName(),
+                message.isOwner()
+        );
+        return copiedMsg;
+    }
+
     public String getUserFullName() {
         return userFullName;
     }

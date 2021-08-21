@@ -2,13 +2,15 @@ package ir.sharif.ap.presenter;
 
 import com.gluonhq.charm.glisten.application.MobileApplication;
 import com.gluonhq.charm.glisten.control.AppBar;
+import com.gluonhq.charm.glisten.control.Snackbar;
 import com.gluonhq.charm.glisten.mvc.View;
 import com.gluonhq.charm.glisten.visual.MaterialDesignIcon;
 import ir.sharif.ap.Main;
+import ir.sharif.ap.controller.PacketHandler;
 import ir.sharif.ap.model.CollectionItemType;
 import ir.sharif.ap.model.CollectionListType;
 import ir.sharif.ap.model.CollectionItem;
-import ir.sharif.ap.model.EditCollectionListType;
+import ir.sharif.ap.presenter.events.NewCollectionEvent;
 import ir.sharif.ap.presenter.listeners.*;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -20,10 +22,9 @@ import javafx.scene.layout.HBox;
 
 import java.net.URL;
 import java.util.ResourceBundle;
-import java.util.logging.LogManager;
 
 import static ir.sharif.ap.Main.mainAppBar;
-import static ir.sharif.ap.presenter.Styles.defaultButtonStyle;
+import static ir.sharif.ap.presenter.Styles.DEFAULT_BUTTON_STYLE;
 
 public class ManageCollectionPresenter implements Initializable {
 
@@ -44,6 +45,8 @@ public class ManageCollectionPresenter implements Initializable {
     private GetCollectionListEventListener getCollectionListEventListener;
     private NewCollectionEventListener newCollectionEventListener;
     private DeleteCollectionEventListener deleteCollectionEventListener;
+
+    private Snackbar snackbar;
 
     public void addDeleteCollectionEventListener(DeleteCollectionEventListener deleteCollectionEventListener) {
         this.deleteCollectionEventListener = deleteCollectionEventListener;
@@ -75,7 +78,7 @@ public class ManageCollectionPresenter implements Initializable {
 
             System.out.println("Added Collection");
         });
-        addCollection.setStyle(defaultButtonStyle);
+        addCollection.setStyle(DEFAULT_BUTTON_STYLE);
         buttonBarBox.getChildren().add(addCollection);
 
         manageCollectionTab.showingProperty().addListener((obs, ov, nv) -> {
@@ -97,10 +100,12 @@ public class ManageCollectionPresenter implements Initializable {
                 getCollectionListEventListener.getCollectionListEventOccurred(collectionListType);
             }
         });
+
+        snackbar = new Snackbar("");
     }
 
     public void onCollectionReceive(String response){
-        String args[] = response.split(",", -1);
+        String[] args = response.split(",", -1);
         CollectionItem collectionItem = new CollectionItem();
         if(collectionListType == CollectionListType.GROUP){
             collectionItem.setCollectionItemType(CollectionItemType.CHAT);
@@ -108,9 +113,13 @@ public class ManageCollectionPresenter implements Initializable {
             collectionItem.setCollectionItemType(CollectionItemType.FOLDER);
         }
         collectionItem.setCollectionID(Long.parseLong(args[0]));
-        collectionItem.setCollectionName(args[1]);
+        collectionItem.setCollectionName(PacketHandler.getDecodedArg(args[1]));
         collectionListView.getItems().add(collectionItem);
     }
 
+    public void onResponseReceive(String response){
+        snackbar.setMessage(response);
+        snackbar.show();
+    }
 
 }

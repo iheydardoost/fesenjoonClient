@@ -7,6 +7,7 @@ import ir.sharif.ap.Main;
 import ir.sharif.ap.model.RelationListType;
 import ir.sharif.ap.model.RelationTile;
 import ir.sharif.ap.model.RelationType;
+import ir.sharif.ap.presenter.events.RelationUserEvent;
 import ir.sharif.ap.presenter.listeners.RelationUserEventListener;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
@@ -16,7 +17,7 @@ import javafx.scene.layout.VBox;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-import static ir.sharif.ap.presenter.Styles.defaultButtonStyle;
+import static ir.sharif.ap.presenter.Styles.DEFAULT_BUTTON_STYLE;
 
 public class RelationListCell extends ListCell<RelationTile> {
 
@@ -44,7 +45,7 @@ public class RelationListCell extends ListCell<RelationTile> {
             relationUserEventListener.relationUserEventOccurred(relationUserEvent);
 
         });
-        unlockButton.setStyle(defaultButtonStyle);
+        unlockButton.setStyle(DEFAULT_BUTTON_STYLE);
         tile.setSecondaryGraphic(new VBox(unlockButton));
     }
 

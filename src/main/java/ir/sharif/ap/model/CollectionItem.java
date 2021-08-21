@@ -7,6 +7,9 @@ public class CollectionItem {
     private Boolean isSelected;
     private CollectionItemType collectionItemType;
 
+    public CollectionItem() {
+    }
+
     public String getUserName() {
         return userName;
     }

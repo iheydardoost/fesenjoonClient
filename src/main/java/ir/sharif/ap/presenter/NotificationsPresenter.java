@@ -4,6 +4,7 @@ import com.gluonhq.charm.glisten.application.MobileApplication;
 import com.gluonhq.charm.glisten.control.AppBar;
 import com.gluonhq.charm.glisten.mvc.View;
 import ir.sharif.ap.Main;
+import ir.sharif.ap.controller.PacketHandler;
 import ir.sharif.ap.model.NotificationListType;
 import ir.sharif.ap.model.NotificationTile;
 import ir.sharif.ap.presenter.listeners.FollowResponseEventListener;
@@ -88,8 +89,8 @@ public class NotificationsPresenter implements Initializable {
         NotificationTile notificationTile = new NotificationTile();
         notificationTile.setNotificationListType(notificationListType);
         notificationTile.setStatusText(args[4]);
-        notificationTile.setUsername(args[0]);
-        notificationTile.setUserFullName(args[1] + " "+ args[2]);
+        notificationTile.setUsername(PacketHandler.getDecodedArg(args[0]));
+        notificationTile.setUserFullName(PacketHandler.getDecodedArg(args[1]) + " "+ PacketHandler.getDecodedArg(args[2]));
         byte[] userImage = null;
         if(!args[3].isEmpty())
             userImage = Base64.getDecoder().decode(args[3]);

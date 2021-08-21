@@ -5,10 +5,10 @@ import com.gluonhq.charm.glisten.control.AppBar;
 import com.gluonhq.charm.glisten.mvc.View;
 import ir.sharif.ap.Main;
 import ir.sharif.ap.controller.MainController;
-import ir.sharif.ap.model.ActionType;
-import ir.sharif.ap.model.RelationType;
-import ir.sharif.ap.model.TweetListType;
-import ir.sharif.ap.model.TweetTile;
+import ir.sharif.ap.model.*;
+import ir.sharif.ap.presenter.events.ActionTweetEvent;
+import ir.sharif.ap.presenter.events.ListTweetEvent;
+import ir.sharif.ap.presenter.events.RelationUserEvent;
 import ir.sharif.ap.presenter.listeners.ActionTweetEventListener;
 import ir.sharif.ap.presenter.listeners.GetTweetEventListener;
 import ir.sharif.ap.presenter.listeners.ListTweetEventListener;
@@ -55,7 +55,7 @@ public class TweetDetailPresenter implements Initializable {
 
     private TweetTile mainTweet;
     private long parentTweetID = -1 ;
-
+    private static LocalDateTime previousLastTweetTime = null;
     private ActionTweetEventListener actionTweetEventListener;
     private RelationUserEventListener relationUserEventListener;
     private ListTweetEventListener listTweetEventListener;
@@ -76,8 +76,6 @@ public class TweetDetailPresenter implements Initializable {
     public void addActionTweetEventListener(ActionTweetEventListener actionTweetEventListener) {
         this.actionTweetEventListener = actionTweetEventListener;
     }
-
-    static LocalDateTime previousLastTweetTime = null;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -141,7 +139,12 @@ public class TweetDetailPresenter implements Initializable {
 
     @FXML
     void onForwardClick(ActionEvent event) {
-
+        Main.clearMessageReceiverList();
+        Main.setEditCollectionListType(EditCollectionListType.FORWARD_LIST);
+        Main.setTargetCollectionID(0);
+        Main.setForwardMessageImage(mainTweet.getTweetImage());
+        Main.setForwardMessageText(mainTweet.getTweetText());
+        MobileApplication.getInstance().switchView(COLLECTION_EDIT_VIEW);
     }
 
     @FXML

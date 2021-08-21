@@ -6,8 +6,10 @@ import com.gluonhq.charm.glisten.control.Snackbar;
 import com.gluonhq.charm.glisten.mvc.View;
 import com.gluonhq.charm.glisten.visual.MaterialDesignIcon;
 import ir.sharif.ap.Main;
+import ir.sharif.ap.controller.PacketHandler;
 import ir.sharif.ap.model.RelationListType;
 import ir.sharif.ap.model.RelationTile;
+import ir.sharif.ap.presenter.events.SearchUsernameEvent;
 import ir.sharif.ap.presenter.listeners.RelationListEventListener;
 import ir.sharif.ap.presenter.listeners.RelationUserEventListener;
 import ir.sharif.ap.presenter.listeners.SearchUsernameEventListener;
@@ -24,7 +26,7 @@ import java.util.Base64;
 import java.util.ResourceBundle;
 
 import static ir.sharif.ap.Main.*;
-import static ir.sharif.ap.presenter.Styles.defaultButtonStyle;
+import static ir.sharif.ap.presenter.Styles.DEFAULT_BUTTON_STYLE;
 
 public class RelationListPresenter implements Initializable {
     private Snackbar snackbar;
@@ -46,6 +48,7 @@ public class RelationListPresenter implements Initializable {
     public void addSearchUsernameEventListener(SearchUsernameEventListener searchUsernameEventListener) {
         this.searchUsernameEventListener = searchUsernameEventListener;
     }
+
     public void addRelationUserEventListener(RelationUserEventListener relationUserEventListener) {
         this.relationUserEventListener = relationUserEventListener;
     }
@@ -62,7 +65,7 @@ public class RelationListPresenter implements Initializable {
             searchUsernameEventListener.searchUsernameEventOccurred(
                     new SearchUsernameEvent(false,searchText.getText()));
         });
-        searchButton.setStyle(defaultButtonStyle);
+        searchButton.setStyle(DEFAULT_BUTTON_STYLE);
         searchBar.getChildren().add(searchButton);
 
         relationListView.setCellFactory(p->{
@@ -96,8 +99,8 @@ public class RelationListPresenter implements Initializable {
 
         RelationTile relationTile = new RelationTile();
         relationTile.setRelationType(relationListType);
-        relationTile.setUserFullName(args[1]+" "+args[2]);
-        relationTile.setUsername(args[0]);
+        relationTile.setUserFullName(PacketHandler.getDecodedArg(args[1])+" "+PacketHandler.getDecodedArg(args[2]));
+        relationTile.setUsername(PacketHandler.getDecodedArg(args[0]));
         byte[] userImage = null;
         if(!args[3].isEmpty())
             userImage = Base64.getDecoder().decode(args[3]);

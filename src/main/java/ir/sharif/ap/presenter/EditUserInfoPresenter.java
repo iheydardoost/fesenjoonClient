@@ -3,6 +3,8 @@ package ir.sharif.ap.presenter;
 import com.gluonhq.charm.glisten.application.MobileApplication;
 import com.gluonhq.charm.glisten.control.AppBar;
 import com.gluonhq.charm.glisten.mvc.View;
+import ir.sharif.ap.controller.PacketHandler;
+import ir.sharif.ap.presenter.events.EditUserInfoEvent;
 import ir.sharif.ap.presenter.listeners.EditUserInfoEventListener;
 import ir.sharif.ap.presenter.listeners.GetPrivateInfoEventListener;
 import javafx.event.ActionEvent;
@@ -56,7 +58,7 @@ public class EditUserInfoPresenter implements Initializable {
     private Button cancelButton;
     private byte[] userImage=null, lastUserImage;
     private String lastFirstnameStr, lastLastnameStr, lastPhoneNumberStr, lastBioStr;
-    LocalDate lastDateOfBirth;
+    private LocalDate lastDateOfBirth;
     private EditUserInfoEventListener editUserInfoEventListener;
     private GetPrivateInfoEventListener getPrivateInfoEventListener;
 
@@ -172,22 +174,22 @@ public class EditUserInfoPresenter implements Initializable {
     public void onUserInfoReceive(String response){
         String[] args = response.split(",",-1);
 
-        String bio = args[7];
-        for(int i=8; i<args.length; i++){
-            bio += ("," + args[i]);
-        }
+        String bio = PacketHandler.getDecodedArg(args[7]);
+//        for(int i=8; i<args.length; i++){
+//            bio += ("," + args[i]);
+//        }
         lastBioStr = bio;
 
         lastDateOfBirth = null;
         if(!args[3].isEmpty())
             lastDateOfBirth = LocalDate.parse(args[3]);
-        lastFirstnameStr = args[1];
-        lastLastnameStr = args[2];
+        lastFirstnameStr = PacketHandler.getDecodedArg(args[1]);
+        lastLastnameStr = PacketHandler.getDecodedArg(args[2]);
         lastUserImage = null;
         if(!args[6].isEmpty()){
             lastUserImage = Base64.getDecoder().decode(args[6]);
         }
-        lastPhoneNumberStr = args[5];
+        lastPhoneNumberStr = PacketHandler.getDecodedArg(args[5]);
 
         phoneNumberText.setText(lastPhoneNumberStr);
         bioText.setText(lastBioStr);

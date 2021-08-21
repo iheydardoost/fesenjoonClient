@@ -9,10 +9,9 @@ import ir.sharif.ap.Main;
 import ir.sharif.ap.controller.MainController;
 import ir.sharif.ap.model.TweetListType;
 import ir.sharif.ap.model.TweetTile;
+import ir.sharif.ap.presenter.events.ListTweetEvent;
 import ir.sharif.ap.presenter.listeners.ListTweetEventListener;
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.event.EventTarget;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -36,12 +35,11 @@ public class TimeLinePresenter extends GluonPresenter<Main> implements Initializ
 
     private ListTweetEventListener listTweetEventListener;
     private final String TAB_NAME ="Timeline";
-
+    private static LocalDateTime previousLastTweetTime = null;
 
     public void addListTweetEventListener(ListTweetEventListener listTweetEventListener) {
         this.listTweetEventListener = listTweetEventListener;
     }
-    static LocalDateTime previousLastTweetTime = null;
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

@@ -7,13 +7,14 @@ import ir.sharif.ap.Main;
 import ir.sharif.ap.model.CollectionItem;
 import ir.sharif.ap.model.CollectionListType;
 import ir.sharif.ap.model.EditCollectionListType;
+import ir.sharif.ap.presenter.events.DeleteCollectionEvent;
 import ir.sharif.ap.presenter.listeners.DeleteCollectionEventListener;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.HBox;
 
 import static ir.sharif.ap.Main.COLLECTION_EDIT_VIEW;
-import static ir.sharif.ap.presenter.Styles.defaultButtonStyle;
+import static ir.sharif.ap.presenter.Styles.DEFAULT_BUTTON_STYLE;
 
 public class ManageCollectionListCell extends ListCell<CollectionItem> {
 
@@ -60,8 +61,8 @@ public class ManageCollectionListCell extends ListCell<CollectionItem> {
             listViewProperty().get().getItems().remove(collectionItem);
         });
 
-        editButton.setStyle(defaultButtonStyle);
-        deleteButton.setStyle(defaultButtonStyle);
+        editButton.setStyle(DEFAULT_BUTTON_STYLE);
+        deleteButton.setStyle(DEFAULT_BUTTON_STYLE);
         buttonBox = new HBox(editButton, deleteButton);
         tile.setSecondaryGraphic(buttonBox);
     }
@@ -70,13 +71,16 @@ public class ManageCollectionListCell extends ListCell<CollectionItem> {
     protected void updateItem(CollectionItem item, boolean empty) {
         super.updateItem(item, empty);
         collectionItem = item;
+        boolean showButtons;
         if (!empty && item != null) {
-            if(collectionItem.getCollectionName().equals("savedMessages")) {
-                deleteButton.setManaged(false);
-                deleteButton.setVisible(false);
-                editButton.setManaged(false);
-                editButton.setVisible(false);
-            }
+            if(collectionItem.getCollectionName().equals("savedMessages"))
+                showButtons = false;
+            else
+                showButtons = true;
+            deleteButton.setManaged(showButtons);
+            deleteButton.setVisible(showButtons);
+            editButton.setManaged(showButtons);
+            editButton.setVisible(showButtons);
             tile.textProperty().setAll(item.getCollectionName());
             setGraphic(tile);
         } else {

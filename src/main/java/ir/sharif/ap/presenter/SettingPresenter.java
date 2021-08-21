@@ -7,11 +7,11 @@ import com.gluonhq.charm.glisten.control.Snackbar;
 import com.gluonhq.charm.glisten.mvc.View;
 import ir.sharif.ap.Main;
 import ir.sharif.ap.model.LastSeenStatus;
+import ir.sharif.ap.presenter.events.SettingChangeFormEvent;
 import ir.sharif.ap.presenter.listeners.LogoutListener;
 import ir.sharif.ap.presenter.listeners.SettingChangeFormListener;
 import ir.sharif.ap.presenter.listeners.SettingInfoListener;
 import ir.sharif.ap.presenter.listeners.UserDeleteListener;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -168,6 +168,7 @@ public class SettingPresenter implements Initializable {
             MobileApplication.getInstance().switchView(HOME_VIEW);
         }
     }
+
     public void onUserDeleteResponse(String result){
         showResult("Delete "+ result);
         if(result.equals("success")){

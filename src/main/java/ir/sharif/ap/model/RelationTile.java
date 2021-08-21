@@ -7,6 +7,9 @@ public class RelationTile {
     private RelationListType relationListType;
     private long userID;
 
+    public RelationTile() {
+    }
+
     public long getUserID() {
         return userID;
     }

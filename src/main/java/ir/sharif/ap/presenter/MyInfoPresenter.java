@@ -4,6 +4,7 @@ import com.gluonhq.charm.glisten.application.MobileApplication;
 import com.gluonhq.charm.glisten.control.AppBar;
 import com.gluonhq.charm.glisten.mvc.View;
 import ir.sharif.ap.Main;
+import ir.sharif.ap.controller.PacketHandler;
 import ir.sharif.ap.presenter.listeners.GetPrivateInfoEventListener;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -69,17 +70,17 @@ public class MyInfoPresenter implements Initializable {
     public void onInfoReceive(String response){
         String[] args = response.split(",",-1);
 
-        usernameTxt.setText(args[0]);
-        firstnameText.setText(args[1]);
-        lastnameText.setText(args[2]);
+        usernameTxt.setText(PacketHandler.getDecodedArg(args[0]));
+        firstnameText.setText(PacketHandler.getDecodedArg(args[1]));
+        lastnameText.setText(PacketHandler.getDecodedArg(args[2]));
         dateOfBirthText.setText(args[3]);
-        emailText.setText(args[4]);
-        phoneText.setText(args[5]);
+        emailText.setText(PacketHandler.getDecodedArg(args[4]));
+        phoneText.setText(PacketHandler.getDecodedArg(args[5]));
 
-        String bio = args[7];
-        for(int i=8; i<args.length; i++){
-            bio += ("," + args[i]);
-        }
+        String bio = PacketHandler.getDecodedArg(args[7]);
+//        for(int i=8; i<args.length; i++){
+//            bio += ("," + args[i]);
+//        }
         bioText.setText(bio);
 
         Image userImage = null;

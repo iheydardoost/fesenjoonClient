@@ -5,6 +5,9 @@ public class ChatItem {
     private int unReadMessages;
     private long chatID;
 
+    public ChatItem() {
+    }
+
     public String getChatName() {
         return chatName;
     }

@@ -5,18 +5,18 @@ import com.gluonhq.charm.glisten.control.ListTile;
 import com.gluonhq.charm.glisten.visual.MaterialDesignIcon;
 import ir.sharif.ap.Main;
 import ir.sharif.ap.model.*;
+import ir.sharif.ap.presenter.events.FollowResponseEvent;
 import ir.sharif.ap.presenter.listeners.FollowResponseEventListener;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.image.Image;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
-import static ir.sharif.ap.presenter.Styles.defaultButtonStyle;
+import static ir.sharif.ap.presenter.Styles.DEFAULT_BUTTON_STYLE;
 
 public class NotificationListCell extends ListCell<NotificationTile> {
 
@@ -55,9 +55,9 @@ public class NotificationListCell extends ListCell<NotificationTile> {
             listViewProperty().get().getItems().remove(notificationTile);
         });
 
-        acceptButton.setStyle(defaultButtonStyle);
-        rejectWithNotifyButton.setStyle(defaultButtonStyle);
-        rejectWithoutNotifyButton.setStyle(defaultButtonStyle);
+        acceptButton.setStyle(DEFAULT_BUTTON_STYLE);
+        rejectWithNotifyButton.setStyle(DEFAULT_BUTTON_STYLE);
+        rejectWithoutNotifyButton.setStyle(DEFAULT_BUTTON_STYLE);
         buttonBox = new HBox(acceptButton, rejectWithNotifyButton, rejectWithoutNotifyButton);
 
         statusText = new Label("");

@@ -6,17 +6,14 @@ import com.gluonhq.charm.glisten.visual.MaterialDesignIcon;
 import ir.sharif.ap.Main;
 import ir.sharif.ap.model.ChatItem;
 import javafx.scene.control.Button;
-import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
-import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Circle;
 
 import static ir.sharif.ap.Main.CHAT_VIEW;
-import static ir.sharif.ap.presenter.Styles.defaultButtonStyle;
+import static ir.sharif.ap.presenter.Styles.DEFAULT_BUTTON_STYLE;
 
 public class ChatsRoomListCell extends ListCell<ChatItem> {
 
@@ -31,7 +28,7 @@ public class ChatsRoomListCell extends ListCell<ChatItem> {
             Main.setChatID(chatItem.getChatID());
             MobileApplication.getInstance().switchView(CHAT_VIEW);
         });
-        visitChatButton.setStyle(defaultButtonStyle);
+        visitChatButton.setStyle(DEFAULT_BUTTON_STYLE);
         tile.setSecondaryGraphic(new HBox(visitChatButton));
         Circle circle = new Circle();
         circle.setRadius(15);

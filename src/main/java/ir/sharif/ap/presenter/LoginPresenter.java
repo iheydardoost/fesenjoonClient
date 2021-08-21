@@ -4,6 +4,7 @@ import com.gluonhq.charm.glisten.control.*;
 import com.gluonhq.charm.glisten.control.TextArea;
 import com.gluonhq.charm.glisten.control.TextField;
 import ir.sharif.ap.Main;
+import ir.sharif.ap.presenter.events.AuthFormEvent;
 import ir.sharif.ap.presenter.listeners.AuthFormListener;
 import javafx.scene.control.DatePicker;
 import com.gluonhq.charm.glisten.animation.FadeInLeftBigTransition;
@@ -92,15 +93,12 @@ public class LoginPresenter implements Initializable {
     public void showProperLoginView(){
 
         if(loginRadio.isSelected()){
-            System.out.println("loginRadio");
             signupView.setManaged(false);
             signupView.setVisible(false);
 
             loginView.setVisible(true);
             loginView.setManaged(true);
         }else if(sigupRadio.isSelected()){
-            System.out.println("sigupRadio");
-
             loginView.setManaged(false);
             loginView.setVisible(false);
 

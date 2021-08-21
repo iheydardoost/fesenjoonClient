@@ -1,6 +1,6 @@
 package ir.sharif.ap.presenter;
 
-import ir.sharif.ap.View.TweetTileView;
+import ir.sharif.ap.view.TweetTileView;
 import ir.sharif.ap.model.TweetTile;
 import ir.sharif.ap.presenter.listeners.ActionTweetEventListener;
 import ir.sharif.ap.presenter.listeners.NewTweetListener;
