@@ -1,6 +1,7 @@
 package ir.sharif.ap.controller;
 
 import ir.sharif.ap.Main;
+import ir.sharif.ap.controller.offline.OfflineController;
 import ir.sharif.ap.model.*;
 import ir.sharif.ap.presenter.events.*;
 import javafx.application.Platform;
@@ -149,6 +150,9 @@ public class MainController implements Runnable{
                 break;
             case GET_CHAT_ID_BY_USER_ID_RES:
                 Platform.runLater(()->Main.getUserInfoPresenter().onChatIDReceive(response.getBody()));
+                break;
+            case SAVE_USER_DATA_RES:
+                OfflineController.saveUserData(response.getBody());
                 break;
             default:
                 break;

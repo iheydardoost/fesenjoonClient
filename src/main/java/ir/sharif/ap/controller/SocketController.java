@@ -8,8 +8,10 @@ import ir.sharif.ap.model.config.ClientSocketConfig;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.nio.charset.StandardCharsets;
 import java.util.LinkedList;
 
@@ -33,21 +35,33 @@ public class SocketController implements Runnable{
         packetHandler = new PacketHandler();
     }
 
-    public void initConnection(){
-        clientSocketConfig = Main.getMainController().getConfigLoader().getClientSocketConfig();
-        InetSocketAddress socketAddress =
-                new InetSocketAddress(clientSocketConfig.getIpAddress(),clientSocketConfig.getPort());
-        this.socket = new Socket();
-        try {
-            socket.connect(socketAddress,5);
-            this.input = socket.getInputStream();
-            this.output = socket.getOutputStream();
-        } catch (IOException e) {
-            //e.printStackTrace();
-            LogHandler.logger.error("could not connect to Server via address "
-                    + clientSocketConfig.getIpAddress().getHostAddress()
-                    + " and port " + clientSocketConfig.getPort());
+    public void initConnection(boolean online) throws IOException {
+        if(online) {
+            clientSocketConfig = Main.getMainController().getConfigLoader().getClientSocketConfig();
+        }else {
+            try {
+                clientSocketConfig = new ClientSocketConfig(InetAddress.getByName("localhost"),8000);
+                LogHandler.logger.info("localhost / port:8000 selected");
+            } catch (UnknownHostException e) {
+                //e.printStackTrace();
+                LogHandler.logger.error("could not connect offline via localhost and port 8000");
+            }
         }
+        InetSocketAddress socketAddress =
+                new InetSocketAddress(clientSocketConfig.getIpAddress(), clientSocketConfig.getPort());
+
+        if(this.socket!=null)
+            socket.close();
+        if(input!=null)
+            input.close();
+        if(output!=null)
+            output.close();
+
+        this.socket = new Socket();
+
+        socket.connect(socketAddress,50);
+        this.input = socket.getInputStream();
+        this.output = socket.getOutputStream();
 
         loopHandler = new LoopHandler(600, this);
         //loopHandler.setNonStop(true);
@@ -136,5 +150,9 @@ public class SocketController implements Runnable{
             //e.printStackTrace();
             LogHandler.logger.error("could not close the socket");
         }
+    }
+
+    public LoopHandler getLoopHandler() {
+        return loopHandler;
     }
 }

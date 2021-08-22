@@ -7,6 +7,7 @@ import com.gluonhq.charm.glisten.control.AppBar;
 import com.gluonhq.charm.glisten.control.Snackbar;
 import com.gluonhq.charm.glisten.mvc.View;
 import com.gluonhq.charm.glisten.visual.MaterialDesignIcon;
+import ir.sharif.ap.controller.offline.OfflineController;
 import ir.sharif.ap.presenter.*;
 import ir.sharif.ap.view.*;
 import ir.sharif.ap.controller.JsonHandler;
@@ -17,11 +18,13 @@ import ir.sharif.ap.presenter.listeners.LogoutListener;
 import javafx.geometry.Dimension2D;
 import javafx.scene.Scene;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Main extends MobileApplication {
 
     private static MainController mainController;
+    private static OfflineController offlineController;
 
     public final static String TIMELINE_VIEW="TimeLineView";
     public final static String PRIVATE_VIEW="PrivateView";
@@ -79,6 +82,7 @@ public class Main extends MobileApplication {
     private static boolean wantUpdateChatroom=false, wantUpdateChat=false;
     private static String forwardMessageText;
     private static byte[] forwardMessageImage;
+    private static OnlineStatus onlineStatus;
 
     public static String getForwardMessageText() {
         return forwardMessageText;
@@ -99,6 +103,9 @@ public class Main extends MobileApplication {
     @Override
     public void stop(){
         mainController.doClose();
+        if(offlineController.getDbCommunicator().isConnectionValid())
+            doCloseOffline();
+        System.exit(0);
     }
 
     @Override
@@ -274,11 +281,51 @@ public class Main extends MobileApplication {
     public static void main(String[] args) {
         JsonHandler.initMapper();
         LogHandler.initLogger(false);
-
         mainController = new MainController();
-        mainController.getSocketController().initConnection();
+        offlineController = new OfflineController();
+        offlineController.getOfflineSocketController().initConnection();
+        onlineStatus = OnlineStatus.LOG_IN;
 
         launch(args);
+    }
+
+    public static boolean connectToServer(){
+        try {
+            if(onlineStatus==OnlineStatus.LOG_IN) {
+                mainController.getSocketController().initConnection(true);
+                onlineStatus = OnlineStatus.ONLINE;
+                return true;
+            }
+        } catch (IOException e) {
+            //e.printStackTrace();
+        }
+        if(onlineStatus==OnlineStatus.LOG_IN) {
+            LogHandler.logger.error("could not connect to Server");
+            loginPresenter.onAuthReceive("error,server is not accessible");
+        }
+        return false;
+    }
+
+    public static boolean connectOffline(){
+        try {
+            if(onlineStatus==OnlineStatus.LOG_IN)
+                if(offlineController.getDbCommunicator().connectDB()) {
+                    mainController.getSocketController().initConnection(false);
+                    onlineStatus = OnlineStatus.OFFLINE;
+                    return true;
+                }
+        } catch (IOException e) {
+            //e.printStackTrace();
+        }
+        if(onlineStatus==OnlineStatus.LOG_IN) {
+            LogHandler.logger.error("could not connect offline");
+            loginPresenter.onAuthReceive("error,offline mode is not accessible");
+        }
+        return false;
+    }
+
+    public static void doCloseOffline(){
+        mainController.getSocketController().getLoopHandler().pause();
     }
 
     private static LogoutListener logoutListener = new LogoutListener() {
@@ -295,12 +342,27 @@ public class Main extends MobileApplication {
     public static void onLogoutResponse(String result){
         if(result.equals("success")){
             MobileApplication.getInstance().switchView(HOME_VIEW);
+            onlineStatus = OnlineStatus.LOG_IN;
+            doCloseOffline();
+            mainController.getSocketController().closeSocket();
         }
+    }
+
+    public static OnlineStatus getOnlineStatus() {
+        return onlineStatus;
+    }
+
+    public static void setOnlineStatus(OnlineStatus onlineStatus) {
+        Main.onlineStatus = onlineStatus;
     }
 
     public static String getNextViewName(){
         lastViewIndex++;
         return "ViewNumber" + String.valueOf(lastViewIndex);
+    }
+
+    public static OfflineController getOfflineController() {
+        return offlineController;
     }
 
     public static long getChatID() {
@@ -471,4 +533,5 @@ public class Main extends MobileApplication {
     public static void setRefreshExplore(boolean refresh) {
         refreshExplore = refresh;
     }
+
 }

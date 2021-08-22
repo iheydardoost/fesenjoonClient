@@ -46,14 +46,6 @@ public class ConfigLoader {
             LogHandler.logger.error("client_socket_config.json does not exist");
         }
 
-        try {
-            clientSocketConfig = new ClientSocketConfig(InetAddress.getByName("localhost"),8000);
-            LogHandler.logger.info("localhost / port:8000 selected");
-            return clientSocketConfig;
-        } catch (UnknownHostException e) {
-            //e.printStackTrace();
-            LogHandler.logger.error("could not connect to Server via localhost and port 8000");
-        }
         return null;
     }
 }

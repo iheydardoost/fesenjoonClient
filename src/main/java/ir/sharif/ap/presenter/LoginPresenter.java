@@ -4,6 +4,7 @@ import com.gluonhq.charm.glisten.control.*;
 import com.gluonhq.charm.glisten.control.TextArea;
 import com.gluonhq.charm.glisten.control.TextField;
 import ir.sharif.ap.Main;
+import ir.sharif.ap.model.OnlineStatus;
 import ir.sharif.ap.presenter.events.AuthFormEvent;
 import ir.sharif.ap.presenter.listeners.AuthFormListener;
 import javafx.scene.control.DatePicker;
@@ -57,11 +58,6 @@ public class LoginPresenter implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-//        FloatingActionButton fab = new FloatingActionButton();
-//        fab.setOnAction(e -> {
-//            System.out.println("FAB click");
-//        });
-//        fab.showOn(home);
 
         home.setShowTransitionFactory(v -> new FadeInLeftBigTransition(v));
         showProperLoginView();
@@ -144,6 +140,10 @@ public class LoginPresenter implements Initializable {
             authFormEvent.setLoginReq(true)
                     .setUserName(loginUsernameText.getText())
                     .setPassword(loginPasswordText.getText());
+            if(Main.getOnlineStatus()== OnlineStatus.LOG_IN) {
+                if (!Main.connectToServer())
+                    Main.connectOffline();
+            }
             authFormListener.authFormEventOccurred(authFormEvent);
         }
     }
@@ -161,18 +161,19 @@ public class LoginPresenter implements Initializable {
         }else if(signupEmailTxt.getText().isEmpty()) {
             signupErrorText.setText("Please enter email");
         }else{
-
-            AuthFormEvent authFormEvent = new AuthFormEvent();
-            authFormEvent.setLoginReq(false)
-                    .setFirstName(signupFirstNameTxt.getText())
-                    .setLastName(signupLastNameTxt.getText())
-                    .setUserName(signupUsernameText.getText())
-                    .setPassword(signupPasswordText.getText())
-                    .setPhoneNumber(signupPhoneTxt.getText())
-                    .setEmail(signupEmailTxt.getText())
-                    .setDateOfBirth(signupDateTxt.getValue())
-                    .setBio(signupBiographyTxt.getText());
-            authFormListener.authFormEventOccurred(authFormEvent);
+            if(Main.getOnlineStatus()== OnlineStatus.ONLINE) {
+                AuthFormEvent authFormEvent = new AuthFormEvent();
+                authFormEvent.setLoginReq(false)
+                        .setFirstName(signupFirstNameTxt.getText())
+                        .setLastName(signupLastNameTxt.getText())
+                        .setUserName(signupUsernameText.getText())
+                        .setPassword(signupPasswordText.getText())
+                        .setPhoneNumber(signupPhoneTxt.getText())
+                        .setEmail(signupEmailTxt.getText())
+                        .setDateOfBirth(signupDateTxt.getValue())
+                        .setBio(signupBiographyTxt.getText());
+                authFormListener.authFormEventOccurred(authFormEvent);
+            }
         }
     }
 
