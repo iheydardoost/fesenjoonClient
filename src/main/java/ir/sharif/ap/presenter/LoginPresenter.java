@@ -161,7 +161,8 @@ public class LoginPresenter implements Initializable {
         }else if(signupEmailTxt.getText().isEmpty()) {
             signupErrorText.setText("Please enter email");
         }else{
-            if(Main.getOnlineStatus()== OnlineStatus.ONLINE) {
+            if(Main.getOnlineStatus()== OnlineStatus.LOG_IN) {
+                Main.connectToServer();
                 AuthFormEvent authFormEvent = new AuthFormEvent();
                 authFormEvent.setLoginReq(false)
                         .setFirstName(signupFirstNameTxt.getText())

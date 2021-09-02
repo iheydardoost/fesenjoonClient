@@ -16,7 +16,6 @@ C:\Users\iman heydardoost\IdeaProjects\fesenjoonClient\src\main\java\ir\sharif\a
 C:\Users\iman heydardoost\IdeaProjects\fesenjoonClient\src\main\java\ir\sharif\ap\presenter\listeners\ListTweetEventListener.java
 C:\Users\iman heydardoost\IdeaProjects\fesenjoonClient\src\main\java\ir\sharif\ap\presenter\events\DeleteCollectionEvent.java
 C:\Users\iman heydardoost\IdeaProjects\fesenjoonClient\src\main\java\ir\sharif\ap\controller\JsonHandler.java
-C:\Users\iman heydardoost\IdeaProjects\fesenjoonClient\src\main\java\ir\sharif\ap\controller\offline\ChatController.java
 C:\Users\iman heydardoost\IdeaProjects\fesenjoonClient\src\main\java\ir\sharif\ap\presenter\SettingPresenter.java
 C:\Users\iman heydardoost\IdeaProjects\fesenjoonClient\src\main\java\ir\sharif\ap\presenter\events\ListTweetEvent.java
 C:\Users\iman heydardoost\IdeaProjects\fesenjoonClient\src\main\java\ir\sharif\ap\presenter\RelationListCell.java
@@ -31,7 +30,6 @@ C:\Users\iman heydardoost\IdeaProjects\fesenjoonClient\src\main\java\ir\sharif\a
 C:\Users\iman heydardoost\IdeaProjects\fesenjoonClient\src\main\java\ir\sharif\ap\model\PacketType.java
 C:\Users\iman heydardoost\IdeaProjects\fesenjoonClient\src\main\java\ir\sharif\ap\presenter\events\EditUserInfoEvent.java
 C:\Users\iman heydardoost\IdeaProjects\fesenjoonClient\src\main\java\ir\sharif\ap\controller\ConfigLoader.java
-C:\Users\iman heydardoost\IdeaProjects\fesenjoonClient\src\main\java\ir\sharif\ap\controller\offline\ChatBuilder.java
 C:\Users\iman heydardoost\IdeaProjects\fesenjoonClient\src\main\java\ir\sharif\ap\model\CollectionItemType.java
 C:\Users\iman heydardoost\IdeaProjects\fesenjoonClient\src\main\java\ir\sharif\ap\presenter\events\NewTweetEvent.java
 C:\Users\iman heydardoost\IdeaProjects\fesenjoonClient\src\main\java\ir\sharif\ap\Main.java
